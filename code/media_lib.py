@@ -102,9 +102,9 @@ class Button:
 				if self.alignment == 0:				# position text based on alignment, button size and rectangle size of text
 					t_x += self.width/2 - rect.width/2
 				elif self.alignment == 1:
-					t_x += rect.x + self.width/10
+					t_x += self.width/10
 				elif self.alignment == 2:
-					t_x += rect.x + self.width - rect.width - self.width/10
+					t_x += self.width - rect.width - self.width/10
 				t_y += rect.y - rect.height/2
 
 				gl.screen.blit(textsur, (t_x, t_y))		# finally blit it
