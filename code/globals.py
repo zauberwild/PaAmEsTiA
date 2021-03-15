@@ -38,10 +38,10 @@ prog_pos = 'i'			# saves current position in program flow
 
 screen = None
 if os_is_linux:
-	screen = pygame.display.set_mode((W,H), pygame.FULLSCREEN)
+	screen = pygame.display.set_mode((W,H), pygame.FULLSCREEN)		# create the window
+	pygame.mouse.set_visible(False)			# hide cursor
 else:
 	screen = pygame.display.set_mode((W,H))
 
-pygame.mouse.set_visible(False)			# hide cursor
 pygame.display.set_caption("paamestia_main")
 clock = pygame.time.Clock()
