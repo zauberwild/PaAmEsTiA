@@ -5,3 +5,5 @@ code/src/.windows
 documentation/2021-01-10 Bestellung der Bauteile/Anforderungsschein Paamestia.pdf
 notes/Dokumentation BGT18 Heart-Frequency-Battle.pdf
 *.pyc
+.vscode/settings.json
+*.code-workspace
