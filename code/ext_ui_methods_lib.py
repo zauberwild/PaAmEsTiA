@@ -86,8 +86,6 @@ def main_menu():
 	if menu_pos > 2:
 		menu_pos = 2
 	
-	
-	
 	btn1.selected = False
 	btn2.selected = False
 	btn3.selected = False
