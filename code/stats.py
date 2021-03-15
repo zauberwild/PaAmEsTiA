@@ -1,5 +1,0 @@
-""" stats.py
-
-store statistics
-
-"""
