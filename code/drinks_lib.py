@@ -129,7 +129,7 @@ def get_still_mixing():
 
 """ ### ### MIXING METHODS ### ### """
 def start_mixing(recipe):
-	""" starts the mixing process.
+	""" compiles the recipe and starts the mixing process.
 	recipe: EITHER as string with recipe name OR as int with index in recipes list
 	"""
 	global is_mixing, recipe_step, commands, recipes
