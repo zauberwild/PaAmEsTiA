@@ -15,7 +15,7 @@ drink_file_path = gen_path + "/src/drinks"				# path of drinks file
 
 """ output variables """
 _UNIT_SIZE = 250 					# size of one unit in ml
-_TIME_PER_UNIT = 25					# time needed to fill one unit in milliseconds
+_TIME_PER_UNIT = 25					# time needed to fill one unit in milliseconds?
 TIME_PER_ML = _UNIT_SIZE / _TIME_PER_UNIT
 
 """ debug variables """
