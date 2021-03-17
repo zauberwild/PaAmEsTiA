@@ -42,7 +42,7 @@ def loop():
 """ ### ### INTRO / MAIN MENU ### ### """
 intro_active = False
 def intro():
-	#gl.prog_pos = 'm'		# DEL as soon as intro needed again
+	gl.prog_pos = 'm'		# DEL as soon as intro needed again
 
 	global intro_active, introduction_vid
 
@@ -57,9 +57,7 @@ def intro():
 		gl.prog_pos = 'm'
 
 menu_active = False
-btn1 = None
-btn2 = None
-btn3 = None
+menu_btns = []
 menu_pos = 0
 
 def main_menu():
@@ -67,66 +65,57 @@ def main_menu():
 	
 	if menu_active == False:			# setup
 		menu_active = True
-		btn1 = media_lib.Button("/src/props/", "prop_black.png", "prop_green.png", "prop_grey.png", 32, 0, 700, 64)
-		btn2 = media_lib.Button("/src/props/", "prop_black.png", "prop_yellow.png", "prop_grey.png", 32, 128, 700, 64)
-		btn3 = media_lib.Button("/src/props/", "prop_black.png", "prop_red.png", "prop_grey.png", 32, 256, 700, 64)
-		btn1.add_text("SET DRINKS", gl.debug_font_big, (0,0,255), alignment=1)
-		btn2.add_text("START MIXING", gl.debug_font_big, (0,0,255), alignment=0)
-		btn3.add_text("RESET DRINKS", gl.debug_font_big, (0,0,255), alignment=2)
+		menu_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_green.png"	, "prop_grey.png", 150, 69, 500, 64))
+		menu_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_blue.png"	, "prop_grey.png", 150, 202, 500, 64))
+		menu_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_yellow.png", "prop_grey.png", 150, 335, 500, 64))
+		menu_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_red.png"	, "prop_grey.png", 150, 468, 500, 64))
+		menu_btns[0].add_text("REZEPT AUSWAEHLEN", gl.debug_font_big, (0,0,0), 0)
+		menu_btns[1].add_text("FREI MISCHEN", gl.debug_font_big, (0,0,0), 0)
+		menu_btns[2].add_text("EINSTELLUNGS", gl.debug_font_big, (0,0,0), 0)
+		menu_btns[3].add_text("VERLASSEN", gl.debug_font_big, (0,0,0), 0)
 	
 	# input
+	# go up or down
 	if io.readInput(io.UP):
 		menu_pos -= 1
 	if io.readInput(io.DOWN):
 		menu_pos += 1
+
+	# select menu item
+	if io.readInput(io.NEXT):
+		if menu_pos == 0:
+			gl.prog_pos = 'rt'
+		elif menu_pos == 1:
+			gl.prog_pos = 'ft'
+		elif menu_pos == 2:
+			gl.prog_pos = 's'
+		elif menu_pos == 3:
+			gl.prog_pos = 'q'
 	
 	# logic
+	# menu boundaries
 	if menu_pos < 0:
 		menu_pos = 0
-	if menu_pos > 2:
-		menu_pos = 2
+	if menu_pos > 3:
+		menu_pos = 3
 	
-	btn1.selected = False
-	btn2.selected = False
-	btn3.selected = False
-	if menu_pos == 0:
-		btn1.selected = True
-	elif menu_pos == 1:
-		btn2.selected = True
-	elif menu_pos == 2:
-		btn3.selected = True
-	
-	if btn1.selected and io.readInput(io.NEXT):
-		drinks.set_drink(1, 3)
-		drinks.set_drink(2, 1)
-		drinks.set_drink(3, 5)
-		drinks.set_drink(4, 4)
-		drinks.set_drink(5, 2)
-		print("UI drinks set")
-	
-	if btn2.selected and io.readInput(io.NEXT):
-		print("UI starting mixing")
-		drinks.start_mixing("Pangalaktischer_Donnergurgler")
-	
-	if btn3.selected and io.readInput(io.NEXT):
-		drinks.set_drink(1, None)
-		drinks.set_drink(2, None)
-		drinks.set_drink(3, None)
-		drinks.set_drink(4, None)
-		drinks.set_drink(5, None)
-		print("UI drink resetted")
+	# selected item
+	for idx, btn in enumerate(menu_btns):
+		if idx == menu_pos:
+			btn.selected = True
+		else:
+			btn.selected = False
 
 	# draw
 	gl.screen.fill((127,127,127))
-	btn1.draw()
-	btn2.draw()
-	btn3.draw()
+	for btn in menu_btns:
+		btn.draw()
 
 	gl.debug_text.append("menu_pos: " + str(menu_pos))
 
 """ ### ### FREE MIXING ### ### """
 def free_transition():
-	pass
+	gl.prog_pos = 'fc'
 
 def free_choose():
 	pass
@@ -136,11 +125,72 @@ def free_output():
 
 
 """ ### ### RECIPE ### ### """
+rt_active = False
 def recipe_transition():
-	pass
+	global rt_active
 
+	if rt_active == False:
+		rt_active = True
+
+	gl.prog_pos = 'rc'
+
+rc_active = False
+rc_btns = []
+rc_pos = 0
+rc_stage = 0		#0: show all recipes; 1: show info of selected recipe (-1: go back; 2: mix recipe)
 def recipe_choose():
-	pass
+	global rc_active, rc_btns, rc_pos, rc_stage
+
+	# entering the menu
+	if rc_active == False:
+		rc_active = True
+		rc_stage = 0
+		height = 64
+		btn_size = (420, 40)
+		rc_btns.clear()
+		for i in drinks.recipes:
+			rc_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 20, height, btn_size[0], btn_size[1]))
+			rc_btns[-1].add_text(i, gl.debug_font, (0,0,0), 1)
+			height += btn_size[1] + 15
+
+	# input
+	if rc_stage == 0:
+		if io.readInput(io.UP):
+			rc_pos -= 1
+		if io.readInput(io.DOWN):
+			rc_pos += 1
+
+	# select menu item
+	if io.readInput(io.NEXT):
+		rc_stage += 1
+	# go back
+	if io.readInput(io.BACK):
+		rc_stage -= 1
+
+	# logic
+	# menu boundaries
+	if rc_pos < 0:
+		rc_pos = 0
+	elif rc_pos > len(rc_btns)-1:
+		rc_pos = len(rc_btns)-1
+
+	# selected item
+	for idx, btn in enumerate(rc_btns):
+		if idx == rc_pos:
+			btn.selected = True
+		else:
+			btn.selected = False
+	
+	# going back
+	if rc_stage == -1:
+		gl.prog_pos = 'm'
+		rc_active = False
+
+	# draw
+	gl.screen.fill((127,127,127))
+	if rc_stage == 0:
+		for i in rc_btns:
+			i.draw()
 
 def recipe_output():
 	pass
@@ -152,4 +202,5 @@ def settings():
 
 """ ### SHUTDOWN ### """
 def shutdown():
-	pass
+	print("STOPPING PROGRAM")
+	gl.prog_active = False
