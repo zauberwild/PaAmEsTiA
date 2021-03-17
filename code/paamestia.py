@@ -83,3 +83,7 @@ while gl.prog_active:
 	gl.clock.tick(gl.FPS)		# limit fps
 
 pygame.quit()
+
+if gl.os_is_linux:
+	# TODO [t2] perform shutdown of RasPi
+	pass
