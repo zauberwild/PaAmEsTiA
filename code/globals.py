@@ -21,7 +21,7 @@ TIME_PER_ML = _UNIT_SIZE / _TIME_PER_UNIT
 """ debug variables """
 os_is_linux = not path.isfile(gen_path + "/src/.windows")		# looks for a ".windows" file, which only exists on my Windows-PC
 
-show_debug = True		# show debugging information (fps,...)
+show_debug = False		# show debugging information (fps,...)
 debug_text = []			# debug list with all parameters to show. append parameters to this list every loop
 
 pygame.freetype.init()
