@@ -49,23 +49,26 @@ class Button:
 		self.text = ""
 		self.font = None
 		self.font_col = (0, 255, 0)
-		self.alignment = 0				# 0 = center, 1 = left, 2 = right
+		self.hor_alignment = 0				# 0 = center, 1 = left, 2 = right
+		self.ver_alignment = 0				# 0 = center, 1 = up, 2 = down
 
-		if direct_load:
+		if direct_load == True:
 			self.load_image()
 	
-	def add_text(self, text, font, col, alignment=0):
+	def add_text(self, text, font, col, hor_alignment=0, ver_alignment=0):
 		""" add text to button
 		- text: text to show [String]
 		- font: font
 		- col: color to use (R, G, B)
-		- alignment=0: alignment (0 = center, 1 = left, 2 = right)
+		- hor_alignment=0: hor_alignment (0 = center, 1 = left, 2 = right)
+		- ver_alignment=0: hor_alignment (0 = center, 1 = up, 2 = down)
 		"""
 		self.show_text = True
 		self.text = text
 		self.font = font
 		self.font_col = col
-		self.alignment = alignment
+		self.hor_alignment = hor_alignment
+		self.ver_alignment = ver_alignment
 	
 	def load_image(self):
 		""" loads image as pygame.Surfaces """
@@ -98,14 +101,21 @@ class Button:
 			if self.show_text:
 				t_x, t_y = self.x, self.y
 				textsur, rect = self.font.render(self.text, self.font_col)	# render text
+				spacing = 15
 
-				if self.alignment == 0:				# position text based on alignment, button size and rectangle size of text
+				if self.hor_alignment == 0:				# position text based on hor_alignment, ver_alignment, button size and rectangle size of text
 					t_x += self.width/2 - rect.width/2
-				elif self.alignment == 1:
-					t_x += self.width/10
-				elif self.alignment == 2:
-					t_x += self.width - rect.width - self.width/10
-				t_y += rect.y - rect.height/2
+				elif self.hor_alignment == 1:
+					t_x += spacing
+				elif self.hor_alignment == 2:
+					t_x += self.width - rect.width - spacing
+
+				if self.ver_alignment == 0:
+					t_y += self.height/2 - rect.height/2
+				elif self.ver_alignment == 1:
+					t_y += spacing
+				elif self.ver_alignment == 2:
+					t_y += self.height - rect.height - spacing
 
 				gl.screen.blit(textsur, (t_x, t_y))		# finally blit it
 
