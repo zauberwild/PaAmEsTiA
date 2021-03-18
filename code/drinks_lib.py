@@ -36,12 +36,10 @@ file1.close()
 for idx, i in enumerate(drinks):						# remove trailing newline characters
 		if drinks[idx].endswith('\n'):
 			drinks[idx] = drinks[idx][:-1]
-drinks.sort()
 
 # look for recipes
 for filename in os.listdir(gl.gen_path + "/src/recipes"):
 	recipes.append(filename)
-recipes.sort()
 
 """ ### TEST AVAILABILITY ### """
 def _test_availability(recipe):
