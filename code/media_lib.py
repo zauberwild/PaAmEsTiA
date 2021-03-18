@@ -13,7 +13,7 @@ import globals as gl
 class Button:
 	""" class for drawing Buttons with different states """
 
-	def __init__(self, path, img_normal, img_selected, img_disabled, x, y, width, height, direct_load=True, disabled=False, selected=False):
+	def __init__(self, path, img_normal, img_selected, img_disabled, x, y, width, height, direct_load=True, disabled=False, selected=False, rotation=0):
 		""" draw single sprites 
 		- path: path to folder with the files
 		- img_normal, img_selected, img_disabled:
@@ -38,6 +38,7 @@ class Button:
 		self.show = False			# 'turn' image on and off
 		self.disabled = disabled	# save if image is disabled (greyed out)
 		self.selected = selected	# save if image is selected (somehow marked)
+		self.rotation = rotation	# save rotation
 
 		# pygame.Surface objects
 		self.img_normal 	= None
@@ -72,9 +73,13 @@ class Button:
 	
 	def load_image(self):
 		""" loads image as pygame.Surfaces """
-		self.img_normal 	= pygame.transform.scale(pygame.image.load(self.path_normal), (self.width, self.height))
-		self.img_disabled 	= pygame.transform.scale(pygame.image.load(self.path_disabled), (self.width, self.height))
-		self.img_selected 	= pygame.transform.scale(pygame.image.load(self.path_selected), (self.width, self.height))
+		self.img_normal 	= pygame.transform.scale(pygame.image.load(self.path_normal)	, (self.width, self.height))
+		self.img_disabled 	= pygame.transform.scale(pygame.image.load(self.path_disabled)	, (self.width, self.height))
+		self.img_selected 	= pygame.transform.scale(pygame.image.load(self.path_selected)	, (self.width, self.height))
+		if self.rotation != 0:
+			self.img_normal 	= pygame.transform.rotate(self.img_normal	, self.rotation)
+			self.img_disabled 	= pygame.transform.rotate(self.img_disabled	, self.rotation)
+			self.img_selected 	= pygame.transform.rotate(self.img_selected	, self.rotation)
 		self.show = True
 	
 	def unload_image(self):
