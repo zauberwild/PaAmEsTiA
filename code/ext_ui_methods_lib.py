@@ -13,7 +13,7 @@ import io_lib as io
 """
 
 # intro
-introduction_vid = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+
 
 """ EOF SETUP """
 
@@ -41,6 +41,9 @@ def loop():
 
 """ ### ### INTRO / MAIN MENU ### ### """
 intro_active = False
+
+introduction_vid = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+
 def intro():
 	gl.prog_pos = 'm'		# DEL as soon as intro needed again
 
@@ -61,7 +64,7 @@ menu_btns = []
 menu_pos = 0
 
 def main_menu():
-	global menu_active, btn1, btn2, btn3, menu_pos, test_recipe	
+	global menu_active, menu_btns, menu_pos, test_recipe	
 	
 	if menu_active == False:			# setup
 		menu_active = True
@@ -71,7 +74,7 @@ def main_menu():
 		menu_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_red.png"	, "prop_grey.png", 150, 468, 500, 64))
 		menu_btns[0].add_text("REZEPT AUSWAEHLEN", gl.debug_font_big, (0,0,0), 0)
 		menu_btns[1].add_text("FREI MISCHEN", gl.debug_font_big, (0,0,0), 0)
-		menu_btns[2].add_text("EINSTELLUNGS", gl.debug_font_big, (0,0,0), 0)
+		menu_btns[2].add_text("EINSTELLUNGEN", gl.debug_font_big, (0,0,0), 0)
 		menu_btns[3].add_text("VERLASSEN", gl.debug_font_big, (0,0,0), 0)
 	
 	# input
@@ -135,62 +138,117 @@ def recipe_transition():
 	gl.prog_pos = 'rc'
 
 rc_active = False
-rc_btns = []
-rc_pos = 0
+rc_visible_n = 6			# number of visible items
+rc_btns = []				# list holding the recipes buttons
+rc_pos = 0					# position of selection in complete recipe list
+rc_visible_pos = 0			# position in visible part
+
+rc_marker = []				# list holding markers
+
+rc_background = None
+
 rc_stage = 0		#0: show all recipes; 1: show info of selected recipe (-1: go back; 2: mix recipe)
 def recipe_choose():
-	global rc_active, rc_btns, rc_pos, rc_stage
+	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_stage, rc_marker, rc_background
 
 	# entering the menu
 	if rc_active == False:
 		rc_active = True
 		rc_stage = 0
-		height = 64
+
+		# creating background
+		rc_background = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+		rc_background.start(repeat=True, audio=False)
+
+		# creating buttons
 		btn_size = (420, 40)
+		spacing = 20
+		height = (600 - (btn_size[1]*rc_visible_n) - (spacing*rc_visible_n-1))/2
 		rc_btns.clear()
-		for i in drinks.recipes:
+		for i in range(rc_visible_n):
 			rc_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 20, height, btn_size[0], btn_size[1]))
-			rc_btns[-1].add_text(i, gl.debug_font, (0,0,0), 1)
-			height += btn_size[1] + 15
+			height += btn_size[1] + spacing
+
+		# creating marker
+		rc_marker.clear()
+		rc_marker.append(media_lib.Button("/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 50, 220, 50, rotation=180))
+		rc_marker.append(media_lib.Button("/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 500, 220, 50))
+
 
 	# input
+	# go up or down
 	if rc_stage == 0:
 		if io.readInput(io.UP):
+			rc_visible_pos -= 1
 			rc_pos -= 1
 		if io.readInput(io.DOWN):
+			rc_visible_pos += 1
 			rc_pos += 1
 
 	# select menu item
-	if io.readInput(io.NEXT):
+	if io.readInput(io.NEXT) or io.readInput(io.RIGHT):
 		rc_stage += 1
 	# go back
-	if io.readInput(io.BACK):
+	if io.readInput(io.BACK) or io.readInput(io.LEFT):
 		rc_stage -= 1
 
 	# logic
 	# menu boundaries
+	# visible part
+	if rc_visible_pos < 0:
+		rc_visible_pos = 0
+	elif rc_visible_pos > rc_visible_n-1:
+		rc_visible_pos = rc_visible_n-1
+	# complete list
 	if rc_pos < 0:
 		rc_pos = 0
-	elif rc_pos > len(rc_btns)-1:
-		rc_pos = len(rc_btns)-1
+	elif rc_pos > len(drinks.recipes)-1:
+		rc_pos = len(drinks.recipes)-1
+	
+	# moving menu / setting correct text
+	a = rc_pos - rc_visible_pos 		# first visible item
+	for btn in rc_btns:
+		btn.add_text(drinks.recipes[a], gl.debug_font, (0,0,0), 1)
+		a += 1
+
+	# control marker
+	# upper marker
+	if rc_btns[0].text == drinks.recipes[0]:	# if first item in recipe-list is visible -> we are on the top of the list
+		rc_marker[0].disabled = True
+	else:
+		rc_marker[0].disabled = False
+	# lower marker
+	if rc_btns[-1].text == drinks.recipes[-1]:	# if last item in recipe-list is visible -> we are on the bottom of the list
+		rc_marker[1].disabled = True
+	else:
+		rc_marker[1].disabled = False
 
 	# selected item
 	for idx, btn in enumerate(rc_btns):
-		if idx == rc_pos:
+		if idx == rc_visible_pos:
 			btn.selected = True
 		else:
 			btn.selected = False
 	
-	# going back
-	if rc_stage == -1:
+	if rc_stage == -1:					# going back
 		gl.prog_pos = 'm'
 		rc_active = False
+	elif rc_stage == 2:					# start mixing
+		pass
 
 	# draw
-	gl.screen.fill((127,127,127))
-	if rc_stage == 0:
+	rc_background.draw()
+	if rc_stage == 0:					# list mode
 		for i in rc_btns:
 			i.draw()
+		for i in rc_marker:
+			i.draw()
+	elif rc_stage == 1:					# info mode
+		pass
+
+	# debug information
+	if gl.show_debug:
+		gl.debug_text.append("rc_pos: " + str(rc_pos) + " rc_visible_pos: " + str(rc_visible_pos))
 
 def recipe_output():
 	pass
