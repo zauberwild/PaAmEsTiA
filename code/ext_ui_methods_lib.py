@@ -248,7 +248,9 @@ def recipe_choose():
 
 	# debug information
 	if gl.show_debug:
-		gl.debug_text.append("rc_pos: " + str(rc_pos) + " rc_visible_pos: " + str(rc_visible_pos))
+		gl.debug_text.append("rc_pos: " + str(rc_pos) + 
+							" rc_visible_pos: " + str(rc_visible_pos) + 
+							" rc_stage: " + str(rc_stage))
 
 def recipe_output():
 	pass
