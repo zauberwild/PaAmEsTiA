@@ -41,6 +41,11 @@ for idx, i in enumerate(drinks):						# remove trailing newline characters
 for filename in os.listdir(gl.gen_path + "/src/recipes"):
 	recipes.append(filename)
 
+# sort lists
+if gl.os_is_linux:
+	drinks.sort()
+	recipes.sort()
+
 """ ### TEST AVAILABILITY ### """
 def _test_availability(recipe):
 	""" tests if the needed drink for a recipe are plugged in. returns bool
