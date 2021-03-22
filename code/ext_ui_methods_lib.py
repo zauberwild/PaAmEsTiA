@@ -10,16 +10,14 @@ import io_lib as io
 """ ### ### SETUP / LOOP ### ### """
 """ actions that need to be executed once on startup are here 
 	This includes object creation, reading files in, etc.
+	# DEL if not needed
 """
-
-# intro
-
 
 """ EOF SETUP """
 
 def loop():
-	""" actions that need to be executed every loop (independently from prog_pos are here)
-		this method will be called before any other actions in the main loop
+	""" actions that need to be executed every loop (independently from prog_pos) are here.
+		this function will be called before any other actions in the main loop
 	"""
 	io.keyboard_input()		# keyboard input
 	io.update_input()		# button input
@@ -39,17 +37,20 @@ def loop():
 			i_s = "I: next: " + str(int(io.readInput(io.NEXT))) + "; back: " + str(int(io.readInput(io.BACK)))
 			gl.debug_text.append(i_s)
 
+
+
+
 """ ### ### INTRO / MAIN MENU ### ### """
 intro_active = False
 
 introduction_vid = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
 
 def intro():
-	gl.prog_pos = 'm'		# DEL as soon as intro needed again
+	gl.prog_pos = 'm'		# DEL as soon as intro is needed again
 
 	global intro_active, introduction_vid
 
-	if intro_active == False:
+	if intro_active == False:		# setup
 		intro_active = True
 		introduction_vid.start(audio=False)			# start intro
 	
@@ -58,6 +59,7 @@ def intro():
 	if introduction_vid.test_for_last_frame():			# test if intro is ending
 		intro_active = False
 		gl.prog_pos = 'm'
+
 
 menu_active = False
 menu_btns = []
@@ -68,6 +70,7 @@ def main_menu():
 	
 	if menu_active == False:			# setup
 		menu_active = True
+		# creating the buttons for the main menu
 		menu_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_green.png"	, "prop_grey.png", 150, 69, 500, 64))
 		menu_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_blue.png"	, "prop_grey.png", 150, 202, 500, 64))
 		menu_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_yellow.png", "prop_grey.png", 150, 335, 500, 64))
@@ -111,10 +114,17 @@ def main_menu():
 
 	# draw
 	gl.screen.fill((127,127,127))
+
+	# for each button in list
 	for btn in menu_btns:
 		btn.draw()
 
-	gl.debug_text.append("menu_pos: " + str(menu_pos))
+	# append debug information
+	if gl.show_debug:
+		gl.debug_text.append("menu_pos: " + str(menu_pos))
+
+
+
 
 """ ### ### FREE MIXING ### ### """
 def free_transition():
@@ -125,6 +135,8 @@ def free_choose():
 
 def free_output():
 	pass
+
+
 
 
 """ ### ### RECIPE ### ### """
@@ -256,9 +268,13 @@ def recipe_output():
 	pass
 
 
+
+
 """ ### ### SETTINGS ### ### """
 def settings():
 	pass
+
+
 
 """ ### SHUTDOWN ### """
 def shutdown():
