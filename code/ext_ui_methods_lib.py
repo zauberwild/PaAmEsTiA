@@ -58,6 +58,7 @@ def intro():
 
 	if introduction_vid.test_for_last_frame():			# test if intro is ending
 		intro_active = False
+		introduction_vid = None
 		gl.prog_pos = 'm'
 
 
@@ -94,7 +95,7 @@ def main_menu():
 		elif menu_pos == 1:
 			gl.prog_pos = 'ft'
 		elif menu_pos == 2:
-			gl.prog_pos = 's'
+			gl.prog_pos = 'st'
 		elif menu_pos == 3:
 			gl.prog_pos = 'q'
 	
@@ -130,7 +131,6 @@ def main_menu():
 ft_active = False
 ft_video = None
 def free_transition():
-	gl.prog_pos = 'fc'
 	global ft_active, ft_video
 
 	if ft_active == False:
@@ -157,7 +157,6 @@ def free_output():
 rt_active = False
 rt_video = None
 def recipe_transition():
-	global rt_active
 	gl.prog_pos ='rc'			# DEL when finished
 	global rt_active, rt_video
 
@@ -168,7 +167,6 @@ def recipe_transition():
 
 	rt_video.draw()
 
-	gl.prog_pos = 'rc'
 	if rt_video.test_for_last_frame():
 		rt_video = None
 		gl.prog_pos = 'rc'
@@ -184,8 +182,10 @@ rc_marker = []				# list holding markers
 rc_background = None
 
 rc_stage = 0		#0: show all recipes; 1: show info of selected recipe (-1: go back; 2: mix recipe)
+rc_info_textfield = None			# holds a textfield as soon stage is set to showing info
+
 def recipe_choose():
-	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_stage, rc_marker, rc_background
+	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_stage, rc_marker, rc_background, rc_info_textfield
 
 	# entering the menu
 	if rc_active == False:
@@ -213,7 +213,7 @@ def recipe_choose():
 
 	# input
 	# go up or down
-	if rc_stage == 0:
+	if rc_stage == 0:					# ony if in list mode
 		if io.readInput(io.UP):
 			rc_visible_pos -= 1
 			rc_pos -= 1
@@ -221,10 +221,10 @@ def recipe_choose():
 			rc_visible_pos += 1
 			rc_pos += 1
 
-	# select menu item
+	# select menu item / start mixing
 	if io.readInput(io.NEXT) or io.readInput(io.RIGHT):
 		rc_stage += 1
-	# go back
+	# go back to menu / list
 	if io.readInput(io.BACK) or io.readInput(io.LEFT):
 		rc_stage -= 1
 
@@ -265,7 +265,23 @@ def recipe_choose():
 			btn.selected = True
 		else:
 			btn.selected = False
-	
+
+	# showing info
+	if rc_stage == 1 and not rc_info_textfield:
+		chosen_recipe = None			# find the chosen recipe
+		for btn in rc_btns:
+			if btn.selected:
+				chosen_recipe = btn.text
+		file = open(gl.gen_path + "/src/recipes/" + chosen_recipe, 'r')
+
+		text = file.readline()		# read the first line (info about recipe)
+		rc_info_textfield = media_lib.TextField(0, 0, 100, 100, text, gl.debug_font)		# create textfield
+		rc_info_textfield.add_background("/src/props/", "prop_yellow")
+	# disabling info
+	if rc_stage == 0 and rc_info_textfield:
+		rc_info_textfield = None
+			
+	# navigating back and forwards
 	if rc_stage == -1:					# going back
 		gl.prog_pos = 'm'
 		rc_active = False
@@ -280,7 +296,7 @@ def recipe_choose():
 		for i in rc_marker:
 			i.draw()
 	elif rc_stage == 1:					# info mode
-		pass
+		rc_info_textfield.draw()
 
 	# debug information
 	if gl.show_debug:
