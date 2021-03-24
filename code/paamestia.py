@@ -50,7 +50,10 @@ while gl.prog_active:
 			ui.recipe_output()
 
 	elif gl.prog_pos[0] == 's':			# settings
-		ui.settings()
+		if gl.prog_pos[1] == 't':			# transition
+			ui.settings_transition()
+		else:								# settings. no exact prog_pos give, because there are different prog_pos's handled in ui.settings()
+			ui.settings()
 	
 	elif gl.prog_pos[0] == 'q':			# quit / shutdown
 		ui.shutdown()
