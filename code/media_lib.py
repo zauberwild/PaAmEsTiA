@@ -324,6 +324,35 @@ class Video:
 		return self.frame_counter == self.frames
 
 
+
+class TextField:
+	""" this class shows a textfield in a given space. 
+	It allows different alignments (center, left, right) and automatic text breaks
+	"""
+
+	x, y, width, height = 0, 0, 0, 0
+
+	lines = []
+
+	background = None
+
+	def __init__(self, x, y, width, height, text, font, alignment=0):
+		self.x, self.y = x, y							# save coordinates
+		self.width, self.height = width, height			# save size
+		
+		# create lines of text
+		words = text.split(" ")		# splitting the text in a list of words
+
+	def add_background(self, path, img):
+		path = gl.gen_path + path
+		print("######", path)
+		background = Button(path, img, img, img, self.x, self.y, self.width, self.height, direct_load=True)
+
+	def draw(self):
+		background.draw()
+
+
+
 # global variables for video-class:
 vlc_start_linux = "cvlc -f --no-video-title-show --play-and-exit --no-loop <path> &"			# command lines for vlc on various platforms
 vlc_kill_linux = "killall vlc"																	# <path> will be replaced with a path
