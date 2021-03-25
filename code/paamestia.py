@@ -88,6 +88,4 @@ while gl.prog_active:
 pygame.quit()
 
 if gl.os_is_linux:
-	# TODO [t2] perform shutdown of RasPi
-	from subprocess import call
-	call("sudo shutdown -h now", shell=True)
+	
