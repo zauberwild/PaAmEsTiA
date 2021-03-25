@@ -41,7 +41,7 @@ Der Rezept-Name wird vom Dateinamen vorgegeben und in der ersten Zeile stehen zu
 ##### media
 Beinhaltet die Video-Ordner und sonstige Mediendateien
 
-##### props / test / test_klein
+##### props, test und test_klein
 Beinhaltet Platzhalter-Dateien
 
 ---
