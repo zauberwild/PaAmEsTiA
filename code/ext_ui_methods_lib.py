@@ -163,7 +163,7 @@ def recipe_transition():
 	if rt_active == False:
 		rt_active = True
 		rt_video = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
-		rt_video.start()
+		rt_video.start(audio=False)
 
 	rt_video.draw()
 
@@ -272,11 +272,12 @@ def recipe_choose():
 		for btn in rc_btns:
 			if btn.selected:
 				chosen_recipe = btn.text
-		file = open(gl.gen_path + "/src/recipes/" + chosen_recipe, 'r')
-
+		file = open(gl .gen_path + "/src/recipes/" + chosen_recipe, 'r')
 		text = file.readline()		# read the first line (info about recipe)
-		rc_info_textfield = media_lib.TextField(0, 0, 100, 100, text, gl.debug_font)		# create textfield
-		rc_info_textfield.add_background("/src/props/", "prop_yellow")
+		file.close()
+		
+		rc_info_textfield = media_lib.TextField(50, 50, 400, 400, text, gl.debug_font, (0,0,255))		# create textfield
+		rc_info_textfield.add_background("/src/props/", "prop_yellow.png")
 	# disabling info
 	if rc_stage == 0 and rc_info_textfield:
 		rc_info_textfield = None
@@ -336,4 +337,5 @@ def settings():
 """ ### SHUTDOWN ### """
 def shutdown():
 	print("STOPPING PROGRAM")
-	gl.prog_active = False
+	from subprocess import call
+	call("sudo shutdown -h now", shell=True)
