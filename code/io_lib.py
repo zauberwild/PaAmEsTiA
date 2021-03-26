@@ -33,13 +33,12 @@ if gl.os_is_linux:								# create button objects to read gpio pins
 	UP_BT, DOWN_BT, LEFT_BT, RIGHT_BT, NEXT_BT, BACK_BT = Button(UP), Button(DOWN), Button(LEFT), Button(RIGHT), Button(NEXT), Button(BACK)
 
 def update_input():
-	""" update all input """
+	""" update all  / reads the input and stores it to be returned by read_input() """
 	global UP, DOWN, LEFT, RIGHT, NEXT, BACK, pygame_events
 	global up_state, down_state, left_state, right_state, next_state, back_state
 	global up_state_prev, down_state_prev, left_state_prev, right_state_prev, next_state_prev, back_state_prev
 	if gl.os_is_linux:
-		global UP_BT, DOWN_BT, LEFT_BT, RIGHT_BT, NEXT_BT, BACK_BT
-	
+		global UP_BT, DOWN_BT, LEFT_BT, RIGHT_BT, NEXT_BT, BACK_BT		
 	# refresh previous states
 	up_state_prev, down_state_prev, left_state_prev, right_state_prev, next_state_prev, back_state_prev = up_state, down_state, left_state, right_state, next_state, back_state
 
@@ -51,15 +50,23 @@ def update_input():
 		right_state	= not RIGHT_BT.is_pressed
 		next_state	= not NEXT_BT.is_pressed
 		back_state	= not BACK_BT.is_pressed
-								# for keyboard
+
+	# for keyboard
 	for event in pygame_events:
-		if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
-			if(event.key == pygame.K_UP):		up_state 	= not up_state
-			if(event.key == pygame.K_DOWN):		down_state 	= not down_state
-			if(event.key == pygame.K_LEFT):		left_state 	= not left_state
-			if(event.key == pygame.K_RIGHT):	right_state = not right_state
-			if(event.key == pygame.K_RETURN):	next_state 	= not next_state
-			if(event.key == pygame.K_DELETE):	back_state 	= not back_state
+		if event.type == pygame.KEYDOWN:		# if pressed down
+			if(event.key == pygame.K_UP):		up_state 	= True
+			if(event.key == pygame.K_DOWN):		down_state 	= True
+			if(event.key == pygame.K_LEFT):		left_state 	= True
+			if(event.key == pygame.K_RIGHT):	right_state = True
+			if(event.key == pygame.K_RETURN):	next_state 	= True
+			if(event.key == pygame.K_DELETE):	back_state 	= True
+		if event.type == pygame.KEYUP:			# if released
+			if(event.key == pygame.K_UP):		up_state 	= False
+			if(event.key == pygame.K_DOWN):		down_state 	= False
+			if(event.key == pygame.K_LEFT):		left_state 	= False
+			if(event.key == pygame.K_RIGHT):	right_state = False
+			if(event.key == pygame.K_RETURN):	next_state 	= False
+			if(event.key == pygame.K_DELETE):	back_state 	= False
 
 def readInput(input):
 	""" returns input states as bool
