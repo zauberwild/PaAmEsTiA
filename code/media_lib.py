@@ -9,7 +9,55 @@ import pygame, pygame.mixer		# used in Animation-Class for displaying sprites an
 import pygame.freetype			# used in Button class to show text
 import cv2 						# used in Video-Class for displaying videos
 import numpy as np 				# used by opencv
-import globals as gl
+import globals as gl			# imports global variables
+from itertools import chain		# utility for text wrapping
+
+def truncline(text, font, maxwidth):
+	real=len(text)
+	
+	stext=text
+	
+	#l=font.size(text)[0]
+
+	textsur, rect = font.render(text, (0,0,0))
+	l = rect.width
+
+	cut=0
+	a=0                  
+	done=1
+	old = None
+	while l > maxwidth:
+		a=a+1
+		n=text.rsplit(None, a)[0]
+		if stext == n:
+			cut += 1
+			stext= n[:-cut]
+		else:
+			stext = n
+		#l=font.size(stext)[0]
+
+		textsur, rect = font.render(stext, (0,0,0))
+		l=rect.width
+
+		real=len(stext)               
+		done=0                        
+	return real, done, stext             
+        
+def wrapline(text, font, maxwidth): 
+    done=0                      
+    wrapped=[]                  
+                               
+    while not done:             
+        nl, done, stext=truncline(text, font, maxwidth) 
+        wrapped.append(stext.strip())                  
+        text=text[nl:]                                 
+    return wrapped
+
+def wrap_multi_line(text, font, maxwidth):
+    """ returns text taking new lines into account.
+    """
+    lines = chain(*(wrapline(line, font, maxwidth) for line in text.splitlines()))
+    return list(lines)
 
 class Button:
 	""" class for drawing Buttons with different states """
@@ -335,22 +383,46 @@ class TextField:
 
 	lines = []
 
+	show_background = False
 	background = None
 
-	def __init__(self, x, y, width, height, text, font, alignment=0):
+	def __init__(self, x, y, width, height, text, font, font_col, alignment=0):
 		self.x, self.y = x, y							# save coordinates
-		self.width, self.height = width, height			# save size
+		self.width, self.height = width, height			# save 
+		self.alignment = alignment
+		self.font = font
+		self.font_color = font_col
 		
 		# create lines of text
-		words = text.split(" ")		# splitting the text in a list of words
+		self.lines = wrapline(text, font, width)		# splitting the text in a list of words
 
 	def add_background(self, path, img):
-		path = gl.gen_path + path
-		print("######", path)
-		background = Button(path, img, img, img, self.x, self.y, self.width, self.height, direct_load=True)
+		self.background = Button(path, img, img, img, self.x, self.y, self.width, self.height, direct_load=True)
+		self.show_background = True
 
 	def draw(self):
-		background.draw()
+		if self.show_background:
+			self.background.draw()
+
+		self.lines
+		
+		t_x, t_y = self.x, self.y
+		for text in self.lines:
+			
+			textsur, rect = self.font.render(text, self.font_color)	# render text
+			spacing = 15
+
+			if self.alignment == 0:				# position text based on hor_alignment, ver_alignment, button size and rectangle size of text
+				t_x += self.width/2 - rect.width/2
+			elif self.alignment == 1:
+				t_x += spacing
+			elif self.alignment == 2:
+				t_x += self.width - rect.width - spacing
+
+			gl.screen.blit(textsur, (t_x, t_y))		# finally blit it
+
+			t_y += rect.height + 5
+			t_x = self.x
 
 
 
