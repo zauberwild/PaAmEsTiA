@@ -46,7 +46,7 @@ intro_active = False
 introduction_vid = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
 
 def intro():
-	gl.prog_pos = 'm'		# DEL as soon as intro is needed again
+	gl.prog_pos = 'rc'		# DEL as soon as intro is needed again
 
 	global intro_active, introduction_vid
 
@@ -276,7 +276,7 @@ def recipe_choose():
 		text = file.readline()		# read the first line (info about recipe)
 		file.close()
 		
-		rc_info_textfield = media_lib.TextField(50, 50, 400, 400, text, gl.debug_font, (0,0,255))		# create textfield
+		rc_info_textfield = media_lib.TextField(50, 50, 400, 400, text, gl.debug_font, (0,0,255), alignment=1)		# create textfield
 		rc_info_textfield.add_background("/src/props/", "prop_yellow.png")
 	# disabling info
 	if rc_stage == 0 and rc_info_textfield:
