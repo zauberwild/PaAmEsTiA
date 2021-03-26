@@ -44,22 +44,22 @@ def update_input():
 	up_state_prev, down_state_prev, left_state_prev, right_state_prev, next_state_prev, back_state_prev = up_state, down_state, left_state, right_state, next_state, back_state
 
 	# read current state
-	if gl.os_is_linux:				# for the raspberry pi
+	if gl.os_is_linux:				# for the raspberry pi / buttons on gpio
 		up_state	= not UP_BT.is_pressed			# read every input
 		down_state	= not DOWN_BT.is_pressed
 		left_state	= not LEFT_BT.is_pressed
 		right_state	= not RIGHT_BT.is_pressed
 		next_state	= not NEXT_BT.is_pressed
 		back_state	= not BACK_BT.is_pressed
-	else:							# for windows / developing
-		for event in pygame_events:
-			if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
-				if(event.key == pygame.K_UP):		up_state 	= not up_state
-				if(event.key == pygame.K_DOWN):		down_state 	= not down_state
-				if(event.key == pygame.K_LEFT):		left_state 	= not left_state
-				if(event.key == pygame.K_RIGHT):	right_state = not right_state
-				if(event.key == pygame.K_RETURN):	next_state 	= not next_state
-				if(event.key == pygame.K_DELETE):	back_state 	= not back_state
+								# for keyboard
+	for event in pygame_events:
+		if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
+			if(event.key == pygame.K_UP):		up_state 	= not up_state
+			if(event.key == pygame.K_DOWN):		down_state 	= not down_state
+			if(event.key == pygame.K_LEFT):		left_state 	= not left_state
+			if(event.key == pygame.K_RIGHT):	right_state = not right_state
+			if(event.key == pygame.K_RETURN):	next_state 	= not next_state
+			if(event.key == pygame.K_DELETE):	back_state 	= not back_state
 
 def readInput(input):
 	""" returns input states as bool
