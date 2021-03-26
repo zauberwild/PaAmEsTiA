@@ -87,5 +87,4 @@ while gl.prog_active:
 
 pygame.quit()
 
-if gl.os_is_linux:
 	
