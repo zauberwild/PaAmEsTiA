@@ -406,11 +406,11 @@ class TextField:
 
 		self.lines
 		
-		t_x, t_y = self.x, self.y
+		spacing = 15
+		t_x, t_y = self.x, self.y + spacing
 		for text in self.lines:
 			
 			textsur, rect = self.font.render(text, self.font_color)	# render text
-			spacing = 15
 
 			if self.alignment == 0:				# position text based on hor_alignment, ver_alignment, button size and rectangle size of text
 				t_x += self.width/2 - rect.width/2
