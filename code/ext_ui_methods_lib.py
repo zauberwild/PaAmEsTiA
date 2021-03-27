@@ -13,6 +13,10 @@ import io_lib as io
 	# DEL if not needed
 """
 
+file = open(gl.gen_path + "/src/drinks")
+lines = file.readlines()
+for idx, val in enumerate(range(0,6)):
+	drinks.set_drink(idx, val)
 """ EOF SETUP """
 
 def loop():
@@ -276,7 +280,7 @@ def recipe_choose():
 		text = file.readline()		# read the first line (info about recipe)
 		file.close()
 		
-		rc_info_textfield = media_lib.TextField(50, 50, 400, 400, text, gl.debug_font, (0,0,255), alignment=1)		# create textfield
+		rc_info_textfield = media_lib.TextField(50, 50, 400, 400, text, gl.debug_font_small, (0,0,255), alignment=1)		# create textfield
 		rc_info_textfield.add_background("/src/props/", "prop_yellow.png")
 	# disabling info
 	if rc_stage == 0 and rc_info_textfield:
@@ -373,5 +377,7 @@ def settings():
 """ ### SHUTDOWN ### """
 def shutdown():
 	print("STOPPING PROGRAM")
-	from subprocess import call
-	call("sudo shutdown -h now", shell=True)
+	if gl.os_is_linux:
+		from subprocess import call
+		call("sudo shutdown -h now", shell=True)
+	gl.prog_active = False
