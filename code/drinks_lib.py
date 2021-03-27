@@ -141,15 +141,24 @@ def start_mixing(recipe):
 
 	if is_mixing:										# break, when there's already a recipe mixing
 		return
+	
+	print("[DR SM]", "1/4 no other recipe mixing")
 
 	if type(recipe) != int and type(recipe) != str:		# break when input type not correct
 		return
 
+	print("[DR SM]", "2/4 correct input type")
+
 	if type(recipe) == int:								# get recipe name when index given
 		recipe = recipes[recipe]
 	
+	print("[DR SM]", "3/4 got recipe name from index (if needed)")
+	
 	if not _test_availability(recipe):					# break when recipe not available
 		return
+	
+	print("[DR SM]", "4/4 recipe is available")
+	print("[DR SM]", "all checks passed, compiling recipe")
 	
 	file1 = open(dir_recipes + recipe, 'r')				# open file
 	steps = file1.readlines()							# save steps as a list
@@ -174,8 +183,8 @@ def start_mixing(recipe):
 		commands.append("c" + str(plug))				# close valve
 	
 	commands.append("e")					# end sign
-	print("DR SM compiling done")
-	print("DR commands:")
+	print("[DR SM] compiling done")
+	print("[DR SM] commands:")
 	for c in commands:
 		print(c)
  
@@ -190,19 +199,19 @@ def update_mixing():
 	if is_mixing:				# if a cocktail is currently mixed
 		cmd = commands[recipe_step]
 		if cmd[0] == 'o':					# open valve
-			print("DR UM open valve " + str(cmd[1]))
+			print("[DR UM] open valve " + str(cmd[1]))
 			io.writeOutput(io.VALVES[int(cmd[1])], 1)
 			io.writeOutput(io.PUMP, 1)
 			recipe_step += 1
 
 		elif cmd[0] == 'c':					# close valve
-			print("DR UM close valve " + str(cmd[1]))
+			print("[DR UM] close valve " + str(cmd[1]))
 			io.writeOutput(io.VALVES[int(cmd[1])], 0)
 			io.writeOutput(io.PUMP, 0)
 			recipe_step += 1
 
 		elif cmd[0] == 't':					# set timer
-			print("DR UM set timer " + str(float(cmd[1:]) / 1000.0))
+			print("[DR UM] set timer " + str(float(cmd[1:]) / 1000.0))
 			finishing_time = time.time() + (float(cmd[1:]) / 1000.0)
 			recipe_step += 1
 
@@ -212,7 +221,7 @@ def update_mixing():
 				recipe_step += 1
 				
 		elif cmd[0] == 'e':					# end sign
-			print("DR UM end mixing")		# stops the mixing process
+			print("[DR UM] end mixing")		# stops the mixing process
 			is_mixing = False	
 		
 
