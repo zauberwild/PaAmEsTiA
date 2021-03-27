@@ -287,7 +287,16 @@ def recipe_choose():
 		gl.prog_pos = 'm'
 		rc_active = False
 	elif rc_stage == 2:					# start mixing
-		pass
+		chosen_recipe = None			# find the chosen recipe
+		for btn in rc_btns:
+			if btn.selected:
+				chosen_recipe = btn.text
+		
+		drinks.start_mixing(chosen_recipe)		# start mixing procedure
+		if drinks.is_mixing:					# if really started
+			gl.prog_pos = 'ro'					# go to recipe output
+		else:
+			rc_stage = 1
 
 	# draw
 	rc_background.draw()
@@ -299,14 +308,41 @@ def recipe_choose():
 	elif rc_stage == 1:					# info mode
 		rc_info_textfield.draw()
 
+
+	# if leaving recipe choose, clean up variables
+	if gl.prog_pos != 'rc':
+		rc_active = False
+		rc_btns.clear()
+		rc_stage = 0
+		rc_marker.clear()
+		rc_background = None
+		rc_info_textfield = None
+
 	# debug information
 	if gl.show_debug:
 		gl.debug_text.append("rc_pos: " + str(rc_pos) + 
 							"; rc_visible_pos: " + str(rc_visible_pos) + 
 							"; rc_stage: " + str(rc_stage))
 
+ro_active = False
+ro_background = None
 def recipe_output():
-	pass
+	global ro_active, ro_background
+
+	if not ro_active:		# if first entering recipe output
+		ro_active = True
+		ro_background = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+		ro_background.start(audio=False, repeat=True)
+		print("[UI RO] now mixing")
+
+	ro_background.draw()
+
+
+	if not drinks.is_mixing:		# if leaving recipe_output
+		print("[UI RO] mixing done")
+		ro_active = False
+		ro_background = None
+		gl.prog_pos = 'rc'
 
 
 
