@@ -181,6 +181,8 @@ rc_btns = []				# list holding the recipes buttons
 rc_pos = 0					# position of selection in complete recipe list
 rc_visible_pos = 0			# position in visible part
 
+rc_recipes = []				# list of all recipes, sorted after availability, than alphabetically
+
 rc_marker = []				# list holding markers
 
 rc_background = None
@@ -189,12 +191,19 @@ rc_stage = 0		#0: show all recipes; 1: show info of selected recipe (-1: go back
 rc_info_textfield = None			# holds a textfield as soon stage is set to showing info
 
 def recipe_choose():
-	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_stage, rc_marker, rc_background, rc_info_textfield
+	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_recipes, rc_stage, rc_marker, rc_background, rc_info_textfield
 
 	# entering the menu
 	if rc_active == False:
 		rc_active = True
 		rc_stage = 0
+
+		# filling recipe list
+		list1 = drinks.get_recipes(available=True)
+		list1.sort()
+		list2 = drinks.get_recipes(available=False)
+		list2.sort()
+		rc_recipes = list1 + list2
 
 		# creating background
 		rc_background = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
@@ -242,23 +251,23 @@ def recipe_choose():
 	# complete list
 	if rc_pos < 0:
 		rc_pos = 0
-	elif rc_pos > len(drinks.recipes)-1:
-		rc_pos = len(drinks.recipes)-1
+	elif rc_pos > len(rc_recipes)-1:
+		rc_pos = len(rc_recipes)-1
 	
 	# moving menu / setting correct text
 	a = rc_pos - rc_visible_pos 		# first visible item
 	for btn in rc_btns:
-		btn.add_text(drinks.recipes[a], gl.debug_font, (0,0,0), 1)
+		btn.add_text(rc_recipes[a], gl.debug_font, (0,0,0), 1)
 		a += 1
 
 	# control marker
 	# upper marker
-	if rc_btns[0].text == drinks.recipes[0]:	# if first item in recipe-list is visible -> we are on the top of the list
+	if rc_btns[0].text == rc_recipes[0]:	# if first item in recipe-list is visible -> we are on the top of the list
 		rc_marker[0].disabled = True
 	else:
 		rc_marker[0].disabled = False
 	# lower marker
-	if rc_btns[-1].text == drinks.recipes[-1]:	# if last item in recipe-list is visible -> we are on the bottom of the list
+	if rc_btns[-1].text == rc_recipes[-1]:	# if last item in recipe-list is visible -> we are on the bottom of the list
 		rc_marker[1].disabled = True
 	else:
 		rc_marker[1].disabled = False
@@ -321,6 +330,7 @@ def recipe_choose():
 		rc_marker.clear()
 		rc_background = None
 		rc_info_textfield = None
+		rc_recipes.clear()
 
 	# debug information
 	if gl.show_debug:
