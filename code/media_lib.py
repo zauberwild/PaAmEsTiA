@@ -98,13 +98,9 @@ class Button:
 	
 	def load_image(self):
 		""" loads image as pygame.Surfaces """
-		self.img_normal 	= pygame.transform.scale(pygame.image.load(self.path_normal)	, (self.width, self.height))
-		self.img_disabled 	= pygame.transform.scale(pygame.image.load(self.path_disabled)	, (self.width, self.height))
-		self.img_selected 	= pygame.transform.scale(pygame.image.load(self.path_selected)	, (self.width, self.height))
-		if self.rotation != 0:
-			self.img_normal 	= pygame.transform.rotate(self.img_normal	, self.rotation)
-			self.img_disabled 	= pygame.transform.rotate(self.img_disabled	, self.rotation)
-			self.img_selected 	= pygame.transform.rotate(self.img_selected	, self.rotation)
+		self.img_normal		= Image(self.path_normal	, self.x, self.y, self.width, self.height, self.rotation)
+		self.img_disabled	= Image(self.path_disabled	, self.x, self.y, self.width, self.height, self.rotation)
+		self.img_selected	= Image(self.path_selected	, self.x, self.y, self.width, self.height, self.rotation)
 		self.show = True
 	
 	def unload_image(self):
@@ -121,12 +117,12 @@ class Button:
 
 		if self.show:			# draw image based on settings
 			if self.disabled:
-				gl.screen.blit(self.img_disabled, (self.x, self.y))
+				self.img_disabled.draw()
 			else:
 				if self.selected:
-					gl.screen.blit(self.img_selected, (self.x, self.y))
+					self.img_selected.draw()
 				else:
-					gl.screen.blit(self.img_normal, (self.x, self.y))
+					self.img_normal.draw()
 			
 			if self.show_text:
 				t_x, t_y = self.x, self.y
@@ -428,8 +424,13 @@ class TextField:
 		# create lines of text
 		self.lines = wrapline(text, font, width)		# splitting the text in a list of words
 
-	def add_background(self, path, img):
-		self.background = Button(path, img, img, img, self.x, self.y, self.width, self.height, direct_load=True)
+	def add_background(self, path):
+		""" add a background image
+		- path:	complete path to image file
+		"""
+
+		# the background is added as a Button object with only one image shown
+		self.background = Image(path, self.x, self.y, self.width, self.height)
 		self.show_background = True
 
 	def draw(self):
