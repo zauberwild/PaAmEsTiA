@@ -12,52 +12,9 @@ import numpy as np 				# used by opencv
 import globals as gl			# imports global variables
 from itertools import chain		# utility for text wrapping
 
-def truncline(text, font, maxwidth):
-	real=len(text)
-	
-	stext=text
-	
-	#l=font.size(text)[0]
 
-	textsur, rect = font.render(text, (0,0,0))
-	l = rect.width
 
-	cut=0
-	a=0                  
-	done=1
-	old = None
-	while l > maxwidth:
-		a=a+1
-		n=text.rsplit(None, a)[0]
-		if stext == n:
-			cut += 1
-			stext= n[:-cut]
-		else:
-			stext = n
-		#l=font.size(stext)[0]
 
-		textsur, rect = font.render(stext, (0,0,0))
-		l=rect.width
-
-		real=len(stext)               
-		done=0                        
-	return real, done, stext             
-        
-def wrapline(text, font, maxwidth): 
-    done=0                      
-    wrapped=[]                  
-                               
-    while not done:             
-        nl, done, stext=truncline(text, font, maxwidth) 
-        wrapped.append(stext.strip())                  
-        text=text[nl:]                                 
-    return wrapped
-
-def wrap_multi_line(text, font, maxwidth):
-    """ returns text taking new lines into account.
-    """
-    lines = chain(*(wrapline(line, font, maxwidth) for line in text.splitlines()))
-    return list(lines)
 
 class Button:
 	""" class for drawing Buttons with different states """
@@ -372,6 +329,52 @@ class Video:
 	def test_for_last_frame(self):
 		return self.frame_counter == self.frames
 
+
+"""
+The following two functions are used by the textfield class.
+They are copied from the pygame wiki and slightly modified.
+Source: http://www.pygame.org/wiki/TextWrapping?parent=CookBook
+"""
+def truncline(text, font, maxwidth):
+	real=len(text)
+	
+	stext=text
+	
+	#l=font.size(text)[0]
+
+	textsur, rect = font.render(text, (0,0,0))
+	l = rect.width
+
+	cut=0
+	a=0                  
+	done=1
+	old = None
+	while l > maxwidth:
+		a=a+1
+		n=text.rsplit(None, a)[0]
+		if stext == n:
+			cut += 1
+			stext= n[:-cut]
+		else:
+			stext = n
+		#l=font.size(stext)[0]
+
+		textsur, rect = font.render(stext, (0,0,0))
+		l=rect.width
+
+		real=len(stext)               
+		done=0                        
+	return real, done, stext             
+        
+def wrapline(text, font, maxwidth): 
+    done=0                      
+    wrapped=[]                  
+                               
+    while not done:             
+        nl, done, stext=truncline(text, font, maxwidth) 
+        wrapped.append(stext.strip())                  
+        text=text[nl:]                                 
+    return wrapped
 
 
 class TextField:
