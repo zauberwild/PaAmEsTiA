@@ -3,14 +3,12 @@ contains class for graphics, animations and videos
 """
 
 import os						# used to scan for files and to execute commands from a commandline
-from random import randint
 from sys import path		# random function to get random list index in video class
 import pygame, pygame.mixer		# used in Animation-Class for displaying sprites and playing audio files
 import pygame.freetype			# used in Button class to show text
 import cv2 						# used in Video-Class for displaying videos
 import numpy as np 				# used by opencv
 import globals as gl			# imports global variables
-from itertools import chain		# utility for text wrapping
 
 
 
@@ -406,8 +404,6 @@ class TextField:
 	def draw(self):
 		if self.show_background:
 			self.background.draw()
-
-		self.lines
 		
 		spacing = 15
 		t_x, t_y = self.x, self.y + spacing
@@ -426,3 +422,6 @@ class TextField:
 
 			t_y += rect.height + 5
 			t_x = self.x
+
+
+""" VLCVideo class deleted. Commit: 2a1128a723551cc48cc0ad81b7ee75fbd4958f82 """
