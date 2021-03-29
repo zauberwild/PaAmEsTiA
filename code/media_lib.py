@@ -10,8 +10,29 @@ import cv2 						# used in Video-Class for displaying videos
 import numpy as np 				# used by opencv
 import globals as gl			# imports global variables
 
+class Image:
+	""" can be used to easily display single images
+	"""
 
+	def __init__(self, path, x, y, width, height, rotation=0, show=True):
+		""" create single sprites and easily display them
+		- path:	complete path to the image file
+		- x:	position on x-axis
+		- y:	position on y-axis
+		- width:	width of image (doesn't have to be as the original files, image can be stretched)
+		- height:	height of image ( -- '' --)
+		- rotation=0:	set a certain rotation to the image (optional)
+		- show=True:	don't display image directly, when set to False
+		"""
+		self.img = pygame.transform.scale(pygame.image.load(path), (width, height))
+		self.x, self.y = x, y
+		if rotation != 0:
+			self.img = pygame.transform.rotate(self.img, rotation)
+		self.show = show
 
+	def draw(self):
+		if self.show:
+			gl.screen.blit(self.img, (self.x, self.y))
 
 
 class Button:
