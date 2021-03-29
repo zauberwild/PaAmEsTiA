@@ -185,10 +185,10 @@ rc_recipes = []				# list of all recipes, sorted after availability, than alphab
 
 rc_marker = []				# list holding markers
 
-rc_background = None
+rc_background = None		# video in the background
 
-rc_stage = 0		#0: show all recipes; 1: show info of selected recipe (-1: go back; 2: mix recipe)
-rc_info_textfield = None			# holds a textfield as soon stage is set to showing info
+rc_stage = 0				#0: show all recipes; 1: show info of selected recipe (-1: go back; 2: mix recipe)
+rc_info_textfield = None	# holds a textfield as soon stage is set to showing info
 
 def recipe_choose():
 	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_recipes, rc_stage, rc_marker, rc_background, rc_info_textfield
@@ -290,7 +290,8 @@ def recipe_choose():
 		file.close()
 		
 		rc_info_textfield = media_lib.TextField(50, 50, 400, 400, text, gl.debug_font_small, (0,0,255), alignment=1)		# create textfield
-		rc_info_textfield.add_background("/src/props/", "prop_yellow.png")
+		rc_info_textfield.add_background(gl.gen_path + "/src/props/prop_yellow.png")
+		
 	# disabling info
 	if rc_stage == 0 and rc_info_textfield:
 		rc_info_textfield = None
