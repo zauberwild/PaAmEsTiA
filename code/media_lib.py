@@ -3,7 +3,7 @@ contains class for graphics, animations and videos
 """
 
 import os						# used to scan for files and to execute commands from a commandline
-from sys import path		# random function to get random list index in video class
+from sys import path			# random function to get random list index in video class
 import pygame, pygame.mixer		# used in Animation-Class for displaying sprites and playing audio files
 import pygame.freetype			# used in Button class to show text
 import cv2 						# used in Video-Class for displaying videos
@@ -86,8 +86,8 @@ class Button:
 		- text: text to show [String]
 		- font: font
 		- col: color to use (R, G, B)
-		- hor_alignment=0: hor_alignment (0 = center, 1 = left, 2 = right)
-		- ver_alignment=0: hor_alignment (0 = center, 1 = up, 2 = down)
+		- hor_alignment=0: horicontal alignment (0 = center, 1 = left, 2 = right)
+		- ver_alignment=0: vertical alignment (0 = center, 1 = up, 2 = down)
 		"""
 		self.show_text = True
 		self.text = text
@@ -398,7 +398,7 @@ def wrapline(text, font, maxwidth):
 
 class TextField:
 	""" this class shows a textfield in a given space. 
-	It allows different alignments (center, left, right) and automatic text breaks
+	It allows different alignments (center, left, right) and automatic text wrapping
 	"""
 
 	x, y, width, height = 0, 0, 0, 0
@@ -408,7 +408,17 @@ class TextField:
 	show_background = False
 	background = None
 
-	def __init__(self, x, y, width, height, text, font, font_col, alignment=0):
+	def __init__(self, x, y, width, height, text, font, font_col, alignment=1):
+		""" creates text in agiven space
+		- x:	x-Position
+		- y:	y-position
+		- width:	width of textfield
+		- height:	height of textfield
+		- text:	the text you want to display
+		- font:	the to be used
+		- font_col:	color in RGB-format as a tuple
+		- alignment=1: horizontal alignment (0 = center, 1 = left, 2 = right)
+		"""
 		self.x, self.y = x, y							# save coordinates
 		self.width, self.height = width, height			# save 
 		self.alignment = alignment
@@ -423,16 +433,20 @@ class TextField:
 		self.show_background = True
 
 	def draw(self):
+		""" draw the textfield
+		"""
+
+		# if background is used
 		if self.show_background:
 			self.background.draw()
 		
-		spacing = 15
-		t_x, t_y = self.x, self.y + spacing
-		for text in self.lines:
+		spacing = 15			# space between lines and padding on the sides
+		t_x, t_y = self.x, self.y + spacing		# set starting coordinates
+		for text in self.lines:					# for each line
 			
 			textsur, rect = self.font.render(text, self.font_color)	# render text
 
-			if self.alignment == 0:				# position text based on hor_alignment, ver_alignment, button size and rectangle size of text
+			if self.alignment == 0:				# position text based on alignment, field size and rectangle size of text
 				t_x += self.width/2 - rect.width/2
 			elif self.alignment == 1:
 				t_x += spacing
