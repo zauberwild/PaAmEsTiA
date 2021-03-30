@@ -196,7 +196,6 @@ def recipe_choose():
 	# entering the menu
 	if rc_active == False:
 		rc_active = True
-		rc_stage = 0
 
 		# filling recipe list
 		list1 = drinks.get_recipes(available=True)
@@ -224,7 +223,7 @@ def recipe_choose():
 		rc_marker.append(media_lib.Button("/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 500, 220, 50))
 
 
-	# input
+	""" input """
 	# go up or down
 	if rc_stage == 0:					# ony if in list mode
 		if io.readInput(io.UP):
@@ -241,7 +240,7 @@ def recipe_choose():
 	if io.readInput(io.BACK) or io.readInput(io.LEFT):
 		rc_stage -= 1
 
-	# logic
+	""" logic """
 	# menu boundaries
 	# visible part
 	if rc_visible_pos < 0:
@@ -289,7 +288,8 @@ def recipe_choose():
 		text = file.readline()		# read the first line (info about recipe)
 		file.close()
 		
-		rc_info_textfield = media_lib.TextField(50, 50, 400, 400, text, gl.debug_font_small, (0,0,255), alignment=1)		# create textfield
+		# create textfield
+		rc_info_textfield = media_lib.TextField(50, 50, 400, 400, text, gl.debug_font_small, (0,0,255), alignment=1)
 		rc_info_textfield.add_background(gl.gen_path + "/src/props/prop_yellow.png")
 		
 	# disabling info
