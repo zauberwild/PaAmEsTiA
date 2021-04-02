@@ -12,7 +12,7 @@ import time
 dir_recipes = gl.gen_path + "/src/recipes/"					# path to the recipe-directory
 
 """ ### STORAGE ### """
-plugs = ["cleaning_water", "", "", "", "", "", ""]			# stores the drinks plugged in
+plugs = ["cleaning_water", "", "", "", "", ""]				# stores the drinks plugged in
 
 drinks = []													# stores the available drinks to choose from
 
@@ -82,7 +82,7 @@ def set_drink(plug, drink):
 	"""
 	global drinks, plugs
 
-	if plug < 1 or plug > 6:
+	if plug < 1 or plug > len(plugs):
 		return					# break when wrong plug given
 
 	if not (type(drink) == int or type(drink) == str or drink is None):		# break when input type not correct

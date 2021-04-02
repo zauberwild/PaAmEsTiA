@@ -98,13 +98,13 @@ if not gl.os_is_linux:
 	except:
 		pass
 
-VALVES = [11, 0, 26, 19, 27, 22, 10]			# NOTE Valves: set corresponding pins here ([0] is the valve for water, then going from left to right)
+VALVES = [11, 0, 26, 19, 27, 22]			# NOTE Valves: set corresponding pins here ([0] is the valve for water, then going from left to right)
 PUMP = 9										#		Pump:  set pin for pump here
 if gl.os_is_linux:
 	from gpiozero import LED
-	VALVES_OUT = [LED(VALVES[0]), LED(VALVES[1]), LED(VALVES[2]), LED(VALVES[3]), LED(VALVES[4]), LED(VALVES[5]), LED(VALVES[6])]
+	VALVES_OUT = [LED(VALVES[0]), LED(VALVES[1]), LED(VALVES[2]), LED(VALVES[3]), LED(VALVES[4]), LED(VALVES[5])]
 	PUMP_OUT = LED(PUMP)
-valves_state = [False, False, False, False, False, False, False]			# states of the pins
+valves_state = [False, False, False, False, False, False]			# states of the pins
 pump_state = False
 
 def writeOutput(out, state):
@@ -118,7 +118,7 @@ def writeOutput(out, state):
 	if gl.os_is_linux:			# for the raspberry pi
 		keys = [(VALVES[0], VALVES_OUT[0]), (VALVES[1], VALVES_OUT[1]), (VALVES[2], VALVES_OUT[2]),
 				(VALVES[3], VALVES_OUT[3]), (VALVES[4], VALVES_OUT[4]), (VALVES[5], VALVES_OUT[5]),
-				(VALVES[6], VALVES_OUT[6]), (PUMP, PUMP_OUT)]		# list of possible outputs and matching led objects
+				(PUMP, PUMP_OUT)]		# list of possible outputs and matching led objects
 		for key in keys:
 			if key[0] == out:
 				if state:
@@ -127,7 +127,7 @@ def writeOutput(out, state):
 					key[1].off()
 
 	else:						# for the windows machine
-		text = ""		# text to send to arduino. the text should contain two digits, the first one for the valve (0-7) or pump (8).
+		text = ""		# text to send to arduino. the text should contain two digits, the first one for the valve (0-5) or pump (7).
 						# The second is the state (1 = on, 0 = off).
 		# set valve / output
 		for idx, valve in enumerate(VALVES):
