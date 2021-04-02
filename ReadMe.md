@@ -43,4 +43,4 @@ In dieser Liste sind hauptsächlich nur die elektronischen und mechanischen Baut
 
 Filamente:  
 - [DasFilament PETG Anthrazit](https://www.dasfilament.de/filament-spulen/petg-1-75-mm/438/petg-filament-1-75-mm-anthrazit-v2?c=21)
-- [Janbex PLA Blau (nicht mehr in Blau verfügbar)](https://www.amazon.de/JANBEX-Filament-Rolle-Drucker-Vakuumverpackung/dp/B078SH5MT5/ref=sr_1_1_sspa?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=6GT7DGDS86IS&dchild=1&keywords=janbex+pla+filament+1%2C75+mm&qid=1617360971&sprefix=janbex%2Caps%2C209&sr=8-1-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzR1FKQkJTUFlBSEYwJmVuY3J5cHRlZElkPUExMDI0MjQwOUxYMDA5TEFLSzRKJmVuY3J5cHRlZEFkSWQ9QTA3Mzk1MjQyRkdVUjVBR1M0SU0wJndpZGdldE5hbWU9c3BfYXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==)
+- [Janbex PLA Blau](https://www.amazon.de/JANBEX-Filament-Drucker-Vakuumverpackung-Schwarz/dp/B08MC7LQZR/ref=sr_1_6?dchild=1&keywords=Janbex&qid=1617379500&sr=8-6&th=1)
