@@ -23,7 +23,7 @@ def keyboard_input():
 				if event.key == pygame.K_i:
 					gl.prog_pos = 'i'
 
-""" ### ### button input ### ### """
+""" ### ### INPUT ### ### """
 UP, DOWN, LEFT, RIGHT, NEXT, BACK = 14, 15, 21, 23, 24, 25		# NOTE Buttons: set corresponding pins here
 up_state, down_state, left_state, right_state, next_state, back_state = False, False, False, False, False, False			# saves pin state
 up_state_prev, down_state_prev, left_state_prev, right_state_prev, next_state_prev, back_state_prev = False, False, False, False, False, False			# saves previous pin state
@@ -87,7 +87,7 @@ def readInput(input):
 	
 	return is_pressed
 
-""" ### ### output ### ### """
+""" ### ### OUTPUT ### ### """
 serial_connected = False
 if not gl.os_is_linux:
 	import serial
