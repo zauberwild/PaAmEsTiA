@@ -1,6 +1,6 @@
 Paamestia
 =========
-_Teammitglieder: Schiemann, Dominik, André, Arvid (@zauberwild)_
+_Teammitglieder: Max, Dominik, André, Arvid (@zauberwild)_
 
 Info
 ----
