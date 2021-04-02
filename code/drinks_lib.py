@@ -24,6 +24,11 @@ recipe_step = 0					# stores the current step
 commands = []					# compiled command lines
 finishing_time = 0				# precalculated time, when the timer will be done
 
+""" functions """
+def current_milli_time():
+	# returns the current unix-time in milliseconds
+    return round(time.time() * 1000)
+
 
 """ ### SETUP ### """
 # this part will run once, as soon this file is imported somewhere
@@ -174,7 +179,7 @@ def start_mixing(recipe):
 	""" compile recipe """
 	for step in steps:								# compile step by step
 		list = step.split(',')							# [<drink>, <volume>]
-		time = int(list[1]) * gl.TIME_PER_ML			# calculate needed time
+		time = int(int(list[1]) * gl.TIME_PER_ML)			# calculate needed time	(in ms)
 		plug = plugs.index(list[0])						# get the plug
 
 		commands.append("o" + str(plug))				# open valve
@@ -211,12 +216,12 @@ def update_mixing():
 			recipe_step += 1
 
 		elif cmd[0] == 't':					# set timer
-			print("[DR UM] set timer " + str(float(cmd[1:]) / 1000.0))
-			finishing_time = time.time() + (float(cmd[1:]) / 1000.0)
+			print("[DR UM] set timer " + cmd[1:] + " ms")
+			finishing_time = current_milli_time() + int(cmd[1:])
 			recipe_step += 1
 
 		elif cmd[0] == 'w':					# wait
-			t = time.time()
+			t = current_milli_time()
 			if t >= finishing_time:				# if waited long enough, advance to next step
 				recipe_step += 1
 				
