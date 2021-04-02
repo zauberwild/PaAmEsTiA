@@ -148,8 +148,91 @@ def free_transition():
 		ft_video = None
 		gl.prog_pos = 'fc'
 
+fc_active = False
+fc_background = None
+fc_buttons = []
+fc_bars = []
+fc_sum_text = None
+
+fc_pos = 1			# position on the menu (0: go back, 1-5: drinks, 6: next)
+fc_values = []		# saves values for the drinks
+
 def free_choose():
-	pass
+	global fc_active, fc_background, fc_buttons, fc_bars, fc_pos, fc_values, fc_sum_text
+	
+	# entering free_choose
+	if fc_active == False:
+		fc_active = True
+		# set video background
+		fc_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+		fc_background.start(repeat=True, audio=False)
+
+		# set buttons
+			# go back
+		fc_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_grey.png", "prop_tri_green.png", "prop_white.png", 20, 500, 60, 60, rotation=270))
+		
+
+			# button with the drinks and bars
+		spacing = 50
+		btn_width, btn_height = 100, 60
+		btn_x, btn_y = spacing, 400
+		for i in drinks.plugs[1:]:
+			fc_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_white.png", btn_x, btn_y, btn_width, btn_height))
+			fc_buttons[-1].add_text(i, gl.debug_font_small, (255,0,0))
+
+			fc_bars.append("#TODO add the bars")
+			fc_values.append(0)
+			btn_x += btn_width + spacing
+
+		fc_buttons[fc_pos].selected = True
+
+			# next
+		fc_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_grey.png", "prop_tri_green.png", "prop_white.png", 800-60-20, 500, 60, 60, rotation=90))
+
+		# textfield for sum
+		fc_sum_text = media_lib.TextField(400-50, 20, 100, 45, "ph", gl.debug_font, (255,0,0), alignment=0)
+		fc_sum_text.add_background(gl.gen_path + "/src/props/prop_white.png")
+
+	""" logic / input """
+	# go left or right
+	if io.readInput(io.LEFT):
+		fc_buttons[fc_pos].selected = False
+		fc_pos -= 1
+		if fc_pos < 0:
+			fc_pos = 0
+		fc_buttons[fc_pos].selected = True
+	if io.readInput(io.RIGHT):
+		fc_buttons[fc_pos].selected = False
+		fc_pos += 1
+		if fc_pos > len(fc_buttons)-1:
+			fc_pos = len(fc_buttons)-1
+		fc_buttons[fc_pos].selected = True
+
+	# raising  / lowering values
+	interval = 10
+	sum_values = sum(fc_values)
+	if io.readInput(io.UP) and sum_values < 100:			# when raising a value, but sum is less than 100%
+		if fc_pos > 0 and fc_pos < len(fc_buttons)-1:
+			fc_values[fc_pos-1] += interval
+			if fc_values[fc_pos-1] > 100:
+				fc_values[fc_pos-1] = 100
+	if io.readInput(io.DOWN):
+		if fc_pos > 0 and fc_pos < len(fc_buttons)-1:
+			fc_values[fc_pos-1] -= interval
+			if fc_values[fc_pos-1] < 0:
+				fc_values[fc_pos-1] = 0
+
+	fc_sum_text.change_text(str(sum_values) + "%")
+
+	""" draw """
+	fc_background.draw()
+
+	fc_sum_text.draw()
+
+	for btn in fc_buttons:
+		btn.draw()
+
+	
 
 def free_output():
 	pass
