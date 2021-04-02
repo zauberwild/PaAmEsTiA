@@ -424,6 +424,9 @@ class TextField:
 		# create lines of text
 		self.lines = wrapline(text, font, width)		# splitting the text in a list of words
 
+	def change_text(self, text):
+		self.lines = wrapline(text, self.font, self.width)
+
 	def add_background(self, path):
 		""" add a background image
 		- path:	complete path to image file
