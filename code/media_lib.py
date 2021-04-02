@@ -40,7 +40,7 @@ class Button:
 
 	def __init__(self, path, img_normal, img_selected, img_disabled, x, y, width, height, direct_load=True, disabled=False, selected=False, rotation=0):
 		""" draw single sprites 
-		- path: path to folder with the files
+		- path: complete path to folder with the files
 		- img_normal, img_selected, img_disabled:
 			file names for the images
 		- x: x-position
@@ -51,7 +51,7 @@ class Button:
 		- disabled=False: set directly on disabled
 		- selected=False: set directly as selected
 		"""
-		path = gl.gen_path + path					# save paths
+		path = path					# save paths
 		self.path_normal 	= path + img_normal
 		self.path_disabled 	= path + img_disabled
 		self.path_selected 	= path + img_selected
@@ -153,9 +153,9 @@ class Animation:
 
 	def __init__(self, folder_path):
 		""" animation class. uses sprites do display a video
-		- folder_path: path to media folder
+		- folder_path: complete path to media folder
 		"""
-		self.path = gl.gen_path + folder_path
+		self.path = folder_path
 		self.w, self.h = pygame.display.get_surface().get_size()
 		# Images
 		self.img_path = []								# save all paths to the image files
@@ -280,9 +280,9 @@ class Video:
 
 	def __init__(self, file, audio_file):
 		""" video class. uses opencv to display a video
-		- files: list of file paths. by pressing play, one will be chosen randomly
+		- files: complete path to the file
 		"""
-		self.file = gl.gen_path + file					# add the directory path to the file names
+		self.file = file					# add the directory path to the file names
 		self.audio_file = gl.gen_path + audio_file
 
 		self.cap = None									# holds the Video-Capture-object for playing the file

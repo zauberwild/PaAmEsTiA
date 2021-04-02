@@ -47,7 +47,7 @@ def loop():
 """ ### ### INTRO / MAIN MENU ### ### """
 intro_active = False
 
-introduction_vid = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+introduction_vid = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
 
 def intro():
 	gl.prog_pos = 'rc'		# DEL as soon as intro is needed again
@@ -76,10 +76,10 @@ def main_menu():
 	if menu_active == False:			# setup
 		menu_active = True
 		# creating the buttons for the main menu
-		menu_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_green.png"	, "prop_grey.png", 150, 69, 500, 64))
-		menu_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_blue.png"	, "prop_grey.png", 150, 202, 500, 64))
-		menu_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_yellow.png", "prop_grey.png", 150, 335, 500, 64))
-		menu_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_red.png"	, "prop_grey.png", 150, 468, 500, 64))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png"	, "prop_grey.png", 150, 69, 500, 64))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_blue.png"	, "prop_grey.png", 150, 202, 500, 64))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_yellow.png", "prop_grey.png", 150, 335, 500, 64))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_red.png"	, "prop_grey.png", 150, 468, 500, 64))
 		menu_btns[0].add_text("REZEPT AUSWAEHLEN", gl.debug_font_big, (0,0,0), 0)
 		menu_btns[1].add_text("FREI MISCHEN", gl.debug_font_big, (0,0,0), 0)
 		menu_btns[2].add_text("EINSTELLUNGEN", gl.debug_font_big, (0,0,0), 0)
@@ -139,7 +139,7 @@ def free_transition():
 
 	if ft_active == False:
 		ft_active = True
-		ft_video = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+		ft_video = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
 		ft_video.start()
 
 	ft_video.draw()
@@ -166,7 +166,7 @@ def recipe_transition():
 
 	if rt_active == False:
 		rt_active = True
-		rt_video = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+		rt_video = media_lib.Video(gl. gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
 		rt_video.start(audio=False)
 
 	rt_video.draw()
@@ -205,7 +205,7 @@ def recipe_choose():
 		rc_recipes = list1 + list2
 
 		# creating background
-		rc_background = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+		rc_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
 		rc_background.start(repeat=True, audio=False)
 
 		# creating buttons
@@ -214,13 +214,13 @@ def recipe_choose():
 		height = (600 - (btn_size[1]*rc_visible_n) - (spacing*rc_visible_n-1))/2
 		rc_btns.clear()
 		for i in range(rc_visible_n):
-			rc_btns.append(media_lib.Button("/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 20, height, btn_size[0], btn_size[1]))
+			rc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 20, height, btn_size[0], btn_size[1]))
 			height += btn_size[1] + spacing
 
 		# creating marker
 		rc_marker.clear()
-		rc_marker.append(media_lib.Button("/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 50, 220, 50, rotation=180))
-		rc_marker.append(media_lib.Button("/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 500, 220, 50))
+		rc_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 50, 220, 50, rotation=180))
+		rc_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 500, 220, 50))
 
 
 	""" input """
@@ -370,7 +370,7 @@ def settings_transition():
 
 	if st_active == False:
 		st_active = True
-		st_video = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+		st_video = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
 		st_video.start()
 
 	st_video.draw()
