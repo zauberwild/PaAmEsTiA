@@ -463,4 +463,49 @@ class TextField:
 			t_x = self.x
 
 
+class Bar:
+
+	def __init__(self, path, x, y, width, height, state=0, rotation=0):
+		""" this class provides a bar (for example progress bar) with 11 states (0% - 100% in measures of 10%)
+		path:	complete path to folder with the sprites (named in the correct order (i.e. a.png to k.png), starting at 0%)
+		x:		x-coordinate of bar
+		y:		y-coordinate of bar
+		width:	width of bar
+		height:	height of bar
+		state=0:	the state of the bar (0-100, will be rounded to the next ten)
+		rotation=0:	add a rotation to the bar (if needed; going clockwise)
+
+		NOTE:the images need to be the same size as 100%, completely filling the area. If necessary, use the alpha channel.
+		"""
+
+		img_path = []								# save all paths to the image files
+		for filename in os.listdir(path):
+			img_path.append(path + filename)
+		img_path.sort()								# sort it, just to be safe
+
+		self.imgs = []								# creating the Image objects from the file paths
+		for i in img_path:	
+			self.imgs.append(Image(i, x, y, width, height, rotation, show=False))
+
+		self.x, self.y = x, y						# saving paramters
+		self.width, self.height = width, height
+
+		self.state = 0								# saves the state / progress
+		self.set_state(state)						# also, set the state
+
+	def set_state(self, state):
+		""" set the state of the bar to a new state. will be rounded to the next ten
+		state:	set the new state (0-100)
+		"""
+		self.imgs[self.state].show = False		# disables the current image
+		self.state = int(round(state/10))		# change to new image
+		self.imgs[self.state].show = True		# enable the new current Image
+
+	def draw(self):
+		""" draw the bar """
+		for i in self.imgs:
+			i.draw()				# draws all images, though only one is enbabled and will be actually drawn
+
+
+
 """ VLCVideo class deleted. Commit: 2a1128a723551cc48cc0ad81b7ee75fbd4958f82 """
