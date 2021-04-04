@@ -43,8 +43,9 @@ for idx, i in enumerate(drinks):						# remove trailing newline characters
 			drinks[idx] = drinks[idx][:-1]
 
 # look for recipes
-for filename in os.listdir(gl.gen_path + "/src/recipes"):
+for filename in os.listdir(dir_recipes):
 	recipes.append(filename)
+recipes.remove('free_mixed_recipe')				# sort the free mixed recipe, as it should not appear in the recipe list
 
 # sort lists
 if gl.os_is_linux:
