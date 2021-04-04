@@ -236,8 +236,26 @@ def free_choose():
 
 	
 
+	
+fo_active = False
+fo_background = None
 def free_output():
-	pass
+	global fo_active, fo_background
+
+	if not fo_active:		# if first entering recipe output
+		fo_active = True
+		fo_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+		fo_background.start(audio=False, repeat=True)
+		print("[UI FO] now mixing")
+
+	fo_background.draw()
+
+	if not drinks.get_still_mixing():
+		print("[UI FO] free mixing done")
+
+		fo_active = False
+		fo_background = None
+		gl.prog_pos = 'fc'
 
 
 
