@@ -26,8 +26,6 @@ def loop():
 	io.keyboard_input()		# keyboard input
 	io.update_input()		# button input
 
-	drinks.update_mixing()		# update mixing process
-
 	# debug information about input and output
 	if gl.show_debug:
 		if not gl.prog_pos == 'i':
@@ -249,6 +247,7 @@ def free_output():
 		print("[UI FO] now mixing")
 
 	fo_background.draw()
+	drinks.update_mixing()		# update mixing process
 
 	if not drinks.get_still_mixing():
 		print("[UI FO] free mixing done")
@@ -454,6 +453,7 @@ def recipe_output():
 		print("[UI RO] now mixing")
 
 	ro_background.draw()
+	drinks.update_mixing()		# update mixing process
 
 
 	if not drinks.is_mixing:		# if leaving recipe_output
