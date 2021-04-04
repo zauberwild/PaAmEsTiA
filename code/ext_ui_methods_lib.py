@@ -223,6 +223,8 @@ def free_choose():
 				fc_values[fc_pos-1] = 0
 
 	fc_sum_text.change_text(str(sum_values) + "%")
+				val = int((gl.GLASS_SIZE / 100) * val)							# converts the relative value (#HACK: from 0 to 100, not 0 to 1)
+																				# to an absolute value from 0 to gl.GLASS_SIZE using a linear function
 
 	""" draw """
 	fc_background.draw()
