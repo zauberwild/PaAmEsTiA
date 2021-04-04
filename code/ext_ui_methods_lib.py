@@ -48,7 +48,7 @@ intro_active = False
 introduction_vid = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
 
 def intro():
-	gl.prog_pos = 'rc'		# DEL as soon as intro is needed again
+	gl.prog_pos = 'fc'		# DEL as soon as intro is needed again
 
 	global intro_active, introduction_vid
 
@@ -146,14 +146,16 @@ def free_transition():
 		ft_video = None
 		gl.prog_pos = 'fc'
 
-fc_active = False
-fc_background = None
-fc_buttons = []
-fc_bars = []
-fc_sum_text = None
 
-fc_pos = 1			# position on the menu (0: go back, 1-5: drinks, 6: next)
-fc_values = []		# saves values for the drinks
+
+fc_active = False			# controls if free_choose is active or not
+fc_background = None		# saves the background video
+fc_buttons = []				# saves the buttons at the buttom
+fc_bars = []				# saves the (progress) bars
+fc_sum_text = None			# saves the textfield showing the sum of all drinks
+
+fc_pos = 1					# position on the menu (0: go back, 1-5: drinks, 6: next)
+fc_values = [0,0,0,0,0]		# saves values for the drinks
 
 def free_choose():
 	global fc_active, fc_background, fc_buttons, fc_bars, fc_pos, fc_values, fc_sum_text
@@ -166,26 +168,30 @@ def free_choose():
 		fc_background.start(repeat=True, audio=False)
 
 		# set buttons
-			# go back
+			# button: go back
 		fc_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_grey.png", "prop_tri_green.png", "prop_white.png", 20, 500, 60, 60, rotation=270))
 		
 
-			# button with the drinks and bars
+			# buttons with the drinks and bars
 		spacing = 50
 		btn_width, btn_height = 100, 60
 		btn_x, btn_y = spacing, 400
-		for i in drinks.plugs[1:]:
+		bar_y, bar_height = 100, 250
+		for e, i in enumerate(drinks.plugs[1:]):
+			# buttons
 			fc_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_white.png", btn_x, btn_y, btn_width, btn_height))
 			fc_buttons[-1].add_text(i, gl.debug_font_small, (255,0,0))
 
-			fc_bars.append("#TODO add the bars")
-			fc_values.append(0)
+			# bars
+			fc_bars.append(media_lib.Bar(gl.gen_path + "/src/props/bar/", btn_x, bar_y, btn_width, bar_height, state=fc_values[e]))
+			
+			# increase counter
 			btn_x += btn_width + spacing
 
-		fc_buttons[fc_pos].selected = True
-
-			# next
+			# button: next
 		fc_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_grey.png", "prop_tri_green.png", "prop_white.png", 800-60-20, 500, 60, 60, rotation=90))
+
+		fc_buttons[fc_pos].selected = True
 
 		# textfield for sum
 		fc_sum_text = media_lib.TextField(400-50, 20, 100, 45, "ph", gl.debug_font, (255,0,0), alignment=0)
@@ -209,30 +215,67 @@ def free_choose():
 	# raising  / lowering values
 	interval = 10
 	sum_values = sum(fc_values)
-	if io.readInput(io.UP) and sum_values < 100:			# when raising a value, but sum is less than 100%
-		if fc_pos > 0 and fc_pos < len(fc_buttons)-1:
+
+	if fc_pos > 0 and fc_pos < len(fc_buttons)-1:			# checking if a drink (and not go back / next) is selected
+		if io.readInput(io.UP) and sum_values < 100:			# when raising a value, but sum is less than 100%
 			fc_values[fc_pos-1] += interval
-			if fc_values[fc_pos-1] > 100:
+			if fc_values[fc_pos-1] > 100:					# upper boundary
 				fc_values[fc_pos-1] = 100
-	if io.readInput(io.DOWN):
-		if fc_pos > 0 and fc_pos < len(fc_buttons)-1:
+		if io.readInput(io.DOWN):
 			fc_values[fc_pos-1] -= interval
-			if fc_values[fc_pos-1] < 0:
+			if fc_values[fc_pos-1] < 0:						# lower boundary
 				fc_values[fc_pos-1] = 0
 
-	fc_sum_text.change_text(str(sum_values) + "%")
+		fc_bars[fc_pos-1].set_state(fc_values[fc_pos-1])	# set the new state for selected bar
+
+	fc_sum_text.change_text(str(sum_values) + "%")			# change the text for the summ of all drinks
+
+
+	# exiting the menu or start mixing
+	if io.readInput(io.BACK) or (io.readInput(io.NEXT) and fc_pos == 0):		# if back pressed or back selected
+		fc_active = False
+		gl.prog_pos = 'm'
+	if io.readInput(io.NEXT) and not fc_pos == 0:								# if next pressed and not back selected
+		file = open(drinks.dir_recipes + "free_mixed_recipe", 'w')				# open file
+		file.truncate(0)														# delete content
+		file.write("this file contains a self mixed recipe\n")					# write first line
+		for idx, val in enumerate(fc_values):									# for every drink with value more than zero,
+			if val > 0:
 				val = int((gl.GLASS_SIZE / 100) * val)							# converts the relative value (#HACK: from 0 to 100, not 0 to 1)
 																				# to an absolute value from 0 to gl.GLASS_SIZE using a linear function
+				text = str(drinks.plugs[idx]) + "," + str(val)					# prepare text
+				file.write(text+"\n")											# add to file with name and amount
+		file.close()															# close file
+
+		drinks.start_mixing("free_mixed_recipe")								# start the micing procedure with the freshly written file
+
+		fc_active = False				# also, leave this menu
+		gl.prog_pos = 'fo'				# and go to free_output
 
 	""" draw """
 	fc_background.draw()
 
 	fc_sum_text.draw()
 
+	for bar in fc_bars:
+		bar.draw()
+
 	for btn in fc_buttons:
 		btn.draw()
 
-	
+	""" if leaving this menu, clear all big variables/objects up """
+	if fc_active == False:
+		fc_background = None
+		fc_buttons.clear()
+		fc_bars.clear()
+		fc_sum_text = None
+
+	""" add debug info """
+	if gl.show_debug:
+		t = "fc_values: "
+		for i in fc_values:
+			t += str(i) + ", "
+		gl.debug_text.append(t)
 
 	
 fo_active = False
@@ -448,7 +491,7 @@ def recipe_output():
 
 	if not ro_active:		# if first entering recipe output
 		ro_active = True
-		ro_background = media_lib.Video("/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+		ro_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
 		ro_background.start(audio=False, repeat=True)
 		print("[UI RO] now mixing")
 
