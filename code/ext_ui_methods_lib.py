@@ -13,7 +13,6 @@ import io_lib as io
 	# DEL if not needed
 """
 
-
 file = open(gl.gen_path + "/src/drinks")
 lines = file.readlines()
 for idx, i in enumerate(lines):						# remove trailing newline characters
@@ -315,7 +314,6 @@ def free_output():
 rt_active = False
 rt_video = None
 def recipe_transition():
-	gl.prog_pos ='rc'			# DEL when finished
 	global rt_active, rt_video
 
 	if rt_active == False:
