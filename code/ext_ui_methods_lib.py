@@ -13,10 +13,18 @@ import io_lib as io
 	# DEL if not needed
 """
 
+
 file = open(gl.gen_path + "/src/drinks")
 lines = file.readlines()
-for idx, val in enumerate(range(0,6)):
+for idx, i in enumerate(lines):						# remove trailing newline characters
+	if lines[idx].endswith('\n'):
+		lines[idx] = lines[idx][:-1]
+print("[UI setup] drink file content:")
+print(lines)
+for idx, val in enumerate(lines):
 	drinks.set_drink(idx, val)
+
+
 """ EOF SETUP """
 
 def loop():

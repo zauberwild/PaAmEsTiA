@@ -41,6 +41,9 @@ file1.close()
 for idx, i in enumerate(drinks):						# remove trailing newline characters
 		if drinks[idx].endswith('\n'):
 			drinks[idx] = drinks[idx][:-1]
+			
+print("[DR setup] drink list  content:")
+print(drinks)
 
 # look for recipes
 for filename in os.listdir(dir_recipes):
@@ -88,17 +91,25 @@ def set_drink(plug, drink):
 	"""
 	global drinks, plugs
 
-	if plug < 1 or plug > len(plugs):
+	if plug < 1 or plug > len(plugs)-1:
 		return					# break when wrong plug given
+		
+	print("[DR SD] 1/4 valid plug given")
 
 	if not (type(drink) == int or type(drink) == str or drink is None):		# break when input type not correct
 		return
+		
+	print("[DR SD] 2/4 correct input type")
 
 	if type(drink) == int:		# get drink name when index given
 		drink = drinks[drink]
 	
+	print("[DR SD] 3/4 got drink name if necessarry")
+	
 	if not (drink in drinks or drink is None):
 		return					# break when drink is not available
+	
+	print("[DR SD] 4/4 drink is available")
 	
 	plugs[plug] = drink			# set drink on plug
 
