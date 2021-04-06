@@ -177,6 +177,7 @@ def free_choose():
 		btn_width, btn_height = 100, 60
 		btn_x, btn_y = spacing, 400
 		bar_y, bar_height = 100, 250
+		print(drinks.plugs)
 		for e, i in enumerate(drinks.plugs[1:]):
 			# buttons
 			fc_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_white.png", btn_x, btn_y, btn_width, btn_height))
