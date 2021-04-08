@@ -24,7 +24,7 @@ def keyboard_input():
 					gl.prog_pos = 'i'
 
 """ ### ### INPUT ### ### """
-UP, DOWN, LEFT, RIGHT, NEXT, BACK = 14, 15, 21, 23, 24, 25		# NOTE Buttons: set corresponding pins here
+UP, DOWN, LEFT, RIGHT, NEXT, BACK = 14, 15, 21, 10, 24, 25		# NOTE Buttons: set corresponding pins here
 up_state, down_state, left_state, right_state, next_state, back_state = False, False, False, False, False, False			# saves pin state
 up_state_prev, down_state_prev, left_state_prev, right_state_prev, next_state_prev, back_state_prev = False, False, False, False, False, False			# saves previous pin state
 
@@ -98,7 +98,7 @@ if not gl.os_is_linux:
 	except:
 		pass
 
-VALVES = [11, 0, 26, 19, 27, 22]			# NOTE Valves: set corresponding pins here ([0] is the valve for water, then going from left to right)
+VALVES = [23, 0, 26, 19, 27, 22]			# NOTE Valves: set corresponding pins here ([0] is the valve for water, then going from left to right)
 PUMP = 9										#		Pump:  set pin for pump here
 if gl.os_is_linux:
 	from gpiozero import LED
@@ -121,7 +121,7 @@ def writeOutput(out, state):
 				(PUMP, PUMP_OUT)]		# list of possible outputs and matching led objects
 		for key in keys:
 			if key[0] == out:
-				if state:
+				if state == True:
 					key[1].on()
 				else:
 					key[1].off()
