@@ -3,7 +3,7 @@ contains class for graphics, animations and videos
 """
 
 import os						# used to scan for files and to execute commands from a commandline
-from sys import path			# random function to get random list index in video class
+#from sys import path			# random function to get random list index in video class
 import pygame, pygame.mixer		# used in Animation-Class for displaying sprites and playing audio files
 import pygame.freetype			# used in Button class to show text
 import cv2 						# used in Video-Class for displaying videos
