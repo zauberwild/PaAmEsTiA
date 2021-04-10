@@ -41,9 +41,9 @@ def loop():
 				i_s += str(int(i)) + "; "
 			i_s += str(int(io.pump_state))
 			gl.debug_text.append(i_s)
-			i_s = "I: up: " + str(int(io.readInput(io.UP))) + "; down: " + str(int(io.readInput(io.DOWN))) + "; left: " + str(int(io.readInput(io.LEFT))) + "; right: " + str(int(io.readInput(io.RIGHT))) + ";"
+			i_s = "I: up: " + str(int(io.read_input(io.UP))) + "; down: " + str(int(io.read_input(io.DOWN))) + "; left: " + str(int(io.read_input(io.LEFT))) + "; right: " + str(int(io.read_input(io.RIGHT))) + ";"
 			gl.debug_text.append(i_s)
-			i_s = "I: next: " + str(int(io.readInput(io.NEXT))) + "; back: " + str(int(io.readInput(io.BACK)))
+			i_s = "I: next: " + str(int(io.read_input(io.NEXT))) + "; back: " + str(int(io.read_input(io.BACK)))
 			gl.debug_text.append(i_s)
 
 
@@ -92,13 +92,13 @@ def main_menu():
 	
 	# input
 	# go up or down
-	if io.readInput(io.UP):
+	if io.read_input(io.UP):
 		menu_pos -= 1
-	if io.readInput(io.DOWN):
+	if io.read_input(io.DOWN):
 		menu_pos += 1
 
 	# select menu item
-	if io.readInput(io.NEXT):
+	if io.read_input(io.NEXT):
 		if menu_pos == 0:
 			gl.prog_pos = 'rt'
 		elif menu_pos == 1:
@@ -207,13 +207,13 @@ def free_choose():
 
 	""" logic / input """
 	# go left or right
-	if io.readInput(io.LEFT):
+	if io.read_input(io.LEFT):
 		fc_buttons[fc_pos].selected = False
 		fc_pos -= 1
 		if fc_pos < 0:
 			fc_pos = 0
 		fc_buttons[fc_pos].selected = True
-	if io.readInput(io.RIGHT):
+	if io.read_input(io.RIGHT):
 		fc_buttons[fc_pos].selected = False
 		fc_pos += 1
 		if fc_pos > len(fc_buttons)-1:
@@ -225,11 +225,11 @@ def free_choose():
 	sum_values = sum(fc_values)
 
 	if fc_pos > 0 and fc_pos < len(fc_buttons)-1:			# checking if a drink (and not go back / next) is selected
-		if io.readInput(io.UP) and sum_values < 100:			# when raising a value, but sum is less than 100%
+		if io.read_input(io.UP) and sum_values < 100:			# when raising a value, but sum is less than 100%
 			fc_values[fc_pos-1] += interval
 			if fc_values[fc_pos-1] > 100:					# upper boundary
 				fc_values[fc_pos-1] = 100
-		if io.readInput(io.DOWN):
+		if io.read_input(io.DOWN):
 			fc_values[fc_pos-1] -= interval
 			if fc_values[fc_pos-1] < 0:						# lower boundary
 				fc_values[fc_pos-1] = 0
@@ -240,10 +240,10 @@ def free_choose():
 
 
 	# exiting the menu or start mixing
-	if io.readInput(io.BACK) or (io.readInput(io.NEXT) and fc_pos == 0):		# if back pressed or back selected
+	if io.read_input(io.BACK) or (io.read_input(io.NEXT) and fc_pos == 0):		# if back pressed or back selected
 		fc_active = False
 		gl.prog_pos = 'm'
-	if io.readInput(io.NEXT) and not fc_pos == 0:								# if next pressed and not back selected
+	if io.read_input(io.NEXT) and not fc_pos == 0:								# if next pressed and not back selected
 		file = open(drinks.dir_recipes + "free_mixed_recipe", 'w')				# open file
 		file.truncate(0)														# delete content
 		file.write("this file contains a self mixed recipe\n")					# write first line
@@ -378,18 +378,18 @@ def recipe_choose():
 	""" input """
 	# go up or down
 	if rc_stage == 0:					# ony if in list mode
-		if io.readInput(io.UP):
+		if io.read_input(io.UP):
 			rc_visible_pos -= 1
 			rc_pos -= 1
-		if io.readInput(io.DOWN):
+		if io.read_input(io.DOWN):
 			rc_visible_pos += 1
 			rc_pos += 1
 
 	# select menu item / start mixing
-	if io.readInput(io.NEXT) or io.readInput(io.RIGHT):
+	if io.read_input(io.NEXT) or io.read_input(io.RIGHT):
 		rc_stage += 1
 	# go back to menu / list
-	if io.readInput(io.BACK) or io.readInput(io.LEFT):
+	if io.read_input(io.BACK) or io.read_input(io.LEFT):
 		rc_stage -= 1
 
 	""" logic """
