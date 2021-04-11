@@ -3,9 +3,9 @@ this file include all methods for the user interface
 """
 
 import globals as gl
+import io_lib as io
 import media_lib
 import drinks_lib as drinks
-import io_lib as io
 
 """ ### ### SETUP / LOOP ### ### """
 """ actions that need to be executed once on startup are here 
@@ -184,7 +184,7 @@ def free_choose():
 		btn_width, btn_height = 100, 60
 		btn_x, btn_y = spacing, 400
 		bar_y, bar_height = 100, 250
-		print(drinks.plugs)
+		print("[UI FC]", drinks.plugs)
 		for e, i in enumerate(drinks.plugs[1:]):
 			# buttons
 			fc_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_white.png", btn_x, btn_y, btn_width, btn_height))
@@ -251,7 +251,7 @@ def free_choose():
 			if val > 0:
 				val = int((gl.GLASS_SIZE / 100) * val)							# converts the relative value (#HACK: from 0 to 100, not 0 to 1)
 																				# to an absolute value from 0 to gl.GLASS_SIZE using a linear function
-				text = str(drinks.plugs[idx]) + "," + str(val)					# prepare text
+				text = str(drinks.plugs[idx+1]) + "," + str(val)				# prepare text (idx+1, because the first one would be cleanig_water)
 				file.write(text+"\n")											# add to file with name and amount
 		file.close()															# close file
 

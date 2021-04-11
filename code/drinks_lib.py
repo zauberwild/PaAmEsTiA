@@ -189,10 +189,11 @@ def start_mixing(recipe):
 
 	commands.clear() 									# delete previous commands
 	""" compile recipe """
-	for step in steps:								# compile step by step
+	for step in steps:									# compile step by step
 		list = step.split(',')							# [<drink>, <volume>]
-		time = int(int(list[1]) * gl.TIME_PER_ML)			# calculate needed time	(in ms)
+		time = int(int(list[1]) * gl.TIME_PER_ML)		# calculate needed time	(in ms)
 		plug = plugs.index(list[0])						# get the plug
+		print("[DR SM]", "Plug:", plug,"corresponding drink:" , list[0])
 
 		commands.append("o" + str(plug))				# open valve
 		commands.append("t" + str(time))				# set timer
@@ -216,14 +217,16 @@ def update_mixing():
 	if is_mixing:				# if a cocktail is currently mixed
 		cmd = commands[recipe_step]
 		if cmd[0] == 'o':					# open valve
-			print("[DR UM] open valve " + str(cmd[1]))
-			io.writeOutput(io.VALVES[int(cmd[1])], 1)
+			valve = int(cmd[1])				# DEL ? add one, because number in command refes to index in plugs and plug[0] corresponds to valve[1] (valve[0] is the one for cleaning water)
+			print("[DR UM] open valve " + str(valve))
+			io.writeOutput(io.VALVES[valve], 1)
 			io.writeOutput(io.PUMP, 1)
 			recipe_step += 1
 
 		elif cmd[0] == 'c':					# close valve
-			print("[DR UM] close valve " + str(cmd[1]))
-			io.writeOutput(io.VALVES[int(cmd[1])], 0)
+			valve = int(cmd[1])
+			print("[DR UM] close valve " + str(valve))
+			io.writeOutput(io.VALVES[valve], 0)
 			io.writeOutput(io.PUMP, 0)
 			recipe_step += 1
 

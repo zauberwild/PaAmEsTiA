@@ -98,12 +98,17 @@ if not gl.os_is_linux:
 	except:
 		pass
 
-VALVES = [23, 0, 26, 19, 27, 22]			# NOTE Valves: set corresponding pins here ([0] is the valve for water, then going from left to right)
+VALVES = [22, 23, 0, 26, 19, 27]			# NOTE Valves: set corresponding pins here ([0] is the valve for water, then going from left to right)
 PUMP = 9										#		Pump:  set pin for pump here
 if gl.os_is_linux:
 	from gpiozero import LED
-	VALVES_OUT = [LED(VALVES[0]), LED(VALVES[1]), LED(VALVES[2]), LED(VALVES[3]), LED(VALVES[4]), LED(VALVES[5])]
+	VALVES_OUT = [LED(VALVES[0]), LED(VALVES[1]), LED(VALVES[2]), LED(VALVES[3]), LED(VALVES[4]), LED(VALVES[5])]		# create led objects to controll valves and pump
 	PUMP_OUT = LED(PUMP)
+	
+	for i in VALVES_OUT:		# setting the output state to high, to switch relais-board off
+		i.on()
+	PUMP_OUT.on()
+	
 valves_state = [False, False, False, False, False, False]			# states of the pins
 pump_state = False
 
@@ -122,9 +127,9 @@ def writeOutput(out, state):
 		for key in keys:
 			if key[0] == out:
 				if state == True:
-					key[1].on()
-				else:
 					key[1].off()
+				else:
+					key[1].on()
 
 	else:						# for the windows machine
 		text = ""		# text to send to arduino. the text should contain two digits, the first one for the valve (0-5) or pump (7).
