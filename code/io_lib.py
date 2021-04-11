@@ -68,7 +68,7 @@ def update_input():
 			if(event.key == pygame.K_RETURN):	next_state 	= False
 			if(event.key == pygame.K_DELETE):	back_state 	= False
 
-def readInput(input):
+def read_input(input):
 	""" returns input states as bool
 	input: chosen input [UP, DOWN, LEFT, RIGHT, NEXT, BACK] or any other gpio pin
 	"""
