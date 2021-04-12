@@ -52,7 +52,7 @@ while gl.prog_active:
 	elif gl.prog_pos[0] == 's':			# settings
 		if gl.prog_pos[1] == 't':			# transition
 			ui.settings_transition()
-		else:								# settings. no exact prog_pos given, because there are different prog_pos's handled in ui.settings()
+		elif gl.prog_pos[1] == 'c':								# settings. no exact prog_pos given, because there are different prog_pos's handled in ui.settings()
 			ui.settings()
 	
 	elif gl.prog_pos[0] == 'q':			# quit / shutdown
