@@ -2,6 +2,7 @@
 this file include all methods for the user interface
 """
 
+from numpy import true_divide
 import globals as gl
 import io_lib as io
 import media_lib
@@ -55,7 +56,7 @@ intro_active = False
 introduction_vid = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
 
 def intro():
-	gl.prog_pos = 'fc'		# DEL as soon as intro is needed again
+	gl.prog_pos = 'sc'		# DEL as soon as intro is needed again
 
 	global intro_active, introduction_vid
 
@@ -524,7 +525,7 @@ def settings_transition():
 	if st_active == False:
 		st_active = True
 		st_video = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
-		st_video.start()
+		st_video.start(audio=False)
 
 	st_video.draw()
 
@@ -532,9 +533,185 @@ def settings_transition():
 		st_video = None
 		gl.prog_pos = 'sc'
 
+s_active = False
+s_background = None				# background for the settings
+
+s_focus = 0					# focus on tab bar (0), on content (1), or selected something on content (2)
+
+s_tab_pos = 1						# position / selected tab (set drinks, import, credits)
+s_tabs = []
+
+s_d_btn_pos = 0					# settings drinks buttons
+s_d_buttons = []
+s_d_ol_btn_pos = 0					# overlay for schoosing drink
+s_d_ol_buttons = []
+s_d_ol_rows = 0
+
+s_i_btn_pos = 0
+s_i_buttons = []
 
 def settings():
-	pass
+	global s_active, s_background, s_tab_pos, s_tabs, s_focus
+	global s_d_btn_pos, s_d_buttons, s_d_ol_btn_pos, s_d_ol_buttons, s_d_ol_rows
+
+	if s_active == False:		# getting into settings
+		s_active = True
+
+		# start background video
+		s_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+		s_background.start(audio=False, repeat=True)
+
+		# adding tabs
+		s_tabs.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 0,0, 64, 64))
+		s_tabs[-1].add_text("<", gl.debug_font_big, (0,0,255))
+		s_tabs.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 72, 0, 237, 64))
+		s_tabs[-1].add_text("Getränke", gl.debug_font_big, (0,0,255))
+		s_tabs.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 317, 0, 237, 64))
+		s_tabs[-1].add_text("Import", gl.debug_font_big, (0,0,255))
+		s_tabs.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 562, 0, 237, 64))
+		s_tabs[-1].add_text("Credits", gl.debug_font_big, (0,0,255))
+		s_tab_pos = 1
+		s_tabs[s_tab_pos].selected = True
+
+		# button for settting the drinks
+		s_d_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 64, 400, 237, 64))
+		s_d_buttons[-1].add_text(drinks.plugs[1], gl.debug_font_big, (0,0,255))
+		s_d_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 128, 285, 237, 64))
+		s_d_buttons[-1].add_text(drinks.plugs[2], gl.debug_font_big, (0,0,255))
+		s_d_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 282, 180, 237, 64))
+		s_d_buttons[-1].add_text(drinks.plugs[3], gl.debug_font_big, (0,0,255))
+		s_d_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 435, 285, 237, 64))
+		s_d_buttons[-1].add_text(drinks.plugs[4], gl.debug_font_big, (0,0,255))
+		s_d_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 499, 400, 237, 64))
+		s_d_buttons[-1].add_text(drinks.plugs[5], gl.debug_font_big, (0,0,255))
+		s_d_buttons[s_d_btn_pos].selected = True
+
+		w, h = 238, 32
+		x, y = gl.W/4-w/2, 64+8
+		for i in drinks.drinks:
+			if i != "cleaning_water":
+				s_d_ol_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
+				t=i
+				if t == 'None':
+					t = 'leer'
+				s_d_ol_buttons[-1].add_text(t, gl.debug_font, (0,0,255))
+				y += h + 4
+
+				if y+h > gl.H:
+					y = 64+8
+					x += gl.W/2
+					if s_d_ol_rows != 0:
+						s_d_ol_rows = min(len(s_d_ol_buttons), s_d_ol_rows)
+					else:
+						s_d_ol_rows = len(s_d_ol_buttons)
+		s_d_ol_buttons[s_d_ol_btn_pos].selected = True
+			
+
+
+	""" logic and input """
+	if s_focus >= 1:					# if focus on content
+		if io.read_input(io.BACK):		# going back to tab bar
+			s_focus = 0
+
+		# setting drinks
+		if s_tab_pos == 1:
+			if s_focus == 1:
+				if io.read_input(io.LEFT):				# going left or right between the drinks
+					s_d_buttons[s_d_btn_pos].selected = False
+					s_d_btn_pos -= 1
+					if s_d_btn_pos < 0:
+						s_d_btn_pos = 0
+					s_d_buttons[s_d_btn_pos].selected = True
+				if io.read_input(io.RIGHT):
+					s_d_buttons[s_d_btn_pos].selected = False
+					s_d_btn_pos += 1
+					if s_d_btn_pos > len(s_d_buttons)-1:
+						s_d_btn_pos = len(s_d_buttons)-1
+					s_d_buttons[s_d_btn_pos].selected = True
+				if io.read_input(io.NEXT):
+					s_focus = 2
+
+			elif s_focus == 2:
+				if io.read_input(io.BACK):
+					s_focus = 1
+				if io.read_input(io.UP):				# going through drink selection
+					s_d_ol_buttons[s_d_ol_btn_pos].selected = False
+					s_d_ol_btn_pos -= 1
+					if s_d_ol_btn_pos < 0:
+						s_d_ol_btn_pos = 0
+					s_d_ol_buttons[s_d_ol_btn_pos].selected = True
+				if io.read_input(io.DOWN):
+					s_d_ol_buttons[s_d_ol_btn_pos].selected = False
+					s_d_ol_btn_pos += 1
+					if s_d_ol_btn_pos > len(s_d_ol_buttons)-1:
+						s_d_ol_btn_pos = len(s_d_ol_buttons)-1
+					s_d_ol_buttons[s_d_ol_btn_pos].selected = True
+				if io.read_input(io.LEFT):
+					s_d_ol_buttons[s_d_ol_btn_pos].selected = False
+					s_d_ol_btn_pos -= s_d_ol_rows
+					if s_d_ol_btn_pos < 0:
+						s_d_ol_btn_pos = 0
+					s_d_ol_buttons[s_d_ol_btn_pos].selected = True
+				if io.read_input(io.RIGHT):
+					s_d_ol_buttons[s_d_ol_btn_pos].selected = False
+					s_d_ol_btn_pos += s_d_ol_rows
+					if s_d_ol_btn_pos > len(s_d_ol_buttons)-1:
+						s_d_ol_btn_pos = len(s_d_ol_buttons)-1
+					s_d_ol_buttons[s_d_ol_btn_pos].selected = True
+				if io.read_input(io.NEXT):
+					s_focus = 1
+					drink = s_d_ol_buttons[s_d_ol_btn_pos].text
+					if drink == 'leer':
+						drink = 'None'
+					drinks.set_drink(s_d_btn_pos+1, drink)
+					s_d_buttons[s_d_btn_pos].text = s_d_ol_buttons[s_d_ol_btn_pos].text
+					print("[UI SD]", "setting drink", drinks.plugs[s_d_btn_pos+1], "on plug", s_d_btn_pos+1)
+
+
+
+	else:						# if focus on tab_bar
+		if io.read_input(io.LEFT):				# going left or right on the tab bar
+			s_tabs[s_tab_pos].selected = False
+			s_tab_pos -= 1
+			if s_tab_pos < 0:
+				s_tab_pos = 0
+			s_tabs[s_tab_pos].selected = True
+		if io.read_input(io.RIGHT):
+			s_tabs[s_tab_pos].selected = False
+			s_tab_pos += 1
+			if s_tab_pos > len(s_tabs)-1:
+				s_tab_pos = len(s_tabs)-1
+			s_tabs[s_tab_pos].selected = True
+		
+		if io.read_input(io.BACK) or (io.read_input(io.NEXT) and s_tab_pos == 0):			# if leaving the settings
+			s_active = False
+			gl.prog_pos = 'm'
+
+		if io.read_input(io.NEXT) and s_tab_pos != 0:			# if selecting a tab
+			s_focus = 1
+			
+
+	""" drawing """
+	s_background.draw()
+	for i in s_tabs:
+		i.draw()
+
+	if s_tab_pos <= 1:
+		if s_focus <= 1:
+			for i in s_d_buttons:
+				i.draw()
+		if s_focus == 2:
+			for i in s_d_ol_buttons:
+				i.draw()
+
+	""" leaving settings """
+	if s_active == False:
+		s_background = None
+		s_tabs.clear()
+
+	""" debug info """
+	if gl.show_debug:
+		gl.debug_text.append("s_focus: " + str(s_focus) + "; s_tab_pos: " + str(s_tab_pos))
 
 
 
