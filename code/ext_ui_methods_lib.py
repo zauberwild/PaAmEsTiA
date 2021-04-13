@@ -550,9 +550,12 @@ s_d_ol_rows = 0
 s_i_btn_pos = 0
 s_i_buttons = []
 
+s_c_objects = []
+
 def settings():
 	global s_active, s_background, s_tab_pos, s_tabs, s_focus
 	global s_d_btn_pos, s_d_buttons, s_d_ol_btn_pos, s_d_ol_buttons, s_d_ol_rows
+	global s_c_objects
 
 	if s_active == False:		# getting into settings
 		s_active = True
@@ -605,6 +608,10 @@ def settings():
 					else:
 						s_d_ol_rows = len(s_d_ol_buttons)
 		s_d_ol_buttons[s_d_ol_btn_pos].selected = True
+
+
+		# objects for the credits
+		s_c_objects.append(media_lib.TextField(0,64+8,gl.W, gl.H-(64+8), gl.credits_text, gl.debug_font, (255,255,255), alignment=0))
 			
 
 
@@ -668,6 +675,9 @@ def settings():
 					print("[UI SD]", "setting drink", drinks.plugs[s_d_btn_pos+1], "on plug", s_d_btn_pos+1)
 
 
+		# credits
+		elif s_tab_pos == 3:
+			pass
 
 	else:						# if focus on tab_bar
 		if io.read_input(io.LEFT):				# going left or right on the tab bar
@@ -703,11 +713,20 @@ def settings():
 		if s_focus == 2:
 			for i in s_d_ol_buttons:
 				i.draw()
+	elif s_tab_pos == 2:
+		pass
+	elif s_tab_pos == 3:
+		for i in s_c_objects:
+			i.draw()
+
 
 	""" leaving settings """
 	if s_active == False:
 		s_background = None
 		s_tabs.clear()
+		s_d_buttons.clear()
+		s_d_ol_buttons.clear()
+		s_c_objects.clear()
 
 	""" debug info """
 	if gl.show_debug:
