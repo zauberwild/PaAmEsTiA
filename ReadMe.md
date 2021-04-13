@@ -57,6 +57,6 @@ Es wurden Code-Ausschnitte aus dem Pygame-Wiki verwendet ([Link](http://www.pyga
 ### verwendete Module:
 
 - [`pygame`](https://www.pygame.org/news) (und `pygame.freetype`)
-- [`opencv`](https://opencv.org/) (und `numpy`)
+- [`opencv`](https://opencv.org/) (und [`numpy`](https://numpy.org/))
 - `os` und `pathlib`
 - [`gpiozero`](https://github.com/gpiozero/gpiozero)
