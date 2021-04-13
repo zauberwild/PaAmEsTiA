@@ -347,7 +347,7 @@ class Video:
 
 """
 The following two functions are used by the textfield class.
-They are copied from the pygame wiki and slightly modified.
+They are copied from the pygame wiki and slightly modified (this includes comments, one change to adapt it to freetype and the ability to do text breaks)
 Source: http://www.pygame.org/wiki/TextWrapping?parent=CookBook
 """
 def truncline(text, font, maxwidth):
@@ -380,16 +380,34 @@ def truncline(text, font, maxwidth):
 		real=len(stext)               
 		done=0                        
 	return real, done, stext             
-        
+		
 def wrapline(text, font, maxwidth): 
-    done=0                      
-    wrapped=[]                  
-                               
-    while not done:             
-        nl, done, stext=truncline(text, font, maxwidth) 
-        wrapped.append(stext.strip())                  
-        text=text[nl:]                                 
-    return wrapped
+	""" this functions splits a string into a list, making lines that fit into a given width.
+	It can also deal with newlines by first splitting the text into paragraphs (sort of), then applieing the the 
+	text-break to each paragraph and putting this into a final list.
+	"""
+
+
+	all_lines = []			# includes all lines, with textbreak and newline chracters included
+
+	ntext = text.split('\n')			# the text, but split into the lines ('n' as in newlin
+
+	#print("[ML WL] split to newlines:", ntext)
+
+	for line in ntext:					# then goes through the lines (or paragraphs if you will)
+		done=0 
+		wrapped=[]
+
+		while not done:   				# in this while all the text break magic happens
+			nl, done, stext=truncline(line, font, maxwidth) 
+			wrapped.append(stext.strip())                  
+			line=line[nl:]
+
+		for wrapped_line in wrapped:			# puts all new wrapped lines to the list
+			all_lines.append(wrapped_line)
+
+	#print("[ML WL] all wrapped lines:", all_lines)                           
+	return all_lines
 
 
 class TextField:
