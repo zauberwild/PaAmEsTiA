@@ -44,3 +44,19 @@ In dieser Liste sind hauptsächlich nur die elektronischen und mechanischen Baut
 Filamente:  
 - [DasFilament PETG Anthrazit](https://www.dasfilament.de/filament-spulen/petg-1-75-mm/438/petg-filament-1-75-mm-anthrazit-v2?c=21)
 - [Janbex PLA Blau](https://www.amazon.de/JANBEX-Filament-Drucker-Vakuumverpackung-Schwarz/dp/B08MC7LQZR/ref=sr_1_6?dchild=1&keywords=Janbex&qid=1617379500&sr=8-6&th=1)
+
+
+
+Credits
+-------
+
+Dieses Projekt steht unter der MIT-Lizenz (komplette Lizenz [hier](https://github.com/zauberwild/paamestia/blob/main/LICENSE))
+
+Es wurden Code-Ausschnitte aus dem Pygame-Wiki verwendet ([Link](http://www.pygame.org/wiki/TextWrapping?parent=CookBook)). Es wurden einige Änderungen vorgenommen, unter anderem wurden Kommentare hinzugefügt, auf Freetype von Pygame angepasst und die Möglichkeit mit Newline-Zeichen (`\n`) umzugehen.
+
+### verwendete Module:
+
+- [`pygame`](https://www.pygame.org/news) (und `pygame.freetype`)
+- [`opencv`](https://opencv.org/) (und `numpy`)
+- `os` und `pathlib`
+- [`gpiozero`](https://github.com/gpiozero/gpiozero)
