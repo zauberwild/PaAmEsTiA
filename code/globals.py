@@ -47,3 +47,13 @@ else:
 
 pygame.display.set_caption("paamestia_main")
 clock = pygame.time.Clock()
+
+""" credits """
+credits_text = """\
+PAAMESTIA
+
+gebaut von André Milling, Max Schiemann, Dominic Kosin und Arvid Randow
+
+GitHub-Repository: www.github.com/zauberwild/paamestia
+veröffentlicht unter der MIT-Lizenz
+"""
