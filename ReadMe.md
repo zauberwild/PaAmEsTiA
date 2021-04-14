@@ -52,8 +52,6 @@ Credits
 
 Dieses Projekt steht unter der MIT-Lizenz (komplette Lizenz [hier](https://github.com/zauberwild/paamestia/blob/main/LICENSE))
 
-Es wurden Code-Ausschnitte aus dem Pygame-Wiki verwendet ([Link](http://www.pygame.org/wiki/TextWrapping?parent=CookBook)). Es wurden einige Änderungen vorgenommen, unter anderem wurden Kommentare hinzugefügt, auf Freetype von Pygame angepasst und die Möglichkeit mit Newline-Zeichen (`\n`) umzugehen.
-
 ### verwendete Module:
 
 - [`pygame`](https://www.pygame.org/news) (und `pygame.freetype`)
