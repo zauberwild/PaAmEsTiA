@@ -24,7 +24,7 @@ def keyboard_input():
 					gl.prog_pos = 'i'
 
 """ ### ### INPUT ### ### """
-UP, DOWN, LEFT, RIGHT, NEXT, BACK = 14, 15, 21, 10, 24, 25		# NOTE Buttons: set corresponding pins here
+UP, DOWN, LEFT, RIGHT, NEXT, BACK = 26, 19, 3, 4, 2, 21		# NOTE Buttons: set corresponding pins here
 up_state, down_state, left_state, right_state, next_state, back_state = False, False, False, False, False, False			# saves pin state
 up_state_prev, down_state_prev, left_state_prev, right_state_prev, next_state_prev, back_state_prev = False, False, False, False, False, False			# saves previous pin state
 
@@ -98,8 +98,8 @@ if not gl.os_is_linux:
 	except:
 		pass
 
-VALVES = [22, 23, 0, 26, 19, 27]			# NOTE Valves: set corresponding pins here ([0] is the valve for water, then going from left to right)
-PUMP = 9										#		Pump:  set pin for pump here
+VALVES = [8, 7, 1, 24, 15, 18]			# NOTE Valves: set corresponding pins here ([0] is the valve for water, then going from left to right)
+PUMP = 23								#		Pump:  set pin for pump here
 if gl.os_is_linux:
 	from gpiozero import LED
 	VALVES_OUT = [LED(VALVES[0]), LED(VALVES[1]), LED(VALVES[2]), LED(VALVES[3]), LED(VALVES[4]), LED(VALVES[5])]		# create led objects to controll valves and pump
