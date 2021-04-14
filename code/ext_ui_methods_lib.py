@@ -53,7 +53,7 @@ def loop():
 """ ### ### INTRO / MAIN MENU ### ### """
 intro_active = False
 
-introduction_vid = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
+introduction_vid = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
 
 def intro():
 	gl.prog_pos = 'sc'		# DEL as soon as intro is needed again
@@ -62,7 +62,7 @@ def intro():
 
 	if intro_active == False:		# setup
 		intro_active = True
-		introduction_vid.start(audio=False)			# start intro
+		introduction_vid.start()			# start intro
 	
 	introduction_vid.draw()				# draw intro
 
@@ -159,8 +159,8 @@ def free_choose():
 	if fc_active == False:
 		fc_active = True
 		# set video background
-		fc_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
-		fc_background.start(repeat=True, audio=False)
+		fc_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
+		fc_background.start(repeat=True)
 
 		# set buttons
 			# button: go back
@@ -281,8 +281,8 @@ def free_output():
 
 	if not fo_active:		# if first entering recipe output
 		fo_active = True
-		fo_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
-		fo_background.start(audio=False, repeat=True)
+		fo_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
+		fo_background.start(repeat=True)
 		print("[UI FO] now mixing")
 
 	fo_background.draw()
@@ -473,8 +473,8 @@ def recipe_output():
 
 	if not ro_active:		# if first entering recipe output
 		ro_active = True
-		ro_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
-		ro_background.start(audio=False, repeat=True)
+		ro_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
+		ro_background.start(repeat=True)
 		print("[UI RO] now mixing")
 
 	ro_background.draw()
@@ -491,21 +491,8 @@ def recipe_output():
 
 
 """ ### ### SETTINGS ### ### """
-st_active = False
-st_video = None
 def settings_transition():
-	global st_active, st_video
-
-	if st_active == False:
-		st_active = True
-		st_video = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
-		st_video.start(audio=False)
-
-	st_video.draw()
-
-	if st_video.test_for_last_frame():
-		st_video = None
-		gl.prog_pos = 'sc'
+	gl.prog_pos = 'sc'
 
 s_active = False
 s_background = None				# background for the settings
@@ -535,8 +522,8 @@ def settings():
 		s_active = True
 
 		# start background video
-		s_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
-		s_background.start(audio=False, repeat=True)
+		s_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
+		s_background.start(repeat=True)
 
 		# adding tabs
 		s_tabs.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 0,0, 64, 64))

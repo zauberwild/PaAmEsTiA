@@ -7,9 +7,7 @@ main script
 # pygame stuff
 import pygame
 import pygame.freetype
-pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.init()
-pygame.mixer.init()
 pygame.freetype.init()
 
 # imports

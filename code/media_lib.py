@@ -4,7 +4,7 @@ contains class for graphics, animations and videos
 
 import os						# used to scan for files and to execute commands from a commandline
 #from sys import path			# random function to get random list index in video class
-import pygame, pygame.mixer		# used in Animation-Class for displaying sprites and playing audio files
+import pygame					# used in Animation-Class for displaying sprites
 import pygame.freetype			# used in Button class to show text
 import cv2 						# used in Video-Class for displaying videos
 import numpy as np 				# used by opencv
@@ -165,15 +165,6 @@ class Animation:
 		self.img_path.sort()		# make sure they are in the right order
 		self.img = []				# will hold the pygame.Surface objects as soon they will be loaded
 		self.n_frames = 0			# number of frames. is updated with every change on self.img[]
-		# Audio
-		self.audio_forwards_path = self.path + "forwards.wav"
-		self.audio_backwards_path = self.path + "backwards.wav"
-		self.audio_forwards = None		# holds pygame.mixer.Sound object,
-		self.audio_backwards = None			# assuming correspoding audio files could be found
-		if os.path.isfile(self.audio_forwards_path):		# test if audio files are there
-			self.audio_forwards = pygame.mixer.Sound(self.audio_backwards_path)		# create object  with audio-file
-		if os.path.isfile(self.audio_backwards_path):
-			self.audio_backwards = pygame.mixer.Sound(self.audio_backwards_path)
 		# States / params
 		self.loaded =  False		# frames loaded
 		self.play = False			# video plays
@@ -181,7 +172,6 @@ class Animation:
 		self.frame = 0				# durrent frame
 		self.forwards = True		# video is played forwards
 		self.repeat = False			# video plays on repeat
-		self.audio_mute = False		# video on mute
 
 	def load(self):
 		""" loads the frames as pygame.Surface. please use sparingly to keep RAM clear
@@ -200,9 +190,8 @@ class Animation:
 		self.n_frames = len(self.img)
 		self.loaded = False
 
-	def start(self,audio=True, forwards=True, repeat=False):
+	def start(self, forwards=True, repeat=False):
 		"""	start video from the beginning
-		- audio=True: set False to mute
 		- forwards=True: set False, if you want play it backwards
 		- repeat=False: set True, to endlessly repeat the video
 			(can be stopped with stop())
@@ -214,27 +203,11 @@ class Animation:
 		self. interrupt = False		# un-pause video, just in case
 		self.forwards = forwards	# set params
 		self.repeat = repeat
-		self.audio_mute = not audio
 		
 		if forwards:				# set start frame and start audio (when exiting and not muted)
 			self.frame = 0
-			if self.audio_forwards != None and audio:
-				self._start_audio()
 		else:
 			self.frame = self.n_frames - 1
-			if self.audio_backwards != None and audio:
-				self._start_audio(forwards=False)
-	
-	def _start_audio(self, forwards=True):
-		""" play the audio files (internal use only)
-		- forwards=True: True: play forwards.wav / False: play backwards.wav
-		"""
-		if forwards:				# start audio (if exiting)
-			if self.audio_forwards != None:
-				pygame.mixer.Sound.play(self.audio_forwards)
-		else:
-			if self.audio_backwards != None:
-				pygame.mixer.Sound.play(self.audio_backwards)
 
 	def pause(self):
 		""" interrupt / un-pause the video
@@ -257,8 +230,6 @@ class Animation:
 					self.frame += 1								# advance frame
 					if self.frame >= self.n_frames:				# if at the end
 						if self.repeat:							# if repeat on
-							if not self.audio_mute:				# start over
-								self._start_audio()
 							self.frame = 0	
 						else:
 							self.play = False					# stop
@@ -267,8 +238,6 @@ class Animation:
 					if self.frame < 0:							# if at the end
 						if self.repeat:							# if repeat on
 							self.frame = self.n_frames - 1		# start over
-							if not self.audio_mute:
-								self._start_audio(forwards=False)
 						else:
 							self.play = False					# stop
 
@@ -278,17 +247,13 @@ class Video:
 	uses opencv to play videos
 	"""
 
-	def __init__(self, file, audio_file):
+	def __init__(self, file):
 		""" video class. uses opencv to display a video
-		- files: complete path to the file
+		- file: complete path to the file
 		"""
 		self.file = file					# add the directory path to the file names
-		self.audio_file = gl.gen_path + audio_file
 
 		self.cap = None									# holds the Video-Capture-object for playing the file
-		self.audio = None								# holds pygame.mixer.Sound object
-		if os.path.isfile(self.audio_file):				# test if audio file is there
-			self.audio = pygame.mixer.Sound(self.audio_file)	
 		
 		# stats / params
 		self.play = False
@@ -297,23 +262,15 @@ class Video:
 		self.frame_counter = 0
 		self.audio_on = True
 
-	def start(self, repeat=False, audio=True):
+	def start(self, repeat=False):
 		""" starts the video
 		- repeat=False: set True, to play repeatedly
-		- audio=True: True for audio, False for mute
 		"""
 		self.play = True
 		self.repeat = repeat
 		self.cap = cv2.VideoCapture(self.file)
 		self.frames = self.cap.get(cv2.CAP_PROP_FRAME_COUNT)
 		self.frame_counter = 0
-		self.audio_on = audio
-		if self.audio_on:				# if audio on
-			self._start_audio()
-	
-	def _start_audio(self):
-		""" plays the audio file"""
-		pygame.mixer.Sound.play(self.audio)			# start audio
 
 	def stop(self):
 		""" stop the video
@@ -332,8 +289,6 @@ class Video:
 				if self.repeat:
 					self.frame_counter = 0
 					self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
-					if self.audio_on:
-						self._start_audio()
 				else:
 					self.play = False
 			
