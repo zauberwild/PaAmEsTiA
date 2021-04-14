@@ -138,21 +138,8 @@ def main_menu():
 
 
 """ ### ### FREE MIXING ### ### """
-ft_active = False
-ft_video = None
 def free_transition():
-	global ft_active, ft_video
-
-	if ft_active == False:
-		ft_active = True
-		ft_video = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
-		ft_video.start()
-
-	ft_video.draw()
-
-	if ft_video.test_for_last_frame():
-		ft_video = None
-		gl.prog_pos = 'fc'
+	gl.prog_pos = 'fc'
 
 
 
@@ -312,21 +299,8 @@ def free_output():
 
 
 """ ### ### RECIPE ### ### """
-rt_active = False
-rt_video = None
 def recipe_transition():
-	global rt_active, rt_video
-
-	if rt_active == False:
-		rt_active = True
-		rt_video = media_lib.Video(gl. gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
-		rt_video.start(audio=False)
-
-	rt_video.draw()
-
-	if rt_video.test_for_last_frame():
-		rt_video = None
-		gl.prog_pos = 'rc'
+	gl.prog_pos = 'rc'
 
 rc_active = False
 rc_visible_n = 6			# number of visible items
