@@ -68,6 +68,14 @@ def update_input():
 			if(event.key == pygame.K_RETURN):	next_state 	= False
 			if(event.key == pygame.K_DELETE):	back_state 	= False
 
+	
+		# check for credits
+		if up_state or (event.type == pygame.KEYDOWN and event.key == pygame.K_LSHIFT):
+			if down_state and left_state and right_state and next_state and back_state or (event.type == pygame.KEYDOWN and event.key == pygame.K_LSHIFT):
+				print("[IO UI] go to credits")
+				gl.cr_prev_pos = gl.prog_pos
+				gl.prog_pos = 'cr'
+
 def read_input(input):
 	""" returns input states as bool
 	input: chosen input [UP, DOWN, LEFT, RIGHT, NEXT, BACK] or any other gpio pin

@@ -575,6 +575,12 @@ def settings():
 		s_c_objects.append(media_lib.TextField(0,64+8,gl.W, gl.H-(64+8), gl.credits_text, gl.debug_font, (255,255,255), alignment=0))
 			
 
+""" ### CREDITS ### """
+cr_active = False
+cr_background = None
+cr_text = None
+def credits():
+	global cr_active, cr_background, cr_text
 
 	""" logic and input """
 	if s_focus >= 1:					# if focus on content
@@ -661,6 +667,11 @@ def settings():
 		if io.read_input(io.NEXT) and s_tab_pos != 0:			# if selecting a tab
 			s_focus = 1
 			
+	if cr_active == False: 		# whe entering credits
+		cr_active = True
+		cr_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
+		cr_background.start(repeat=True)
+		cr_text = media_lib.TextField(0,8,gl.W, gl.H-8, gl.credits_text, gl.debug_font, (255,255,255), alignment=0)
 
 	""" drawing """
 	s_background.draw()
@@ -679,7 +690,13 @@ def settings():
 	elif s_tab_pos == 3:
 		for i in s_c_objects:
 			i.draw()
+	# input
+	if io.read_input(io.BACK):
+		cr_active = False
 
+	# draw
+	cr_background.draw()
+	cr_text.draw()
 
 	""" leaving settings """
 	if s_active == False:
@@ -688,6 +705,10 @@ def settings():
 		s_d_buttons.clear()
 		s_d_ol_buttons.clear()
 		s_c_objects.clear()
+	if cr_active == False:			# when leaving credits
+		cr_background = None
+		cr_text = None
+		gl.prog_pos = gl.cr_prev_pos
 
 	""" debug info """
 	if gl.show_debug:

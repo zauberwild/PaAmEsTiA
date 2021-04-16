@@ -52,6 +52,9 @@ while gl.prog_active:
 			ui.settings_transition()
 		elif gl.prog_pos[1] == 'c':								# settings. no exact prog_pos given, because there are different prog_pos's handled in ui.settings()
 			ui.settings()
+
+	elif gl.prog_pos == 'cr':			# creedits
+		ui.credits()
 	
 	elif gl.prog_pos[0] == 'q':			# quit / shutdown
 		ui.shutdown()

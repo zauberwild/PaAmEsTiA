@@ -37,6 +37,7 @@ FPS = 24				# frames per second
 W, H = 800, 600			# width and height of the window
 
 prog_pos = 'i'			# saves current position in program flow
+cr_prev_pos = ''		# this stores the previous position for the credits
 
 screen = None
 if os_is_linux:
