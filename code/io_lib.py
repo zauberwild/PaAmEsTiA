@@ -37,8 +37,11 @@ def update_input():
 	global UP, DOWN, LEFT, RIGHT, NEXT, BACK, pygame_events
 	global up_state, down_state, left_state, right_state, next_state, back_state
 	global up_state_prev, down_state_prev, left_state_prev, right_state_prev, next_state_prev, back_state_prev
+
+
 	if gl.os_is_linux:
 		global UP_BT, DOWN_BT, LEFT_BT, RIGHT_BT, NEXT_BT, BACK_BT		
+
 	# refresh previous states
 	up_state_prev, down_state_prev, left_state_prev, right_state_prev, next_state_prev, back_state_prev = up_state, down_state, left_state, right_state, next_state, back_state
 
@@ -70,8 +73,8 @@ def update_input():
 
 	
 		# check for credits
-		if up_state or (event.type == pygame.KEYDOWN and event.key == pygame.K_LSHIFT):
-			if down_state and left_state and right_state and next_state and back_state or (event.type == pygame.KEYDOWN and event.key == pygame.K_LSHIFT):
+		if up_state or (event.type == pygame.KEYDOWN and event.key == pygame.K_TAB):
+			if down_state and left_state and right_state and next_state and back_state or (event.type == pygame.KEYDOWN and event.key == pygame.K_TAB):
 				print("[IO UI] go to credits")
 				gl.cr_prev_pos = gl.prog_pos
 				gl.prog_pos = 'cr'
