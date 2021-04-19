@@ -2,6 +2,7 @@
 this file include all methods for the user interface
 """
 
+from tkinter.constants import TRUE
 from numpy import true_divide
 import globals as gl
 import io_lib as io
@@ -56,7 +57,7 @@ intro_active = False
 introduction_vid = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
 
 def intro():
-	gl.prog_pos = 'sc'		# DEL as soon as intro is needed again
+	gl.prog_pos = 'si'		# DEL as soon as intro is needed again
 
 	global intro_active, introduction_vid
 
@@ -326,8 +327,8 @@ def recipe_choose():
 		rc_recipes = list1 + list2
 
 		# creating background
-		rc_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4", "/src/media/intro/audio.wav")
-		rc_background.start(repeat=True, audio=False)
+		rc_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
+		rc_background.start(repeat=True)
 
 		# creating buttons
 		btn_size = (420, 40)
@@ -485,6 +486,168 @@ def recipe_output():
 
 
 """ ### ### SETTINGS ### ### """
+# settings: selection menu
+sc_active = False
+sc_background = None			# background
+sc_btns = []					# list of all buttons
+sc_pos = 0						# positon / selected button
+
+def settings_choose():
+	global sc_active, sc_background, sc_btns, sc_pos
+
+	if sc_active == False:		# when entering settings_choose
+		sc_active = True
+		sc_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")		# create background
+		sc_background.start(repeat=True)
+
+		# create buttons
+		sc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 35, 35, 300, 530))
+		sc_btns[-1].add_text("Getränke", gl.debug_font, (0,0,255))
+		sc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", gl.W-35-300, 35, 300, 530))
+		sc_btns[-1].add_text("Importieren", gl.debug_font, (0,0,255))
+		sc_btns[sc_pos].selected = True
+
+	# input
+	if io.read_input(io.BACK):		# if going back
+		sc_active = False
+		gl.prog_pos = 'm'
+	elif io.read_input(io.NEXT):		# selecting a setting
+		sc_active = False
+		if sc_pos == 0:
+			gl.prog_pos = 'sd'
+		else:
+			gl.prog_pos = 'si'
+	elif io.read_input(io.LEFT):		# moving the selection
+		sc_pos = 0
+		sc_btns[0].selected = True
+		sc_btns[1].selected = False
+	elif io.read_input(io.RIGHT):
+		sc_pos = 1
+		sc_btns[0].selected = False
+		sc_btns[1].selected = True
+
+	# draw
+	sc_background.draw()
+	for i in sc_btns:
+		i.draw()
+
+
+	if sc_active == False:		# when leaving settings_choose
+		sc_background = None
+		sc_btns.clear()
+
+
+# PLACEHOLDER def settings_drink():
+
+# settings: import
+si_active = False
+
+si_background = None
+
+si_recipe_list = []
+si_first_recipe = 0
+
+si_btn_list = []
+si_chosen_btn = 0
+si_n_visible_btn = 10
+
+si_import_btn = None
+
+def settings_import():
+	global si_active, si_background, si_recipe_list, si_first_recipe, si_btn_list, si_chosen_btn, si_n_visible_btn, si_import_btn
+
+	if si_active == False:			# when entering import settings
+		si_active = True
+		si_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")		# create background
+		si_background.start(repeat=True)
+
+		# get recipes
+		si_recipe_list = drinks.get_recipes()
+
+		# create button list
+		x, y = int(0.25*100), int(0.35*100)
+		w, h = int(3.5*100), int(5.3*100/si_n_visible_btn)
+		for i in range(si_n_visible_btn):
+			si_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
+			y += h
+		si_btn_list[si_chosen_btn].selected = True
+
+		# create import button
+		si_import_btn = media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", int(gl.W-(0.25+1)*100), 480, 100, 50)
+		si_import_btn.add_text("Import", gl.standard_font, (0,0,255))
+
+	# input
+	if io.read_input(io.BACK):
+		si_active = False
+		gl.prog_pos = 'sc'
+
+	elif io.read_input(io.UP) and si_import_btn.selected == False:
+		if si_chosen_btn == 0:
+			si_first_recipe -= 1
+			if si_first_recipe < 0:
+				si_first_recipe = 0
+
+		si_btn_list[si_chosen_btn].selected = False
+		si_chosen_btn -= 1
+		if si_chosen_btn < 0:
+			si_chosen_btn = 0
+		si_btn_list[si_chosen_btn].selected = True
+
+
+	elif io.read_input(io.DOWN) and si_import_btn.selected == False:
+		if si_chosen_btn == si_n_visible_btn-1:
+			si_first_recipe += 1
+			if si_first_recipe > len(si_recipe_list) - si_n_visible_btn:
+				si_first_recipe = len(si_recipe_list) - si_n_visible_btn
+
+		si_btn_list[si_chosen_btn].selected = False
+		si_chosen_btn += 1
+		if si_chosen_btn > si_n_visible_btn-1:
+			si_chosen_btn = si_chosen_btn-1
+		si_btn_list[si_chosen_btn].selected = True
+
+	elif io.read_input(io.RIGHT):
+		si_import_btn.selected = True
+		si_btn_list[si_chosen_btn].selected = False
+
+	elif io.read_input(io.LEFT):
+		si_import_btn.selected = False
+		si_btn_list[si_chosen_btn].selected = True
+
+	elif io.read_input(io.NEXT):
+		if si_import_btn.selected:
+			print("[UI SI] import recipe procedure started")
+			success = drinks.import_recipe()
+			if success:
+				print("[UI SI] recipe succesfully imported")
+				si_active = False
+			else:
+				print("[UI SI] an error occured during import")
+
+
+		else:
+			drinks.delete_recipe(si_first_recipe+si_chosen_btn)
+			si_active = False
+
+	
+	# add the recipe names to the buttons
+	for idx, btn in enumerate(si_btn_list):
+		btn.add_text(si_recipe_list[si_first_recipe+idx], gl.standard_font, (0,0,255))
+
+	# draw
+	si_background.draw()
+	for i in si_btn_list:
+		i.draw()
+	si_import_btn.draw()
+
+	if si_active == False:		# when leaving import settings
+		print("[UI SI] leavin' import settings")
+		si_background = None
+		si_recipe_list.clear()
+		si_btn_list.clear()
+
+	if gl.show_debug:		# append debug info
+		gl.debug_text.append("[UI SI] chosen_btn: " + str(si_chosen_btn) + " first_recipe: " + str(si_first_recipe) +  " chosen_recipe: " + str(drinks.recipes[si_first_recipe+si_chosen_btn]))
 
 """ ### CREDITS ### """
 cr_active = False
@@ -493,114 +656,12 @@ cr_text = None
 def credits():
 	global cr_active, cr_background, cr_text
 
-	""" logic and input """
-	if s_focus >= 1:					# if focus on content
-		if io.read_input(io.BACK):		# going back to tab bar
-			s_focus = 0
-
-		# setting drinks
-		if s_tab_pos == 1:
-			if s_focus == 1:
-				if io.read_input(io.LEFT):				# going left or right between the drinks
-					s_d_buttons[s_d_btn_pos].selected = False
-					s_d_btn_pos -= 1
-					if s_d_btn_pos < 0:
-						s_d_btn_pos = 0
-					s_d_buttons[s_d_btn_pos].selected = True
-				if io.read_input(io.RIGHT):
-					s_d_buttons[s_d_btn_pos].selected = False
-					s_d_btn_pos += 1
-					if s_d_btn_pos > len(s_d_buttons)-1:
-						s_d_btn_pos = len(s_d_buttons)-1
-					s_d_buttons[s_d_btn_pos].selected = True
-				if io.read_input(io.NEXT):
-					s_focus = 2
-
-			elif s_focus == 2:
-				if io.read_input(io.BACK):
-					s_focus = 1
-				if io.read_input(io.UP):				# going through drink selection
-					s_d_ol_buttons[s_d_ol_btn_pos].selected = False
-					s_d_ol_btn_pos -= 1
-					if s_d_ol_btn_pos < 0:
-						s_d_ol_btn_pos = 0
-					s_d_ol_buttons[s_d_ol_btn_pos].selected = True
-				if io.read_input(io.DOWN):
-					s_d_ol_buttons[s_d_ol_btn_pos].selected = False
-					s_d_ol_btn_pos += 1
-					if s_d_ol_btn_pos > len(s_d_ol_buttons)-1:
-						s_d_ol_btn_pos = len(s_d_ol_buttons)-1
-					s_d_ol_buttons[s_d_ol_btn_pos].selected = True
-				if io.read_input(io.LEFT):
-					s_d_ol_buttons[s_d_ol_btn_pos].selected = False
-					s_d_ol_btn_pos -= s_d_ol_rows
-					if s_d_ol_btn_pos < 0:
-						s_d_ol_btn_pos = 0
-					s_d_ol_buttons[s_d_ol_btn_pos].selected = True
-				if io.read_input(io.RIGHT):
-					s_d_ol_buttons[s_d_ol_btn_pos].selected = False
-					s_d_ol_btn_pos += s_d_ol_rows
-					if s_d_ol_btn_pos > len(s_d_ol_buttons)-1:
-						s_d_ol_btn_pos = len(s_d_ol_buttons)-1
-					s_d_ol_buttons[s_d_ol_btn_pos].selected = True
-				if io.read_input(io.NEXT):
-					s_focus = 1
-					drink = s_d_ol_buttons[s_d_ol_btn_pos].text
-					if drink == 'leer':
-						drink = 'None'
-					drinks.set_drink(s_d_btn_pos+1, drink)
-					s_d_buttons[s_d_btn_pos].text = s_d_ol_buttons[s_d_ol_btn_pos].text
-					print("[UI SD]", "setting drink", drinks.plugs[s_d_btn_pos+1], "on plug", s_d_btn_pos+1)
-
-
-		# credits
-		elif s_tab_pos == 3:
-			pass
-
-	else:						# if focus on tab_bar
-		if io.read_input(io.LEFT):				# going left or right on the tab bar
-			s_tabs[s_tab_pos].selected = False
-			s_tab_pos -= 1
-			if s_tab_pos < 0:
-				s_tab_pos = 0
-			s_tabs[s_tab_pos].selected = True
-		if io.read_input(io.RIGHT):
-			s_tabs[s_tab_pos].selected = False
-			s_tab_pos += 1
-			if s_tab_pos > len(s_tabs)-1:
-				s_tab_pos = len(s_tabs)-1
-			s_tabs[s_tab_pos].selected = True
-		
-		if io.read_input(io.BACK) or (io.read_input(io.NEXT) and s_tab_pos == 0):			# if leaving the settings
-			s_active = False
-			gl.prog_pos = 'm'
-
-		if io.read_input(io.NEXT) and s_tab_pos != 0:			# if selecting a tab
-			s_focus = 1
-			
 	if cr_active == False: 		# whe entering credits
 		cr_active = True
 		cr_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
 		cr_background.start(repeat=True)
 		cr_text = media_lib.TextField(0,8,gl.W, gl.H-8, gl.credits_text, gl.debug_font, (255,255,255), alignment=0)
 
-	""" drawing """
-	s_background.draw()
-	for i in s_tabs:
-		i.draw()
-
-	if s_tab_pos <= 1:
-		if s_focus <= 1:
-			for i in s_d_buttons:
-				i.draw()
-		if s_focus == 2:
-			for i in s_d_ol_buttons:
-				i.draw()
-	elif s_tab_pos == 2:
-		pass
-	elif s_tab_pos == 3:
-		for i in s_c_objects:
-			i.draw()
 	# input
 	if io.read_input(io.BACK):
 		cr_active = False
@@ -609,21 +670,11 @@ def credits():
 	cr_background.draw()
 	cr_text.draw()
 
-	""" leaving settings """
-	if s_active == False:
-		s_background = None
-		s_tabs.clear()
-		s_d_buttons.clear()
-		s_d_ol_buttons.clear()
-		s_c_objects.clear()
 	if cr_active == False:			# when leaving credits
 		cr_background = None
 		cr_text = None
 		gl.prog_pos = gl.cr_prev_pos
 
-	""" debug info """
-	if gl.show_debug:
-		gl.debug_text.append("s_focus: " + str(s_focus) + "; s_tab_pos: " + str(s_tab_pos))
 
 
 
