@@ -2,16 +2,16 @@
 PLACEHOLDER for testing
 """
 
-import drinks_lib as drinks
-import pygame
-import pygame.freetype
-import globals as gl
 
-drinks.spot[5].drink = "Alter Janx-Geist"
-drinks.spot[4].drink = "arkturanischer Mega-Gin"
-drinks.spot[6].drink = "fallianisches Sumpfgas"
-drinks.spot[2].drink = "qualaktinischen Hyperminz-Extrakt"
-drinks.spot[1].drink = "Zamphuor"
-drinks.spot[3].drink = "KiBa"
+lst1 = [1,2,3,4,5]
+lst2 = ['a','b','c']
 
-pangal = drinks.Recipe(gl.gen_path + "/src/recipes/Pangalaktischer_Donnergurgler")
+print(lst1, lst2)
+
+lst2 = lst1
+
+print(lst1, lst2)
+
+lst2.clear()
+
+print(lst1, lst2)
