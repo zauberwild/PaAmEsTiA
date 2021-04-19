@@ -344,15 +344,15 @@ def update_mixing():
 		if cmd[0] == 'o':					# open valve
 			valve = int(cmd[1])
 			print("[DR UM] open valve " + str(valve))
-			io.writeOutput(io.VALVES[valve], 1)
-			io.writeOutput(io.PUMP, 1)
+			io.write_output(io.VALVES[valve], 1)
+			io.write_output(io.PUMP, 1)
 			recipe_step += 1
 
 		elif cmd[0] == 'c':					# close valve
 			valve = int(cmd[1])
 			print("[DR UM] close valve " + str(valve))
-			io.writeOutput(io.VALVES[valve], 0)
-			io.writeOutput(io.PUMP, 0)
+			io.write_output(io.VALVES[valve], 0)
+			io.write_output(io.PUMP, 0)
 			recipe_step += 1
 
 		elif cmd[0] == 't':					# set timer

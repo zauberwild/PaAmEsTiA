@@ -120,7 +120,7 @@ if gl.os_is_linux:
 valves_state = [False, False, False, False, False, False]			# states of the pins
 pump_state = False
 
-def writeOutput(out, state):
+def write_output(out, state):
 	""" set output
 	out: pin to set [VALVES[0:7], PUMP] or any other gpio pin
 	state: state [True / 1, False / 0]
