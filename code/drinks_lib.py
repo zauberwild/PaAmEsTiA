@@ -242,10 +242,10 @@ def delete_recipe(recipe):
 """ ### GETTER METHODS ### """
 """ used to get different lists"""
 def get_drinks():
-	return drinks
+	return drinks.copy()
 
 def get_plugs():
-	return plugs
+	return plugs.copy()
 
 def get_recipes(available=None):
 	""" returns recipes as a list
@@ -257,7 +257,7 @@ def get_recipes(available=None):
 	return_list = []
 
 	if available == None:
-		return_list = recipes			# no filter applied, so everything will be returned
+		return_list = recipes.copy()			# no filter applied, so everything will be returned
 	elif available == True:
 		for r in recipes:						# only adds the available recipes to the return list
 			if _test_availability(r):
@@ -267,7 +267,7 @@ def get_recipes(available=None):
 			if not _test_availability(r):
 				return_list.append(r)
 	
-	return return_list		# actually returns the list
+	return return_list.copy()		# actually returns the list
 
 def get_still_mixing():
 	global is_mixing
