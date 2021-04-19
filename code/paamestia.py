@@ -32,26 +32,24 @@ while gl.prog_active:
 		ui.main_menu()
 
 	elif gl.prog_pos[0] == 'f':			# free mixing
-		if gl.prog_pos[1] == 't':				# transition
-			ui.free_transition()
-		elif gl.prog_pos[1] == 'c':			# mix cocktail
+		if gl.prog_pos[1] == 'c':			# mix cocktail
 			ui.free_choose()
 		elif gl.prog_pos[1] == 'o':			# output
 			ui.free_output()
 
 	elif gl.prog_pos[0] == 'r':			# recipe
-		if gl.prog_pos[1] == 't':				# transition
-			ui.recipe_transition()
-		elif gl.prog_pos[1] == 'c':			# choose recipe / cocktail
+		if gl.prog_pos[1] == 'c':			# choose recipe / cocktail
 			ui.recipe_choose()
 		elif gl.prog_pos[1] == 'o':			# output
 			ui.recipe_output()
 
 	elif gl.prog_pos[0] == 's':			# settings
-		if gl.prog_pos[1] == 't':			# transition
-			ui.settings_transition()
-		elif gl.prog_pos[1] == 'c':								# settings. no exact prog_pos given, because there are different prog_pos's handled in ui.settings()
-			ui.settings()
+		if gl.prog_pos[1] == 'c':								# choose between import or setting drinks
+			ui.settings_choose()
+		elif gl.prog_pos[1] == 'd':								# setting the drinks
+			ui.settings_drink()
+		elif gl.prog_pos[1] == 'i':								# import recipes
+			ui.settings_import()
 
 	elif gl.prog_pos == 'cr':			# creedits
 		ui.credits()
