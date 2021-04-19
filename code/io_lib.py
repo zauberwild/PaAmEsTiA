@@ -98,15 +98,6 @@ def read_input(input):
 	return is_pressed
 
 """ ### ### OUTPUT ### ### """
-serial_connected = False
-if not gl.os_is_linux:
-	import serial
-	PORT, BAUD = "COM5", 9600		# NOTE settings for serial comm.
-	try:
-		ser = serial.Serial(PORT, BAUD)
-		serial_connected = True
-	except:
-		pass
 
 VALVES = [8, 7, 1, 24, 15, 18]			# NOTE Valves: set corresponding pins here ([0] is the valve for water, then going from left to right)
 PUMP = 23								#		Pump:  set pin for pump here
@@ -141,21 +132,6 @@ def write_output(out, state):
 					key[1].off()
 				else:
 					key[1].on()
-
-	else:						# for the windows machine
-		text = ""		# text to send to arduino. the text should contain two digits, the first one for the valve (0-5) or pump (7).
-						# The second is the state (1 = on, 0 = off).
-		# set valve / output
-		for idx, valve in enumerate(VALVES):
-			if out == valve:
-				text = str(idx)
-		if out == PUMP:
-			text = "7"
-		text += str(int(state)) + '\n'		# add state and newline carrier
-
-		global serial_connected
-		if serial_connected:
-			ser.write(text.encode('utf-8'))		# send text
 	
 	# keep the saved states up-to-date
 	for idx, valve in enumerate(VALVES):
