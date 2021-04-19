@@ -5,7 +5,7 @@ import globals as gl
 import pygame
 pygame_events = None
 
-""" ### ### general input ### ### """
+""" ### ### general input via keyboard ### ### """
 def keyboard_input():
 	global pygame_events
 
@@ -77,12 +77,14 @@ def update_input():
 				gl.prog_pos = 'cr'
 
 def read_input(input):
-	""" returns input states as bool
-	input: chosen input [UP, DOWN, LEFT, RIGHT, NEXT, BACK] or any other gpio pin
+	""" returns input state as bool
+	input: key [UP, DOWN, LEFT, RIGHT, NEXT, BACK]
 	"""
 	global UP, DOWN, LEFT, RIGHT, NEXT, BACK
 	global up_state, down_state, left_state, right_state, next_state, back_state
 	global up_state_prev, down_state_prev, left_state_prev, right_state_prev, next_state_prev, back_state_prev
+
+
 	keys = [(UP, up_state, up_state_prev), (DOWN, down_state, down_state_prev),
 			(LEFT, left_state, left_state_prev), (RIGHT, right_state, right_state_prev),
 			(NEXT, next_state, next_state_prev), (BACK, back_state, back_state_prev)]			# list of possible inputs and matching states
@@ -129,9 +131,10 @@ def write_output(out, state):
 	global VALVES_OUT, PUMP_OUT
 
 	if gl.os_is_linux:			# for the raspberry pi
+		# list of possible outputs and matching led objects
 		keys = [(VALVES[0], VALVES_OUT[0]), (VALVES[1], VALVES_OUT[1]), (VALVES[2], VALVES_OUT[2]),
 				(VALVES[3], VALVES_OUT[3]), (VALVES[4], VALVES_OUT[4]), (VALVES[5], VALVES_OUT[5]),
-				(PUMP, PUMP_OUT)]		# list of possible outputs and matching led objects
+				(PUMP, PUMP_OUT)]		
 		for key in keys:
 			if key[0] == out:
 				if state == True:
