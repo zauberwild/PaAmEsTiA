@@ -33,27 +33,40 @@ def current_milli_time():
 """ ### SETUP ### """
 # this part will run once, as soon this file is imported somewhere
 
-# look for drinks
-file1 = open(gl.gen_path + "/src/drinks", 'r')			# open file
-drinks = file1.readlines()								# save lines as a list
-file1.close()
+def update_recipes_and_drinks():
+	global drinks, recipes
+	drinks.clear()
+	recipes.clear()
 
-for idx, i in enumerate(drinks):						# remove trailing newline characters
-		if drinks[idx].endswith('\n'):
-			drinks[idx] = drinks[idx][:-1]
-			
-print("[DR setup] drink list  content:")
-print(drinks)
+	# look for drinks
+	file1 = open(gl.gen_path + "/src/drinks", 'r')			# open file
+	drinks = file1.readlines()								# save lines as a list
+	file1.close()
+	file1 = open(gl.gen_path + "/src/drinks_custom", 'r')			# open file
+	drinks += file1.readlines()								# save lines as a list
+	file1.close()
 
-# look for recipes
-for filename in os.listdir(dir_recipes):
-	recipes.append(filename)
-recipes.remove('free_mixed_recipe')				# sort the free mixed recipe, as it should not appear in the recipe list
+	for idx, i in enumerate(drinks):						# remove trailing newline characters
+			if drinks[idx].endswith('\n'):
+				drinks[idx] = drinks[idx][:-1]
+				
+	print("[DR URD] drink list  content:")
+	print(drinks)
 
-# sort lists
-if gl.os_is_linux:
-	drinks.sort()
-	recipes.sort()
+	# look for recipes
+	for filename in os.listdir(dir_recipes):
+		recipes.append(filename)
+	recipes.remove('free_mixed_recipe')				# sort the free mixed recipe, as it should not appear in the recipe list
+
+	print("[DR URD] recipe list  content:")
+	print(recipes)
+
+	# sort lists
+	if gl.os_is_linux:
+		drinks.sort()
+		recipes.sort()
+
+update_recipes_and_drinks()
 
 """ ### TEST AVAILABILITY ### """
 def _test_availability(recipe):
