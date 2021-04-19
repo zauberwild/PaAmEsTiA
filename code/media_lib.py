@@ -9,6 +9,8 @@ import pygame.freetype			# used in Button class to show text
 import cv2 						# used in Video-Class for displaying videos
 import numpy as np 				# used by opencv
 import globals as gl			# imports global variables
+import tkinter					# used for file prompt to import new recipes
+import tkinter.filedialog
 
 class Image:
 	""" can be used to easily display single images
@@ -479,6 +481,19 @@ class Bar:
 		for i in self.imgs:
 			i.draw()				# draws all images, though only one is enbabled and will be actually drawn
 
+
+"""
+The following function is used to open a files dialog using tkinter.
+It ist directy copied from a question on StackOverflow
+Source: https://stackoverflow.com/questions/63801960/how-to-prompt-user-to-open-a-file-with-python3-pygame
+"""
+def prompt_file():
+    """Create a Tk file dialog and cleanup when finished"""
+    top = tkinter.Tk()
+    top.withdraw()  # hide window
+    file_name = tkinter.filedialog.askopenfilename(parent=top)
+    top.destroy()
+    return file_name
 
 
 """ VLCVideo class deleted. Commit: 2a1128a723551cc48cc0ad81b7ee75fbd4958f82 """
