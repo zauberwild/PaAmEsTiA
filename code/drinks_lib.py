@@ -339,10 +339,10 @@ def start_mixing(recipe):
 def update_mixing():
 	global is_mixing, recipe_step, commands, finishing_time
 
-	if is_mixing:				# if a cocktail is currently mixed
+	if is_mixing:				# if something is currently mixed
 		cmd = commands[recipe_step]
 		if cmd[0] == 'o':					# open valve
-			valve = int(cmd[1])				# DEL ? add one, because number in command refes to index in plugs and plug[0] corresponds to valve[1] (valve[0] is the one for cleaning water)
+			valve = int(cmd[1])
 			print("[DR UM] open valve " + str(valve))
 			io.writeOutput(io.VALVES[valve], 1)
 			io.writeOutput(io.PUMP, 1)
