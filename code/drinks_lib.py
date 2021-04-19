@@ -7,6 +7,8 @@ import globals as gl
 import io_lib as io
 import os
 import time
+from media_lib import prompt_file		# both used to import new files
+from shutil import copyfile
 
 """ ### PATHS ### """
 dir_recipes = gl.gen_path + "/src/recipes/"					# path to the recipe-directory
@@ -126,6 +128,116 @@ def set_drink(plug, drink):
 	
 	plugs[plug] = drink			# set drink on plug
 
+
+""" MANAGE RECIPES """
+def add_drinks(new_drinks):
+	""" add new drinks to the drink file
+	drinks: a list of the new drinks
+	returns True if successfull, False if an error occurred
+	"""
+
+	global drinks
+
+	print("[DR AD] adding new drinks")
+
+	file = open(gl.gen_path + "/src/drinks_custom", "a")
+	for i in new_drinks:
+		file.write(i+"\n")
+	file.close()
+	drinks.sort()
+
+	print("[DR AD] finished adding new drinks")
+
+	return True
+
+
+def import_recipe():
+	""" opens a file prompt to import a new recipe
+	returns True if successfull, False if an error occurred
+	"""
+	file_path = prompt_file()			# select a file
+	print("[DR IR] 1/ file path:", file_path)
+
+	file = open(file_path, 'r')					# read the file and do a compatability check
+	lines = file.readlines()
+	file.close()
+	for idx, i in enumerate(lines):						# remove trailing newline characters
+		if lines[idx].endswith('\n'):
+			lines[idx] = lines[idx][:-1]
+
+	print("[DR IR] 2/ could read file and removed newline characters")
+
+	new_drinks = []
+	
+	try:
+		for i in lines[1:]:
+			splitted = i.split(',')
+			if not splitted[0] in drinks:
+				new_drinks.append(splitted[0])
+			amount = int(splitted[1])
+	except ValueError:
+		print("[DR IR] 3/ ValueError: couldn't convert to int")
+		return(False)
+	except IndexError:
+		print("[DR IR] 3/ IndexError: couldn't split Commands into drink and amount needed")
+		return(False)
+
+	print("[DR IR] 3/ No faulty units")
+
+	print("[DR IR] 4/ These new drinks will be added:", new_drinks)
+	
+	success = add_drinks(new_drinks)
+
+	if success:
+		print("[DR IR] 4/ New drinks added successfully")
+	else:
+		print("[DR IR] 4/ Error occured")
+
+	print("[DR IR] 5/ copy drink to recipe folder")
+	
+	try:
+		split = file_path.split('/')
+		filename = split[-1]
+		copyfile(file_path, gl.gen_path + "/src/recipes/" + filename)
+	except Exception:
+		print("[DR IR] an error occured while copying the file")
+		return False
+
+	update_recipes_and_drinks()
+	print("[DR SI] 6/ update recipes and drinks")
+
+	print("[DR SI] all done")
+
+	return True
+
+def delete_recipe(recipe):
+	""" deletes recipe """
+	print("[DR DelR]", "1/ starting deleting procedure")
+
+	if type(recipe) != int and type(recipe) != str:		# break when input type not correct
+		return
+
+	print("[DR DelR]", "2/ correct input type")
+
+	if type(recipe) == int:								# get recipe name when index given
+		recipe = recipes[recipe]
+	
+	print("[DR DelR]", "3/ got recipe name from index (if needed)")
+
+	if recipe in gl.immutable_recipes:
+		print("[DR DelR] 4/ abort, recipe is immutable")
+		return
+
+	print("[DR DelR] 4/ recipe is allowed to be deleted")
+
+	os.remove(gl.gen_path + "/src/recipes/" + recipe)
+
+	print("[DR DelR] 5/ recipe successfully deleted")
+
+	update_recipes_and_drinks()
+
+	print("[DR DelR] 6/ updated recipes and drinks")
+	print("[DR DelR] all done")
 
 """ ### GETTER METHODS ### """
 """ used to get different lists"""
