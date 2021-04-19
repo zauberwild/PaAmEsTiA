@@ -101,11 +101,11 @@ def main_menu():
 	# select menu item
 	if io.read_input(io.NEXT):
 		if menu_pos == 0:
-			gl.prog_pos = 'rt'
+			gl.prog_pos = 'rc'
 		elif menu_pos == 1:
-			gl.prog_pos = 'ft'
+			gl.prog_pos = 'fc'
 		elif menu_pos == 2:
-			gl.prog_pos = 'st'
+			gl.prog_pos = 'sc'
 		elif menu_pos == 3:
 			gl.prog_pos = 'q'
 	
@@ -138,10 +138,6 @@ def main_menu():
 
 
 """ ### ### FREE MIXING ### ### """
-def free_transition():
-	gl.prog_pos = 'fc'
-
-
 
 fc_active = False			# controls if free_choose is active or not
 fc_background = None		# saves the background video
@@ -299,8 +295,6 @@ def free_output():
 
 
 """ ### ### RECIPE ### ### """
-def recipe_transition():
-	gl.prog_pos = 'rc'
 
 rc_active = False
 rc_visible_n = 6			# number of visible items
@@ -491,89 +485,6 @@ def recipe_output():
 
 
 """ ### ### SETTINGS ### ### """
-def settings_transition():
-	gl.prog_pos = 'sc'
-
-s_active = False
-s_background = None				# background for the settings
-
-s_focus = 0					# focus on tab bar (0), on content (1), or selected something on content (2)
-
-s_tab_pos = 1						# position / selected tab (set drinks, import, credits)
-s_tabs = []
-
-s_d_btn_pos = 0					# settings drinks buttons
-s_d_buttons = []
-s_d_ol_btn_pos = 0					# overlay for schoosing drink
-s_d_ol_buttons = []
-s_d_ol_rows = 0
-
-s_i_btn_pos = 0
-s_i_buttons = []
-
-s_c_objects = []
-
-def settings():
-	global s_active, s_background, s_tab_pos, s_tabs, s_focus
-	global s_d_btn_pos, s_d_buttons, s_d_ol_btn_pos, s_d_ol_buttons, s_d_ol_rows
-	global s_c_objects
-
-	if s_active == False:		# getting into settings
-		s_active = True
-
-		# start background video
-		s_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
-		s_background.start(repeat=True)
-
-		# adding tabs
-		s_tabs.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 0,0, 64, 64))
-		s_tabs[-1].add_text("<", gl.debug_font_big, (0,0,255))
-		s_tabs.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 72, 0, 237, 64))
-		s_tabs[-1].add_text("Getränke", gl.debug_font_big, (0,0,255))
-		s_tabs.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 317, 0, 237, 64))
-		s_tabs[-1].add_text("Import", gl.debug_font_big, (0,0,255))
-		s_tabs.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 562, 0, 237, 64))
-		s_tabs[-1].add_text("Credits", gl.debug_font_big, (0,0,255))
-		s_tab_pos = 1
-		s_tabs[s_tab_pos].selected = True
-
-		# button for settting the drinks
-		s_d_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 64, 400, 237, 64))
-		s_d_buttons[-1].add_text(drinks.plugs[1], gl.debug_font_big, (0,0,255))
-		s_d_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 128, 285, 237, 64))
-		s_d_buttons[-1].add_text(drinks.plugs[2], gl.debug_font_big, (0,0,255))
-		s_d_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 282, 180, 237, 64))
-		s_d_buttons[-1].add_text(drinks.plugs[3], gl.debug_font_big, (0,0,255))
-		s_d_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 435, 285, 237, 64))
-		s_d_buttons[-1].add_text(drinks.plugs[4], gl.debug_font_big, (0,0,255))
-		s_d_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 499, 400, 237, 64))
-		s_d_buttons[-1].add_text(drinks.plugs[5], gl.debug_font_big, (0,0,255))
-		s_d_buttons[s_d_btn_pos].selected = True
-
-		w, h = 238, 32
-		x, y = gl.W/4-w/2, 64+8
-		for i in drinks.drinks:
-			if i != "cleaning_water":
-				s_d_ol_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
-				t=i
-				if t == 'None':
-					t = 'leer'
-				s_d_ol_buttons[-1].add_text(t, gl.debug_font, (0,0,255))
-				y += h + 4
-
-				if y+h > gl.H:
-					y = 64+8
-					x += gl.W/2
-					if s_d_ol_rows != 0:
-						s_d_ol_rows = min(len(s_d_ol_buttons), s_d_ol_rows)
-					else:
-						s_d_ol_rows = len(s_d_ol_buttons)
-		s_d_ol_buttons[s_d_ol_btn_pos].selected = True
-
-
-		# objects for the credits
-		s_c_objects.append(media_lib.TextField(0,64+8,gl.W, gl.H-(64+8), gl.credits_text, gl.debug_font, (255,255,255), alignment=0))
-			
 
 """ ### CREDITS ### """
 cr_active = False
