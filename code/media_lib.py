@@ -398,8 +398,10 @@ class TextField:
 		self.font = font
 		self.font_color = font_col
 		
+		self.spacing = 15
+
 		# create lines of text
-		self.lines = wrapline(text, font, width)		# splitting the text in a list of words
+		self.lines = wrapline(text, font, width - 2*self.spacing)		# splitting the text in a list of words
 
 	def change_text(self, text):
 		self.lines = wrapline(text, self.font, self.width)
@@ -421,7 +423,7 @@ class TextField:
 		if self.show_background:
 			self.background.draw()
 		
-		spacing = 15			# space between lines and padding on the sides
+		spacing = self.spacing			# space between lines and padding on the sides
 		t_x, t_y = self.x, self.y + spacing		# set starting coordinates
 		for text in self.lines:					# for each line
 			
