@@ -264,15 +264,17 @@ class Video:
 		self.frame_counter = 0
 		self.audio_on = True
 
-	def start(self, repeat=False):
+	def start(self, repeat=False, frame_counter=0):
 		""" starts the video
 		- repeat=False: set True, to play repeatedly
 		"""
 		self.play = True
 		self.repeat = repeat
 		self.cap = cv2.VideoCapture(self.file)
+		if frame_counter != 0:
+			self.cap.set(1, frame_counter-1)
 		self.frames = self.cap.get(cv2.CAP_PROP_FRAME_COUNT)
-		self.frame_counter = 0
+		self.frame_counter = frame_counter
 
 	def stop(self):
 		""" stop the video
