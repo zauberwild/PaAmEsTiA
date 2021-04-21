@@ -307,13 +307,14 @@ rc_recipes = []				# list of all recipes, sorted after availability, than alphab
 
 rc_marker = []				# list holding markers
 
+rc_std_file = "/src/media/intro/intro.mp4"	# standard video file
 rc_background = None		# video in the background
 
 rc_stage = 0				#0: show all recipes; 1: show info of selected recipe (-1: go back; 2: mix recipe)
 rc_info_textfield = None	# holds a textfield as soon stage is set to showing info
 
 def recipe_choose():
-	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_recipes, rc_stage, rc_marker, rc_background, rc_info_textfield
+	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_recipes, rc_stage, rc_marker, rc_std_file, rc_background, rc_info_textfield
 
 	# entering the menu
 	if rc_active == False:
@@ -327,7 +328,7 @@ def recipe_choose():
 		rc_recipes = list1 + list2
 
 		# creating background
-		rc_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
+		rc_background = media_lib.Video(gl.gen_path + rc_std_file)
 		rc_background.start(repeat=True)
 
 		# creating buttons
@@ -363,6 +364,22 @@ def recipe_choose():
 		rc_stage -= 1
 
 	""" logic """
+	chosen_recipe = None			# find the chosen recipe
+	for btn in rc_btns:
+		if btn.selected:
+			chosen_recipe = btn.text
+
+	if (io.read_input(io.UP) or io.read_input(io.DOWN)) and rc_stage == 0:
+		# setting correct background
+		prev_file = rc_background.file
+		try:
+			new_file = gl.gen_path + gl.recipe_video_dict[chosen_recipe]
+		except KeyError:
+			new_file = gl.gen_path + rc_std_file
+		if prev_file != new_file:
+			rc_background.file = new_file
+			rc_background.start(repeat=True, frame_counter=rc_background.frame_counter)
+	
 	# menu boundaries
 	# visible part
 	if rc_visible_pos < 0:
@@ -402,10 +419,6 @@ def recipe_choose():
 
 	# showing info
 	if rc_stage == 1 and not rc_info_textfield:
-		chosen_recipe = None			# find the chosen recipe
-		for btn in rc_btns:
-			if btn.selected:
-				chosen_recipe = btn.text
 		file = open(gl .gen_path + "/src/recipes/" + chosen_recipe, 'r')
 		text = file.readline()		# read the first line (info about recipe)
 		file.close()
