@@ -57,7 +57,7 @@ intro_active = False
 introduction_vid = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
 
 def intro():
-	gl.prog_pos = 'si'		# DEL as soon as intro is needed again
+	gl.prog_pos = 'sd'		# DEL as soon as intro is needed again
 
 	global intro_active, introduction_vid
 
@@ -537,7 +537,126 @@ def settings_choose():
 		sc_btns.clear()
 
 
-# PLACEHOLDER def settings_drink():
+# settings: setting drinks
+sd_active = False
+
+sd_background = None
+
+sd_drinks_list = []
+sd_first_drink = 0
+
+sd_btn_list = []
+sd_chosen_btn = 0
+sd_n_visible_btn = 10
+
+sd_plug_btn = None
+sd_plug_num = 1
+
+def settings_drink():
+	global sd_active, sd_background, sd_drinks_list, sd_first_drink, sd_btn_list, sd_chosen_btn, sd_n_visible_btn, sd_plug_btn, sd_plug_num
+
+	if sd_active == False:			# when entering drink settings
+		sd_active = True
+		sd_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")		# create background
+		sd_background.start(repeat=True)
+
+		# get recipes
+		sd_drinks_list = drinks.get_drinks()
+		sd_drinks_list.remove('cleaning_water')		# remove cleaning_water, as it is strictly set to plug 0
+		sd_drinks_list.remove("None")				# put 'None' in first place
+		sd_drinks_list.insert(0, "None")
+
+		# create button list
+		x, y = gl.W - int((3.5+0.1+0.25)*100), int(0.35*100)
+		w, h = int(3.5*100), int(5.3*100/sd_n_visible_btn)
+		for i in range(sd_n_visible_btn):
+			sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
+			y += h
+		sd_btn_list[sd_chosen_btn].selected = True
+
+		#create plug button
+		sd_plug_btn = media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", gl.W-int(0.35*100)-h, int(0.35*100), h, h)
+		sd_plug_btn.add_text(str(sd_plug_num), gl.standard_font, (0,0,255))
+	
+	# input
+	if io.read_input(io.BACK):
+		sd_active = False
+		gl.prog_pos = 'sc'
+
+	# selecting drink
+	elif io.read_input(io.UP):
+		if sd_chosen_btn == 0:
+			sd_first_drink -= 1
+			if sd_first_drink < 0:
+				sd_first_drink = 0
+
+		sd_btn_list[sd_chosen_btn].selected = False
+		sd_chosen_btn -= 1
+		if sd_chosen_btn < 0:
+			sd_chosen_btn = 0
+		sd_btn_list[sd_chosen_btn].selected = True
+
+
+	elif io.read_input(io.DOWN):
+		if sd_chosen_btn == sd_n_visible_btn-1:
+			sd_first_drink += 1
+			if sd_first_drink > len(sd_drinks_list) - sd_n_visible_btn:
+				sd_first_drink = len(sd_drinks_list) - sd_n_visible_btn
+
+		sd_btn_list[sd_chosen_btn].selected = False
+		sd_chosen_btn += 1
+		if sd_chosen_btn > sd_n_visible_btn-1:
+			sd_chosen_btn = sd_chosen_btn-1
+		sd_btn_list[sd_chosen_btn].selected = True
+
+	# selecting plug
+	elif io.read_input(io.LEFT):
+		sd_plug_num -= 1
+		if sd_plug_num < 1:
+			sd_plug_num = 1
+		# add text plug field
+		sd_plug_btn.add_text(str(sd_plug_num), gl.standard_font, (0,0,255))
+	elif io.read_input(io.RIGHT):
+		sd_plug_num += 1
+		if sd_plug_num > len(drinks.plugs)-1:
+			sd_plug_num = len(drinks.plugs)-1
+		# add text plug field
+		sd_plug_btn.add_text(str(sd_plug_num), gl.standard_font, (0,0,255))
+
+	# setting new drink to plug
+	elif io.read_input(io.NEXT):
+		drink = sd_btn_list[sd_chosen_btn].text
+		if drink == "leer":
+			drink = 'None'
+		drinks.set_drink(sd_plug_num, drink)
+		
+
+	# add the drink names to the buttons
+	for idx, btn in enumerate(sd_btn_list):
+		text = sd_drinks_list[sd_first_drink+idx]
+		if text == 'None':
+			text = 'leer'
+		btn.add_text(text, gl.standard_font, (0,0,255))
+
+	# draw
+	sd_background.draw()
+	for i in sd_btn_list:
+		i.draw()
+	sd_plug_btn.draw()
+
+	if sd_active == False:		# when leaving drink settings
+		print("[UI SD] leavin' import settings")
+		sd_background = None
+		sd_drinks_list.clear()
+		sd_btn_list.clear()
+		sd_plug_btn = None
+	
+	if gl.show_debug:		# append debug info
+		gl.debug_text.append("[UI SD] chosen_btn: " + str(sd_chosen_btn) + " first_drink: " + str(sd_first_drink) +  " chosen_drink: " + str(drinks.drinks[sd_first_drink+sd_chosen_btn]))
+		t = "[UI SD] set drinks:"
+		for idx, drink in enumerate(drinks.plugs):
+			t += " " + str(idx) + ": " + str(drink) + "; "
+		gl.debug_text.append(t)
 
 # settings: import
 si_active = False
