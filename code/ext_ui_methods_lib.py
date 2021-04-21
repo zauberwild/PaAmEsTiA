@@ -59,7 +59,7 @@ introduction_vid = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
 def intro():
 	global intro_active, introduction_vid
 
-	gl.prog_pos = 'rc'		# DEL as soon as intro is needed again
+	gl.prog_pos = 'm'		# DEL as soon as intro is needed again
 	intro_active = False
 
 	if intro_active == False:		# setup
@@ -76,54 +76,58 @@ def intro():
 
 menu_active = False
 menu_btns = []
-menu_pos = 0
+menu_pos_x = 1
+menu_pos_y = 0
 
 def main_menu():
-	global menu_active, menu_btns, menu_pos, test_recipe	
+	global menu_active, menu_btns, menu_pos_x, test_recipe, menu_pos_y
 	
 	if menu_active == False:			# setup
 		menu_active = True
 		# creating the buttons for the main menu
-		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png"	, "prop_grey.png", 150, 69, 500, 64))
-		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_blue.png"	, "prop_grey.png", 150, 202, 500, 64))
-		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_yellow.png", "prop_grey.png", 150, 335, 500, 64))
-		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_red.png"	, "prop_grey.png", 150, 468, 500, 64))
-		menu_btns[0].add_text("REZEPT AUSWAEHLEN", gl.debug_font_big, (0,0,0), 0)
-		menu_btns[1].add_text("FREI MISCHEN", gl.debug_font_big, (0,0,0), 0)
-		menu_btns[2].add_text("EINSTELLUNGEN", gl.debug_font_big, (0,0,0), 0)
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", 	"prop_grey.png", 50, 90, 200, 370))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_blue.png", 	"prop_grey.png", 275, 35, 250, 445))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_yellow.png", "prop_grey.png", 550, 90, 200, 370))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_red.png", 	"prop_grey.png", 275, 505, 250, 50))
+		menu_btns[0].add_text("EINSTELLUNGEN", gl.debug_font_big, (0,0,0), 0)
+		menu_btns[1].add_text("REZEPT", gl.debug_font_big, (0,0,0), 0)
+		menu_btns[2].add_text("FREI MISCHEN", gl.debug_font_big, (0,0,0), 0)
 		menu_btns[3].add_text("VERLASSEN", gl.debug_font_big, (0,0,0), 0)
+		menu_btns[1].selected = True
 	
 	# input
-	# go up or down
 	if io.read_input(io.UP):
-		menu_pos -= 1
-	if io.read_input(io.DOWN):
-		menu_pos += 1
+		menu_pos_y = 0
+		menu_btns[menu_pos_x].selected = True
+		menu_btns[3].selected = False
+	elif io.read_input(io.DOWN):
+		menu_pos_y = 1
+		menu_btns[menu_pos_x].selected = False
+		menu_btns[3].selected = True
+	elif io.read_input(io.LEFT):
+		menu_btns[menu_pos_x].selected = False
+		menu_pos_x -= 1
+		if menu_pos_x < 0:
+			menu_pos_x = 0
+		menu_btns[menu_pos_x].selected = True
+	elif io.read_input(io.RIGHT):
+		menu_btns[menu_pos_x].selected = False
+		menu_pos_x += 1
+		if menu_pos_x > 2:
+			menu_pos_x = 2
+		menu_btns[menu_pos_x].selected = True
 
-	# select menu item
-	if io.read_input(io.NEXT):
-		if menu_pos == 0:
-			gl.prog_pos = 'rc'
-		elif menu_pos == 1:
-			gl.prog_pos = 'fc'
-		elif menu_pos == 2:
-			gl.prog_pos = 'sc'
-		elif menu_pos == 3:
+	elif io.read_input(io.NEXT):
+		menu_active = False
+		if menu_pos_y == 0:
+			if menu_pos_x == 0:
+				gl.prog_pos = 'sc'
+			elif menu_pos_x == 1:
+				gl.prog_pos = 'rc'
+			elif menu_pos_x == 2:
+				gl.prog_pos = 'fc'
+		elif menu_pos_y == 1:
 			gl.prog_pos = 'q'
-	
-	# logic
-	# menu boundaries
-	if menu_pos < 0:
-		menu_pos = 0
-	if menu_pos > 3:
-		menu_pos = 3
-	
-	# selected item
-	for idx, btn in enumerate(menu_btns):
-		if idx == menu_pos:
-			btn.selected = True
-		else:
-			btn.selected = False
 
 	# draw
 	gl.screen.fill((127,127,127))
@@ -134,9 +138,7 @@ def main_menu():
 
 	# append debug information
 	if gl.show_debug:
-		gl.debug_text.append("menu_pos: " + str(menu_pos))
-
-
+		gl.debug_text.append("menu_pos_x: " + str(menu_pos_x))
 
 
 """ ### ### FREE MIXING ### ### """
