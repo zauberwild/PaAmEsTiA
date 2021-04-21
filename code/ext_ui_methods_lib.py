@@ -57,9 +57,10 @@ intro_active = False
 introduction_vid = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
 
 def intro():
-	gl.prog_pos = 'sd'		# DEL as soon as intro is needed again
-
 	global intro_active, introduction_vid
+
+	gl.prog_pos = 'rc'		# DEL as soon as intro is needed again
+	intro_active = False
 
 	if intro_active == False:		# setup
 		intro_active = True
@@ -67,7 +68,7 @@ def intro():
 	
 	introduction_vid.draw()				# draw intro
 
-	if introduction_vid.test_for_last_frame():			# test if intro is ending
+	if introduction_vid.test_for_last_frame() or intro_active == False:			# test if intro is ending
 		intro_active = False
 		introduction_vid = None
 		gl.prog_pos = 'm'
@@ -310,11 +311,12 @@ rc_marker = []				# list holding markers
 rc_std_file = "/src/media/intro/intro.mp4"	# standard video file
 rc_background = None		# video in the background
 
-rc_stage = 0				#0: show all recipes; 1: show info of selected recipe (-1: go back; 2: mix recipe)
+rc_stage = 0				# 0: show all recipes; 1: show info of selected recipe (-1: go back; 2: mix recipe)
 rc_info_textfield = None	# holds a textfield as soon stage is set to showing info
+rc_info_btns = []			# holds all objects for info screen
 
 def recipe_choose():
-	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_recipes, rc_stage, rc_marker, rc_std_file, rc_background, rc_info_textfield
+	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_recipes, rc_stage, rc_marker, rc_std_file, rc_background, rc_info_textfield, rc_info_btns
 
 	# entering the menu
 	if rc_active == False:
@@ -426,6 +428,13 @@ def recipe_choose():
 		# create textfield
 		rc_info_textfield = media_lib.TextField(50, 50, 400, 400, text, gl.debug_font_small, (0,0,255), alignment=1)
 		rc_info_textfield.add_background(gl.gen_path + "/src/props/prop_yellow.png")
+		#creating info objects
+		rc_info_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_grey.png", "prop_white.png", "prop_white.png", 50, 500, 75, 75, rotation=270))
+		rc_info_btns[-1].add_text("BACK", gl.standard_font, (0,0,255))
+		rc_info_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_grey.png", "prop_white.png", "prop_white.png", 700, 500, 75, 75, rotation=90))
+		rc_info_btns[-1].add_text("MISCHEN", gl.standard_font, (0,0,255))
+		rc_info_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_grey.png", "prop_white.png", "prop_white.png", 300, 500, 475, 75))
+		rc_info_btns[-1].add_text("MISCHEN NICHT MÖGLICH", gl.standard_font, (0,0,255))
 		
 	# disabling info
 	if rc_stage == 0 and rc_info_textfield:
@@ -456,7 +465,11 @@ def recipe_choose():
 			i.draw()
 	elif rc_stage == 1:					# info mode
 		rc_info_textfield.draw()
-
+		rc_info_btns[0].draw()
+		if drinks._test_availability(chosen_recipe):
+			rc_info_btns[1].draw()
+		else:
+			rc_info_btns[2].draw()
 
 	# if leaving recipe choose, clean up variables
 	if gl.prog_pos != 'rc':
@@ -466,6 +479,7 @@ def recipe_choose():
 		rc_marker.clear()
 		rc_background = None
 		rc_info_textfield = None
+		rc_info_btns.clear()
 		rc_recipes.clear()
 
 	# debug information
