@@ -7,8 +7,7 @@ Info
 
 In diesem Repository sind alle Dateien, Quellcodes, etc. für das Praxisprojekt für Fach Praxis im BGT an der BBS.  
 Bei dem Projekt handelt es sich um eine Cocktail-Mischmaschine, bei der man ein Rezept auswählt und dies automatisch gemischt wird.
-Außerdem soll es möglich sein, selber frei zu mischen und Rezepte zu importieren.  
-Lizenz: [_MIT license_](https://github.com/zauberwild/paamestia/blob/main/LICENSE)
+Außerdem soll es möglich sein, selber frei zu mischen und Rezepte zu importieren. 
 
 ---
 
