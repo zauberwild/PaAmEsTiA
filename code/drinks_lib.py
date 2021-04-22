@@ -21,10 +21,10 @@ drinks = []													# stores the available drinks to choose from
 recipes = []												# stores all recipes that could be found in the recipe folder
 
 """ variables for mixing """
-is_mixing = False				# stores, if currently a recipe is mixing
+is_mixing = False				# stores if currently a recipe is mixing
 recipe_step = 0					# stores the current step
 commands = []					# compiled command lines
-finishing_time = 0				# precalculated time, when the timer will be done
+finishing_time = 0				# precalculated time for when the timer will be done
 
 """ functions """
 def current_milli_time():
