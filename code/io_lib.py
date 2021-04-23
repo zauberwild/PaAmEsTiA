@@ -73,7 +73,8 @@ def update_input():
 			if(event.key == pygame.K_DELETE):	back_state 	= False
 
 	
-		# check for credits
+		# check for credits (activate by either pressing all button down at once or pressing tab)
+		# it only test for one key first to save time
 		if up_state or (event.type == pygame.KEYDOWN and event.key == pygame.K_TAB):
 			if down_state and left_state and right_state and next_state and back_state or (event.type == pygame.KEYDOWN and event.key == pygame.K_TAB):
 				print("[IO UI] go to credits")

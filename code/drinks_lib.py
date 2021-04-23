@@ -36,6 +36,7 @@ def current_milli_time():
 # this part will run once, as soon this file is imported somewhere
 
 def update_recipes_and_drinks():
+	""" updates the recipe and drinks list"""
 	global drinks, recipes
 	drinks.clear()
 	recipes.clear()
@@ -119,7 +120,7 @@ def set_drink(plug, drink):
 	if type(drink) == int:		# get drink name when index given
 		drink = drinks[drink]
 	
-	print("[DR SD] 3/4 got drink name if necessarry")
+	print("[DR SD] 3/4 got drink name if necessary")
 	
 	if not (drink in drinks or drink is None):
 		return					# break when drink is not available
@@ -156,87 +157,84 @@ def import_recipe():
 	returns True if successfull, False if an error occurred
 	"""
 	file_path = prompt_file()			# select a file
-	print("[DR IR] 1/ file path:", file_path)
+	print("[DR IR] 1/6 file path:", file_path)
 
-	file = open(file_path, 'r')					# read the file and do a compatability check
+	file = open(file_path, 'r')							# read the file and do a compatability check
 	lines = file.readlines()
 	file.close()
 	for idx, i in enumerate(lines):						# remove trailing newline characters
 		if lines[idx].endswith('\n'):
 			lines[idx] = lines[idx][:-1]
 
-	print("[DR IR] 2/ could read file and removed newline characters")
+	print("[DR IR] 2/6 could read file and removed newline characters")
 
 	new_drinks = []
 	
-	try:
+	try:											# trying to convert the second param of the instructions to int
 		for i in lines[1:]:
 			splitted = i.split(',')
 			if not splitted[0] in drinks:
 				new_drinks.append(splitted[0])
 			amount = int(splitted[1])
 	except ValueError:
-		print("[DR IR] 3/ ValueError: couldn't convert to int")
+		print("[DR IR] 3/6 ValueError: couldn't convert to int")
 		return(False)
 	except IndexError:
-		print("[DR IR] 3/ IndexError: couldn't split Commands into drink and amount needed")
+		print("[DR IR] 3/6 IndexError: couldn't split Commands into drink and amount needed")
 		return(False)
 
-	print("[DR IR] 3/ No faulty units")
+	print("[DR IR] 3/6 No faulty units")
 
-	print("[DR IR] 4/ These new drinks will be added:", new_drinks)
-	
+	# if necessary, add new drinks to the list
+	print("[DR IR] 4/6 These new drinks will be added:", new_drinks)
 	success = add_drinks(new_drinks)
-
 	if success:
-		print("[DR IR] 4/ New drinks added successfully")
+		print("[DR IR] 4/6 New drinks added successfully")
 	else:
-		print("[DR IR] 4/ Error occured")
+		print("[DR IR] 4/6 Error occurred")
 
-	print("[DR IR] 5/ copy drink to recipe folder")
-	
+
+	print("[DR IR] 5/6 copy drink to recipe folder")
 	try:
 		split = file_path.split('/')
 		filename = split[-1]
 		copyfile(file_path, gl.gen_path + "/src/recipes/" + filename)
 	except Exception:
-		print("[DR IR] an error occured while copying the file")
+		print("[DR IR] an error occurred while copying the file")
 		return False
 
+	# update recipe and drink lists
 	update_recipes_and_drinks()
-	print("[DR SI] 6/ update recipes and drinks")
+	print("[DR SI] 6/6 update recipes and drinks")
 
 	print("[DR SI] all done")
-
 	return True
 
 def delete_recipe(recipe):
-	""" deletes recipe """
+	""" deletes recipe 
+	- recipe: either in index of recipe_list, or String for recipe name
+	"""
 	print("[DR DelR]", "1/ starting deleting procedure")
 
 	if type(recipe) != int and type(recipe) != str:		# break when input type not correct
 		return
-
 	print("[DR DelR]", "2/ correct input type")
 
 	if type(recipe) == int:								# get recipe name when index given
 		recipe = recipes[recipe]
-	
 	print("[DR DelR]", "3/ got recipe name from index (if needed)")
 
-	if recipe in gl.immutable_recipes:
+	if recipe in gl.immutable_recipes:					# check if recipe is immutable / can't be deleted
 		print("[DR DelR] 4/ abort, recipe is immutable")
 		return
-
 	print("[DR DelR] 4/ recipe is allowed to be deleted")
 
-	os.remove(gl.gen_path + "/src/recipes/" + recipe)
-
+	os.remove(gl.gen_path + "/src/recipes/" + recipe)	# delete recipe
 	print("[DR DelR] 5/ recipe successfully deleted")
 
-	update_recipes_and_drinks()
-
+	update_recipes_and_drinks()							# update recipe and drinks list
 	print("[DR DelR] 6/ updated recipes and drinks")
+
 	print("[DR DelR] all done")
 
 """ ### GETTER METHODS ### """

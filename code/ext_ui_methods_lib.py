@@ -54,7 +54,7 @@ def loop():
 """ ### ### INTRO / MAIN MENU ### ### """
 intro_active = False
 
-introduction_vid = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
+introduction_vid = None		# saves the video ofr the intro
 
 def intro():
 	global intro_active, introduction_vid
@@ -64,6 +64,7 @@ def intro():
 
 	if intro_active == False:		# setup
 		intro_active = True
+		introduction_vid = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
 		introduction_vid.start()			# start intro
 	
 	introduction_vid.draw()				# draw intro
@@ -75,8 +76,8 @@ def intro():
 
 
 menu_active = False
-menu_btns = []
-menu_pos_x = 1
+menu_btns = []				# saves the buttons of the main menu
+menu_pos_x = 1				# postion of the buttons
 menu_pos_y = 0
 
 def main_menu():
@@ -181,7 +182,7 @@ def free_choose():
 			# bars
 			fc_bars.append(media_lib.Bar(gl.gen_path + "/src/props/bar/", btn_x, bar_y, btn_width, bar_height, state=fc_values[e]))
 			
-			# increase counter
+			# increase x-position
 			btn_x += btn_width + spacing
 
 			# button: next
@@ -198,18 +199,18 @@ def free_choose():
 	if io.read_input(io.LEFT):
 		fc_buttons[fc_pos].selected = False
 		fc_pos -= 1
-		if fc_pos < 0:
+		if fc_pos < 0:								# lower boundary
 			fc_pos = 0
 		fc_buttons[fc_pos].selected = True
 	if io.read_input(io.RIGHT):
 		fc_buttons[fc_pos].selected = False
 		fc_pos += 1
-		if fc_pos > len(fc_buttons)-1:
+		if fc_pos > len(fc_buttons)-1:				# upper boundary
 			fc_pos = len(fc_buttons)-1
 		fc_buttons[fc_pos].selected = True
 
-	# raising  / lowering values
-	interval = 10
+	# raising / lowering values
+	interval = 10			# interval, by which the values will be lowered/raised
 	sum_values = sum(fc_values)
 
 	if fc_pos > 0 and fc_pos < len(fc_buttons)-1:			# checking if a drink (and not go back / next) is selected
@@ -224,7 +225,7 @@ def free_choose():
 
 		fc_bars[fc_pos-1].set_state(fc_values[fc_pos-1])	# set the new state for selected bar
 
-	fc_sum_text.change_text(str(sum_values) + "%")			# change the text for the summ of all drinks
+		fc_sum_text.change_text(str(sum_values) + "%")			# change the text for the summ of all drinks
 
 
 	# exiting the menu or start mixing
@@ -239,7 +240,7 @@ def free_choose():
 			if val > 0:
 				val = int((gl.GLASS_SIZE / 100) * val)							# converts the relative value (#HACK: from 0 to 100, not 0 to 1)
 																				# to an absolute value from 0 to gl.GLASS_SIZE using a linear function
-				text = str(drinks.plugs[idx+1]) + "," + str(val)				# prepare text (idx+1, because the first one would be cleanig_water)
+				text = str(drinks.plugs[idx+1]) + "," + str(val)				# prepare text (idx+1, because the first one would be cleaning_water)
 				file.write(text+"\n")											# add to file with name and amount
 		file.close()															# close file
 
@@ -324,12 +325,12 @@ def recipe_choose():
 	if rc_active == False:
 		rc_active = True
 
-		# filling recipe list
-		list1 = drinks.get_recipes(available=True)
-		list1.sort()
-		list2 = drinks.get_recipes(available=False)
-		list2.sort()
-		rc_recipes = list1 + list2
+		# filling recipe list (first all available recipes, then the unavailable ones)
+		list_available = drinks.get_recipes(available=True)
+		list_available.sort()
+		list_unavailable = drinks.get_recipes(available=False)
+		list_unavailable.sort()
+		rc_recipes = list_available + list_unavailable
 
 		# creating background
 		rc_background = media_lib.Video(gl.gen_path + rc_std_file)
@@ -352,7 +353,7 @@ def recipe_choose():
 
 	""" input """
 	# go up or down
-	if rc_stage == 0:					# ony if in list mode
+	if rc_stage == 0:					# only if in list mode
 		if io.read_input(io.UP):
 			rc_visible_pos -= 1
 			rc_pos -= 1
@@ -491,7 +492,7 @@ def recipe_choose():
 							"; rc_stage: " + str(rc_stage))
 
 ro_active = False
-ro_background = None
+ro_background = None			# background
 def recipe_output():
 	global ro_active, ro_background
 
@@ -519,7 +520,7 @@ def recipe_output():
 sc_active = False
 sc_background = None			# background
 sc_btns = []					# list of all buttons
-sc_pos = 0						# positon / selected button
+sc_pos = 0						# position / selected button
 
 def settings_choose():
 	global sc_active, sc_background, sc_btns, sc_pos
@@ -591,7 +592,7 @@ def settings_drink():
 
 		# get recipes
 		sd_drinks_list = drinks.get_drinks()
-		sd_drinks_list.remove('cleaning_water')		# remove cleaning_water, as it is strictly set to plug 0
+		sd_drinks_list.remove('cleaning_water')		# remove cleaning_water, as it is already permanently set to plug 0
 		sd_drinks_list.remove("None")				# put 'None' in first place
 		sd_drinks_list.insert(0, "None")
 
@@ -619,20 +620,18 @@ def settings_drink():
 			if sd_first_drink < 0:
 				sd_first_drink = 0
 
-		sd_btn_list[sd_chosen_btn].selected = False
+		sd_btn_list[sd_chosen_btn].selected = False				# menu boundaries
 		sd_chosen_btn -= 1
 		if sd_chosen_btn < 0:
 			sd_chosen_btn = 0
 		sd_btn_list[sd_chosen_btn].selected = True
-
-
 	elif io.read_input(io.DOWN):
 		if sd_chosen_btn == sd_n_visible_btn-1:
 			sd_first_drink += 1
 			if sd_first_drink > len(sd_drinks_list) - sd_n_visible_btn:
 				sd_first_drink = len(sd_drinks_list) - sd_n_visible_btn
 
-		sd_btn_list[sd_chosen_btn].selected = False
+		sd_btn_list[sd_chosen_btn].selected = False				# menu boundaries
 		sd_chosen_btn += 1
 		if sd_chosen_btn > sd_n_visible_btn-1:
 			sd_chosen_btn = sd_chosen_btn-1
@@ -690,16 +689,16 @@ def settings_drink():
 # settings: import
 si_active = False
 
-si_background = None
+si_background = None		# stores the background
 
-si_recipe_list = []
-si_first_recipe = 0
+si_recipe_list = []			# stores the recipes
+si_first_recipe = 0			# stores the number of the first shown recipe
 
-si_btn_list = []
-si_chosen_btn = 0
-si_n_visible_btn = 10
+si_btn_list = []			# stores the Button objects
+si_chosen_btn = 0			# stores the chosen Button
+si_n_visible_btn = 10		# number of visible Buttons
 
-si_import_btn = None
+si_import_btn = None		# the import button in the bottom-right corner
 
 def settings_import():
 	global si_active, si_background, si_recipe_list, si_first_recipe, si_btn_list, si_chosen_btn, si_n_visible_btn, si_import_btn
@@ -729,7 +728,7 @@ def settings_import():
 		si_active = False
 		gl.prog_pos = 'sc'
 
-	elif io.read_input(io.UP) and si_import_btn.selected == False:
+	elif io.read_input(io.UP) and si_import_btn.selected == False:		# moving up and down in the list
 		if si_chosen_btn == 0:
 			si_first_recipe -= 1
 			if si_first_recipe < 0:
@@ -740,8 +739,6 @@ def settings_import():
 		if si_chosen_btn < 0:
 			si_chosen_btn = 0
 		si_btn_list[si_chosen_btn].selected = True
-
-
 	elif io.read_input(io.DOWN) and si_import_btn.selected == False:
 		if si_chosen_btn == si_n_visible_btn-1:
 			si_first_recipe += 1
@@ -754,27 +751,26 @@ def settings_import():
 			si_chosen_btn = si_chosen_btn-1
 		si_btn_list[si_chosen_btn].selected = True
 
-	elif io.read_input(io.RIGHT):
+	elif io.read_input(io.RIGHT):							# switch to import button
 		si_import_btn.selected = True
 		si_btn_list[si_chosen_btn].selected = False
 
-	elif io.read_input(io.LEFT):
+	elif io.read_input(io.LEFT):							# switch to recipe list
 		si_import_btn.selected = False
 		si_btn_list[si_chosen_btn].selected = True
 
-	elif io.read_input(io.NEXT):
-		if si_import_btn.selected:
-			print("[UI SI] import recipe procedure started")
+	elif io.read_input(io.NEXT):								# pressing next
+		if si_import_btn.selected:								# if currently focusing the import-button
+			print("[UI SI] import recipe procedure started")		# start recipe import
 			success = drinks.import_recipe()
 			if success:
-				print("[UI SI] recipe succesfully imported")
+				print("[UI SI] recipe successfully imported")
 				si_active = False
 			else:
-				print("[UI SI] an error occured during import")
+				print("[UI SI] an error occurred during import")
 
-
-		else:
-			drinks.delete_recipe(si_first_recipe+si_chosen_btn)
+		else:													# if currently focusing somewhere on the list
+			drinks.delete_recipe(si_first_recipe+si_chosen_btn)		# delete the chosen recipe (if possible)
 			si_active = False
 
 	
@@ -799,13 +795,14 @@ def settings_import():
 
 """ ### CREDITS ### """
 cr_active = False
-cr_background = None
-cr_text = None
+cr_background = None			# stores background
+cr_text = None					# stores the textfield
 def credits():
 	global cr_active, cr_background, cr_text
 
-	if cr_active == False: 		# whe entering credits
+	if cr_active == False: 		# when entering credits
 		cr_active = True
+		# create objects
 		cr_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
 		cr_background.start(repeat=True)
 		cr_text = media_lib.TextField(0,8,gl.W, gl.H-8, gl.credits_text, gl.debug_font, (255,255,255), alignment=0)
@@ -830,6 +827,6 @@ def credits():
 def shutdown():
 	print("STOPPING PROGRAM")
 	if gl.os_is_linux:
-		from subprocess import call
+		from subprocess import call							# sending the shutdown command for linux
 		call("sudo shutdown -h now", shell=True)
-	gl.prog_active = False
+	gl.prog_active = False									# on any other machine, simply stop the program

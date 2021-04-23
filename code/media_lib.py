@@ -25,13 +25,17 @@ class Image:
 		- rotation=0:	set a certain rotation to the image (optional)
 		- show=True:	don't display image directly, when set to False
 		"""
+
 		self.img = pygame.transform.scale(pygame.image.load(path), (width, height))
+
+		# save all parameters
 		self.x, self.y = x, y
 		if rotation != 0:
 			self.img = pygame.transform.rotate(self.img, rotation)
 		self.show = show
 
 	def draw(self):
+		""" draws the image. no params needed """
 		if self.show:
 			gl.screen.blit(self.img, (self.x, self.y))
 
@@ -87,7 +91,7 @@ class Button:
 		- text: text to show [String]
 		- font: font
 		- col: color to use (R, G, B)
-		- hor_alignment=0: horicontal alignment (0 = center, 1 = left, 2 = right)
+		- hor_alignment=0: horizontal alignment (0 = center, 1 = left, 2 = right)
 		- ver_alignment=0: vertical alignment (0 = center, 1 = up, 2 = down)
 		"""
 		self.show_text = True
@@ -400,7 +404,7 @@ class TextField:
 		self.spacing = 15
 
 		# create lines of text
-		self.lines = wrapline(text, font, width - 2*self.spacing)		# splitting the text in a list of words
+		self.lines = wrapline(text, font, width - 2*self.spacing)		# splitting the text in a list of words (maxwidth includes/substracts spacing)
 
 	def change_text(self, text):
 		self.lines = wrapline(text, self.font, self.width)
@@ -482,12 +486,12 @@ class Bar:
 	def draw(self):
 		""" draw the bar """
 		for i in self.imgs:
-			i.draw()				# draws all images, though only one is enbabled and will be actually drawn
+			i.draw()				# draws all images, though only one is enabled and will be actually drawn
 
 
 """
 The following function is used to open a files dialog using tkinter.
-It ist directy copied from a question on StackOverflow
+It ist directly copied from a question on StackOverflow
 Source: https://stackoverflow.com/questions/63801960/how-to-prompt-user-to-open-a-file-with-python3-pygame
 """
 def prompt_file():
