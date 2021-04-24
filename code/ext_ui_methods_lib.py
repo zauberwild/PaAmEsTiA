@@ -59,8 +59,7 @@ introduction_vid = None		# saves the video ofr the intro
 def intro():
 	global intro_active, introduction_vid
 
-	gl.prog_pos = 'm'		# DEL as soon as intro is needed again
-	intro_active = False
+	#gl.prog_pos = 'm'		# DEL as soon as intro is needed again
 
 	if intro_active == False:		# setup
 		intro_active = True
@@ -160,7 +159,7 @@ def free_choose():
 	if fc_active == False:
 		fc_active = True
 		# set video background
-		fc_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
+		fc_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")
 		fc_background.start(repeat=True)
 
 		# set buttons
@@ -282,7 +281,7 @@ def free_output():
 
 	if not fo_active:		# if first entering recipe output
 		fo_active = True
-		fo_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
+		fo_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")
 		fo_background.start(repeat=True)
 		print("[UI FO] now mixing")
 
@@ -311,7 +310,7 @@ rc_recipes = []				# list of all recipes, sorted after availability, than alphab
 
 rc_marker = []				# list holding markers
 
-rc_std_file = "/src/media/intro/intro.mp4"	# standard video file
+rc_std_file = "/src/props/intro.mp4"	# standard video file
 rc_background = None		# video in the background
 
 rc_stage = 0				# 0: show all recipes; 1: show info of selected recipe (-1: go back; 2: mix recipe)
@@ -498,7 +497,7 @@ def recipe_output():
 
 	if not ro_active:		# if first entering recipe output
 		ro_active = True
-		ro_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
+		ro_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")
 		ro_background.start(repeat=True)
 		print("[UI RO] now mixing")
 
@@ -527,7 +526,7 @@ def settings_choose():
 
 	if sc_active == False:		# when entering settings_choose
 		sc_active = True
-		sc_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")		# create background
+		sc_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")		# create background
 		sc_background.start(repeat=True)
 
 		# create buttons
@@ -587,7 +586,7 @@ def settings_drink():
 
 	if sd_active == False:			# when entering drink settings
 		sd_active = True
-		sd_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")		# create background
+		sd_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")		# create background
 		sd_background.start(repeat=True)
 
 		# get recipes
@@ -705,7 +704,7 @@ def settings_import():
 
 	if si_active == False:			# when entering import settings
 		si_active = True
-		si_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")		# create background
+		si_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")		# create background
 		si_background.start(repeat=True)
 
 		# get recipes
@@ -803,7 +802,7 @@ def credits():
 	if cr_active == False: 		# when entering credits
 		cr_active = True
 		# create objects
-		cr_background = media_lib.Video(gl.gen_path + "/src/media/intro/intro.mp4")
+		cr_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")
 		cr_background.start(repeat=True)
 		cr_text = media_lib.TextField(0,8,gl.W, gl.H-8, gl.credits_text, gl.debug_font, (255,255,255), alignment=0)
 
