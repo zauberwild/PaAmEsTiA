@@ -75,7 +75,7 @@ def update_input():
 	
 		# check for credits (activate by either pressing all button down at once or pressing tab)
 		# it only test for one key first to save time
-		if not up_state or (event.type == pygame.KEYDOWN and event.key == pygame.K_TAB):
+		if (not up_state and gl.os_is_linux == True) or (event.type == pygame.KEYDOWN and event.key == pygame.K_TAB):
 			if not down_state and not left_state and not right_state and not next_state and not back_state or (event.type == pygame.KEYDOWN and event.key == pygame.K_TAB):
 				print("[IO UI] go to credits")
 				gl.cr_prev_pos = gl.prog_pos
