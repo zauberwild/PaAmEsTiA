@@ -59,7 +59,7 @@ introduction_vid = None		# saves the video ofr the intro
 def intro():
 	global intro_active, introduction_vid
 
-	#gl.prog_pos = 'm'		# DEL as soon as intro is needed again
+	gl.prog_pos = 'm'		# DEL as soon as intro is needed again
 
 	if intro_active == False:		# setup
 		intro_active = True
