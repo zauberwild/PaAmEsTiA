@@ -819,6 +819,9 @@ def credits():
 		cr_text = None
 		gl.prog_pos = gl.cr_prev_pos
 
+	if gl.show_debug:
+		gl.debug_text.append("prev prog_pos: " + gl.cr_prev_pos)
+
 
 
 
