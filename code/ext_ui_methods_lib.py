@@ -74,13 +74,14 @@ def intro():
 		gl.prog_pos = 'm'
 
 
+menu_background = None
 menu_active = False
 menu_btns = []				# saves the buttons of the main menu
 menu_pos_x = 1				# postion of the buttons
 menu_pos_y = 0
 
 def main_menu():
-	global menu_active, menu_btns, menu_pos_x, test_recipe, menu_pos_y
+	global menu_background, menu_active, menu_btns, menu_pos_x, test_recipe, menu_pos_y
 	
 	if menu_active == False:			# setup
 		menu_active = True
@@ -135,6 +136,11 @@ def main_menu():
 	# for each button in list
 	for btn in menu_btns:
 		btn.draw()
+
+	# exiting the main menu
+	if menu_active == False:
+		menu_background = None
+		menu_btns.clear()
 
 	# append debug information
 	if gl.show_debug:
