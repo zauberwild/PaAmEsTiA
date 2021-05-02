@@ -287,7 +287,7 @@ def free_output():
 
 	if not fo_active:		# if first entering recipe output
 		fo_active = True
-		fo_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")
+		fo_background = media_lib.Video(gl.gen_path + "/src/media/loading.mp4")
 		fo_background.start(repeat=True)
 		print("[UI FO] now mixing")
 
@@ -503,7 +503,7 @@ def recipe_output():
 
 	if not ro_active:		# if first entering recipe output
 		ro_active = True
-		ro_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")
+		ro_background = media_lib.Video(gl.gen_path + "/src/media/loading.mp4")
 		ro_background.start(repeat=True)
 		print("[UI RO] now mixing")
 
