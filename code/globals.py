@@ -29,7 +29,7 @@ pygame.freetype.init()
 debug_font = pygame.freetype.Font(gen_path + "/src/fonts/CamingoCode-Regular.ttf", 24)		# debug font
 debug_font_big = pygame.freetype.Font(gen_path + "/src/fonts/CamingoCode-Regular.ttf", 48)		# debug font, but bigger
 debug_font_small = pygame.freetype.Font(gen_path + "/src/fonts/CamingoCode-Regular.ttf", 18)		# debug font, but smaller
-standard_font = pygame.freetype.Font(gen_path + "/src/fonts/OpenSans-Regular.ttf", 24)
+standard_font = pygame.freetype.Font(gen_path + "/src/fonts/da_mad_rave/Da Mad Rave.otf", 18)
 
 """ setting window up """
 prog_active = True		# set to False to end program
