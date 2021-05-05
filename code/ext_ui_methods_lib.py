@@ -12,10 +12,9 @@ import drinks_lib as drinks
 """ ### ### SETUP / LOOP ### ### """
 """ actions that need to be executed once on startup are here 
 	This includes object creation, reading files in, etc.
-	# DEL if not needed
 """
 
-file = open(gl.gen_path + "/src/drinks")
+file = open(gl.gen_path + "/src/drinks")			# DEL i guess
 lines = file.readlines()
 for idx, i in enumerate(lines):						# remove trailing newline characters
 	if lines[idx].endswith('\n'):
@@ -48,6 +47,11 @@ def loop():
 			i_s = "I: next: " + str(int(io.read_input(io.NEXT))) + "; back: " + str(int(io.read_input(io.BACK)))
 			gl.debug_text.append(i_s)
 
+def end_loop():
+	""" actions that need to be executed every loop AT THE END are here. """
+	# draw and update notifications
+	for i in gl.notifications:
+		i.update()
 
 
 
@@ -90,7 +94,7 @@ def main_menu():
 		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_blue.png", 	"prop_grey.png", 275, 35, 250, 445))
 		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_yellow.png", "prop_grey.png", 550, 90, 200, 370))
 		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_red.png", 	"prop_grey.png", 275, 505, 250, 50))
-		menu_btns[0].add_text("EINSTELLUNGEN", gl.debug_font_big, (0,0,0), 0)
+		menu_btns[0].add_text("EINSTELLUNGEN", gl.debug_font_big, (0,0,0), 0)			# DEL as soon as  the real sources are ready
 		menu_btns[1].add_text("REZEPT", gl.debug_font_big, (0,0,0), 0)
 		menu_btns[2].add_text("FREI MISCHEN", gl.debug_font_big, (0,0,0), 0)
 		menu_btns[3].add_text("VERLASSEN", gl.debug_font_big, (0,0,0), 0)
@@ -182,7 +186,7 @@ def free_choose():
 		for e, i in enumerate(drinks.plugs[1:]):
 			# buttons
 			fc_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_white.png", btn_x, btn_y, btn_width, btn_height))
-			fc_buttons[-1].add_text(i, gl.debug_font_small, (255,0,0))
+			fc_buttons[-1].add_text(i, gl.debug_font_small, (255,0,0))				# DEL src rdy
 
 			# bars
 			fc_bars.append(media_lib.Bar(gl.gen_path + "/src/props/bar/", btn_x, bar_y, btn_width, bar_height, state=fc_values[e]))
@@ -196,7 +200,7 @@ def free_choose():
 		fc_buttons[fc_pos].selected = True
 
 		# textfield for sum
-		fc_sum_text = media_lib.TextField(400-50, 20, 100, 45, "ph", gl.debug_font, (255,0,0), alignment=0)
+		fc_sum_text = media_lib.TextField(400-50, 20, 100, 45, "ph", gl.standard_font, (255,0,0), alignment=0)
 		fc_sum_text.add_background(gl.gen_path + "/src/props/prop_white.png")
 
 	""" logic / input """
@@ -405,7 +409,7 @@ def recipe_choose():
 	# moving menu / setting correct text
 	a = rc_pos - rc_visible_pos 		# first visible item
 	for btn in rc_btns:
-		btn.add_text(rc_recipes[a], gl.debug_font, (0,0,0), 1)
+		btn.add_text(rc_recipes[a], gl.standard_font, (0,0,0), 1)
 		a += 1
 
 	# control marker
@@ -434,7 +438,7 @@ def recipe_choose():
 		file.close()
 		
 		# create textfield
-		rc_info_textfield = media_lib.TextField(50, 50, 400, 400, text, gl.debug_font_small, (0,0,255), alignment=1)
+		rc_info_textfield = media_lib.TextField(50, 50, 400, 400, text, gl.standard_font_small, (0,0,255), alignment=1)
 		rc_info_textfield.add_background(gl.gen_path + "/src/props/prop_yellow.png")
 		#creating info objects
 		rc_info_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_grey.png", "prop_white.png", "prop_white.png", 50, 500, 75, 75, rotation=270))
@@ -537,9 +541,9 @@ def settings_choose():
 
 		# create buttons
 		sc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 35, 35, 300, 530))
-		sc_btns[-1].add_text("Getränke", gl.debug_font, (0,0,255))
+		sc_btns[-1].add_text("Getränke", gl.debug_font, (0,0,255))		# DEL src rdy
 		sc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", gl.W-35-300, 35, 300, 530))
-		sc_btns[-1].add_text("Importieren", gl.debug_font, (0,0,255))
+		sc_btns[-1].add_text("Importieren", gl.debug_font, (0,0,255))	# DEL src rdy
 		sc_btns[sc_pos].selected = True
 
 	# input
@@ -659,16 +663,16 @@ def settings_drink():
 	# setting new drink to plug
 	elif io.read_input(io.NEXT):
 		drink = sd_btn_list[sd_chosen_btn].text
-		if drink == "leer":
-			drink = 'None'
 		drinks.set_drink(sd_plug_num, drink)
+		notification_text = str(sd_plug_num) + " set to " + str(drink)
+		if drink == 'None':
+			notification_text = str(sd_plug_num) + " set clear"
+		gl.notifications.append(media_lib.Notification(notification_text))
 		
 
 	# add the drink names to the buttons
 	for idx, btn in enumerate(sd_btn_list):
 		text = sd_drinks_list[sd_first_drink+idx]
-		if text == 'None':
-			text = 'leer'
 		btn.add_text(text, gl.standard_font, (0,0,255))
 
 	# draw
@@ -771,12 +775,20 @@ def settings_import():
 			if success:
 				print("[UI SI] recipe successfully imported")
 				si_active = False
+				notification_text = "recipe successfully imported"
 			else:
 				print("[UI SI] an error occurred during import")
+				notification_text = "An error occurred during import"
 
 		else:													# if currently focusing somewhere on the list
-			drinks.delete_recipe(si_first_recipe+si_chosen_btn)		# delete the chosen recipe (if possible)
+			success = drinks.delete_recipe(si_first_recipe+si_chosen_btn)		# delete the chosen recipe (if possible)
 			si_active = False
+			if success:
+				notification_text = "successfully deleted recipe"
+			else:
+				notification_text = "couldn't delete recipe, recipe is immutable"
+		
+		gl.notifications.append(media_lib.Notification(notification_text))
 
 	
 	# add the recipe names to the buttons
@@ -810,7 +822,7 @@ def credits():
 		# create objects
 		cr_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")
 		cr_background.start(repeat=True)
-		cr_text = media_lib.TextField(0,8,gl.W, gl.H-8, gl.credits_text, gl.debug_font, (255,255,255), alignment=0)
+		cr_text = media_lib.TextField(0,8,gl.W, gl.H-8, gl.credits_text, gl.standard_font, (255,255,255), alignment=0)
 
 	# input
 	if io.read_input(io.BACK):
