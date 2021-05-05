@@ -15,7 +15,6 @@ import globals as gl
 import ext_ui_methods_lib as ui
 import subprocess
 
-# DEL fill screen, can be deleted, when project done
 gl.screen.fill((0,0,127))
 pygame.display.flip()
 
@@ -51,7 +50,7 @@ while gl.prog_active:
 		elif gl.prog_pos[1] == 'i':								# import recipes
 			ui.settings_import()
 
-	elif gl.prog_pos == 'cr':			# creedits
+	elif gl.prog_pos == 'cr':			# credits
 		ui.credits()
 	
 	elif gl.prog_pos[0] == 'q':			# quit / shutdown
@@ -66,6 +65,9 @@ while gl.prog_active:
 			gl.debug_font.render_to(gl.screen, (0,h), t, (255,0,0))
 			h += 32
 		prog_pos = 'm'
+
+
+	ui.end_loop()
 
 
 	# debug infos
