@@ -30,7 +30,12 @@ pygame.freetype.init()
 debug_font = pygame.freetype.Font(gen_path + "/src/fonts/CamingoCode-Regular.ttf", 24)		# debug font
 debug_font_big = pygame.freetype.Font(gen_path + "/src/fonts/CamingoCode-Regular.ttf", 48)		# debug font, but bigger
 debug_font_small = pygame.freetype.Font(gen_path + "/src/fonts/CamingoCode-Regular.ttf", 18)		# debug font, but smaller
-standard_font = pygame.freetype.Font(gen_path + "/src/fonts/da_mad_rave/Da Mad Rave.otf", 18)
+
+standard_font_size = 18
+standard_font = pygame.freetype.Font(gen_path + "/src/fonts/da_mad_rave/Da Mad Rave.otf", standard_font_size)
+
+standard_font_size_small = 12
+standard_font_small = pygame.freetype.Font(gen_path + "/src/fonts/da_mad_rave/Da Mad Rave.otf", standard_font_size_small)
 
 """ setting window up """
 prog_active = True		# set to False to end program
@@ -59,6 +64,8 @@ recipe_video_dict = {"2":"/src/media/intro/intro2.mp4",
 					 "3":"/src/media/intro/intro3.mp4",
 					 "4":"/src/media/intro/intro4.mp4",
 					 }
+""" notification """
+notifications = []
 
 
 """ credits """
