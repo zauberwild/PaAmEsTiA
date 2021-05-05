@@ -14,7 +14,7 @@ def keyboard_input():
 
 	for event in pygame_events:					# check for keyboard input
 			# closing window / exit program
-			if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+			if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
 				gl.prog_active = False
 			if event.type == pygame.KEYDOWN:
 				# debug information
