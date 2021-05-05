@@ -2,7 +2,8 @@
 contains class for graphics, animations and videos
 """
 
-import os						# used to scan for files and to execute commands from a commandline
+import os
+from typing import Sized						# used to scan for files and to execute commands from a commandline
 import pygame					# used in Animation-Class for displaying sprites
 import pygame.freetype			# used in Button class to show text
 import cv2 						# used in Video-Class for displaying videos
@@ -10,6 +11,7 @@ import numpy as np 				# used by opencv
 import globals as gl			# imports global variables
 import tkinter					# used for file prompt to import new recipes
 import tkinter.filedialog
+from time import time			# used to automatically fade out notifications
 
 class Image:
 	""" can be used to easily display single images
@@ -384,7 +386,7 @@ class TextField:
 	show_background = False
 	background = None
 
-	def __init__(self, x, y, width, height, text, font, font_col, alignment=1):
+	def __init__(self, x, y, width, height, text, font, font_col, alignment=1, ver_alignment=1):
 		""" creates text in agiven space
 		- x:	x-Position
 		- y:	y-position
@@ -394,14 +396,27 @@ class TextField:
 		- font:	the to be used
 		- font_col:	color in RGB-format as a tuple
 		- alignment=1: horizontal alignment (0 = center, 1 = left, 2 = right)
+		- veR_alignment=1: vertical alignment (0 = center, 1 = top)
 		"""
 		self.x, self.y = x, y							# save coordinates
 		self.width, self.height = width, height			# save 
 		self.alignment = alignment
+		self.ver_alignment = ver_alignment
 		self.font = font
 		self.font_color = font_col
 		
 		self.spacing = 15
+
+		# save font size. this part is slightly hacky, but who cares?
+		if font == gl.standard_font:
+			self.font_size = gl.standard_font_size
+			print("[MED TF init] standard size")
+		elif font == gl.standard_font_small:
+			self.font_size = gl.standard_font_size_small
+			print("[MED TF init] small size")
+		else:
+			self.font_size = 12
+			print("[MED TF init] not found; switched to default size")
 
 		# create lines of text
 		self.lines = wrapline(text, font, width - 2*self.spacing)		# splitting the text in a list of words (maxwidth includes/substracts spacing)
@@ -428,6 +443,8 @@ class TextField:
 		
 		spacing = self.spacing			# space between lines and padding on the sides
 		t_x, t_y = self.x, self.y + spacing		# set starting coordinates
+		if self.ver_alignment == 0:					# align vertical, if necessary
+			t_y = self.y + ((self.height/2) - (len(self.lines) *  self.font_size / 2))
 		for text in self.lines:					# for each line
 			
 			textsur, rect = self.font.render(text, self.font_color)	# render text
@@ -487,6 +504,60 @@ class Bar:
 		""" draw the bar """
 		for i in self.imgs:
 			i.draw()				# draws all images, though only one is enabled and will be actually drawn
+
+
+class Notification:
+
+	def __init__(self, text):
+		""" notification class. it will show up, go away and delete istelf automatically
+		- text: text to show
+		"""
+		self.text = text
+
+		self.state = 0				# state of notification (0: fading in; 1: showing; 2: fading out)
+		self.fade_vel = 5			# velocity of fading in/out
+		self.show_time = 2			# time in seconds to show notification (excl. fade-in/out)
+
+		# times
+		self.finish_time = 0
+
+		# coordinates and size
+		w, h = 350, 100
+		x, y = 10, 0-h
+		self.x ,self.y, self.w, self.h = x, y, w, h
+
+		# image and text
+		self.image = Image(gl.gen_path + "/src/props/prop_notify.png", x, y, w, h)
+		self.textfield = TextField(x, y, w, h, text, gl.standard_font, (0,255,0), 0, ver_alignment=0)
+
+	def update(self):
+		""" update notification """
+		#update
+		if self.state == 0:
+			self.y += self.fade_vel
+			if self.y >= 10:		# if reached at final position
+				self.y = 10
+
+				self.finish_time = time()+self.show_time
+				self.state = 1
+			
+		elif self.state == 1:
+			if time() >= self.finish_time:
+				self.state = 2
+		elif self.state == 2:
+			self.y -= self.fade_vel
+			if self.y <= 0-self.h:		# if reached at final position
+				#index = gl.notifications.index(self)
+				gl.notifications.remove(self)
+
+		# update image and text coordinates
+		self.image.y = self.y
+		self.textfield.y = self.y
+
+		# draw
+		self.image.draw()
+		self.textfield.draw()
+
 
 
 """
