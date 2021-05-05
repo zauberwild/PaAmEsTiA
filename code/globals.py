@@ -18,6 +18,7 @@ _UNIT_SIZE = 250 									# size of one unit in ml
 _TIME_PER_UNIT = 25000								# time needed to fill one unit in milliseconds
 TIME_PER_ML = _TIME_PER_UNIT / _UNIT_SIZE			# time pro milliliter in millisecond
 GLASS_SIZE = 300									# size of the glass
+CLEANING_TIME = 2000								# time for cleaning water to clean pipes (in milliseconds)
 
 """ debug variables """
 os_is_linux = not path.isfile(gen_path + "/src/.windows")		# looks for a ".windows" file, which only exists on my Windows-PC
