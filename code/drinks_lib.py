@@ -3,6 +3,7 @@ contains the recipe-class and drink-class
 """
 
 # imports
+from tkinter.constants import TRUE
 import globals as gl
 import io_lib as io
 import os
@@ -226,7 +227,7 @@ def delete_recipe(recipe):
 
 	if recipe in gl.immutable_recipes:					# check if recipe is immutable / can't be deleted
 		print("[DR DelR] 4/ abort, recipe is immutable")
-		return
+		return False
 	print("[DR DelR] 4/ recipe is allowed to be deleted")
 
 	os.remove(gl.gen_path + "/src/recipes/" + recipe)	# delete recipe
@@ -236,6 +237,7 @@ def delete_recipe(recipe):
 	print("[DR DelR] 6/ updated recipes and drinks")
 
 	print("[DR DelR] all done")
+	return True
 
 """ ### GETTER METHODS ### """
 """ used to get different lists"""
