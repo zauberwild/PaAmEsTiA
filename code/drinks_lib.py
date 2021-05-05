@@ -323,6 +323,11 @@ def start_mixing(recipe):
 		commands.append("w")							# wait for timer to pass
 		commands.append("c" + str(plug))				# close valve
 	
+	commands.append("o0")								# cleaning procedure. this will pump some water through to clean the pipes
+	commands.append("t" + str(gl.CLEANING_TIME))
+	commands.append("w")
+	commands.append("c0")
+
 	commands.append("e")					# end sign
 	print("[DR SM] compiling done")
 	print("[DR SM] commands:")
