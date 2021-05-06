@@ -581,21 +581,23 @@ sd_active = False
 
 sd_background = None
 
-sd_drinks_list = []
+sd_drinks_list = []				# contains all drinks
 sd_first_drink = 0
 
-sd_btn_list = []
+sd_btn_list = []				# contains all buttons
 sd_chosen_btn = 0
 sd_n_visible_btn = 8
 sd_btn_list_cords = (gl.W - int((3.5+0.1+0.25)*100), int(0.35*100), int(3.5*100), int(5.3*100/sd_n_visible_btn))		# x, y, w, h
 
-sd_plug_img = None
+sd_marker = []				# list holding markers
+
+sd_plug_img = None			# small image indicating selected plug
 sd_plug_img_name = ["cleaning_water can't be set", "prop_1.png", "prop_2.png", "prop_3.png", "prop_4.png", "prop_5.png"]
 sd_plug_num = 1
 sd_plug_img_cords = (gl.W-int(0.35*100)-sd_btn_list_cords[3], int(0.35*100), sd_btn_list_cords[3], sd_btn_list_cords[3])				# x, y, w, h
 
 def settings_drink():
-	global sd_active, sd_background, sd_drinks_list, sd_first_drink, sd_btn_list, sd_chosen_btn, sd_n_visible_btn, sd_plug_img, sd_plug_img_name, sd_plug_num, sd_plug_img_cords, sd_btn_list_cords
+	global sd_active, sd_background, sd_drinks_list, sd_first_drink, sd_btn_list, sd_chosen_btn, sd_n_visible_btn, sd_marker, sd_plug_img, sd_plug_img_name, sd_plug_num, sd_plug_img_cords, sd_btn_list_cords
 
 	if sd_active == False:			# when entering drink settings
 		sd_active = True
@@ -615,6 +617,10 @@ def settings_drink():
 			sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
 			y += h
 		sd_btn_list[sd_chosen_btn].selected = True
+
+		# create marker
+		sd_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 50, 220, 50, rotation=180))
+		sd_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 500, 220, 50))
 
 		#create plug image
 		sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], h, h)
@@ -677,18 +683,33 @@ def settings_drink():
 		text = sd_drinks_list[sd_first_drink+idx]
 		btn.add_text(text, gl.standard_font, (0,0,255))
 
+	# control marker
+	# upper marker
+	if sd_btn_list[0].text == sd_drinks_list[0]:	# if first item in recipe-list is visible -> we are on the top of the list
+		sd_marker[0].disabled = True
+	else:
+		sd_marker[0].disabled = False
+	# lower marker
+	if sd_btn_list[-1].text == sd_drinks_list[-1]:	# if last item in recipe-list is visible -> we are on the bottom of the list
+		sd_marker[1].disabled = True
+	else:
+		sd_marker[1].disabled = False
+
 	# draw
 	sd_background.draw()
 	for i in sd_btn_list:
 		i.draw()
+	for i in sd_marker:
+		i.draw()
 	sd_plug_img.draw()
 
 	if sd_active == False:		# when leaving drink settings
-		print("[UI SD] leavin' import settings")
+		print("[UI SD] leaving import settings")
 		sd_background = None
 		sd_drinks_list.clear()
 		sd_btn_list.clear()
 		sd_plug_img = None
+		sd_marker.clear()
 	
 	if gl.show_debug:		# append debug info
 		gl.debug_text.append("[UI SD] chosen_btn: " + str(sd_chosen_btn) + " first_drink: " + str(sd_first_drink) +  " chosen_drink: " + str(drinks.drinks[sd_first_drink+sd_chosen_btn]))
@@ -709,10 +730,12 @@ si_btn_list = []			# stores the Button objects
 si_chosen_btn = 0			# stores the chosen Button
 si_n_visible_btn = 10		# number of visible Buttons
 
+si_marker = []				# list holding markers
+
 si_import_btn = None		# the import button in the bottom-right corner
 
 def settings_import():
-	global si_active, si_background, si_recipe_list, si_first_recipe, si_btn_list, si_chosen_btn, si_n_visible_btn, si_import_btn
+	global si_active, si_background, si_recipe_list, si_first_recipe, si_btn_list, si_chosen_btn, si_n_visible_btn, si_import_btn, si_marker
 
 	if si_active == False:			# when entering import settings
 		si_active = True
@@ -729,6 +752,10 @@ def settings_import():
 			si_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
 			y += h
 		si_btn_list[si_chosen_btn].selected = True
+
+		# create marker
+		si_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 50, 220, 50, rotation=180))
+		si_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 500, 220, 50))
 
 		# create import button
 		si_import_btn = media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", int(gl.W-(0.25+1)*100), 480, 100, 50)
@@ -792,6 +819,18 @@ def settings_import():
 		
 		gl.notifications.append(media_lib.Notification(notification_text))
 
+	# control marker
+	# upper marker
+	if si_btn_list[0].text == si_recipe_list[0]:	# if first item in recipe-list is visible -> we are on the top of the list
+		si_marker[0].disabled = True
+	else:
+		si_marker[0].disabled = False
+	# lower marker
+	if si_btn_list[-1].text == si_recipe_list[-1]:	# if last item in recipe-list is visible -> we are on the bottom of the list
+		si_marker[1].disabled = True
+	else:
+		si_marker[1].disabled = False
+
 	
 	# add the recipe names to the buttons
 	for idx, btn in enumerate(si_btn_list):
@@ -801,13 +840,16 @@ def settings_import():
 	si_background.draw()
 	for i in si_btn_list:
 		i.draw()
+	for i in si_marker:
+		i.draw()
 	si_import_btn.draw()
 
 	if si_active == False:		# when leaving import settings
-		print("[UI SI] leavin' import settings")
+		print("[UI SI] leaving import settings")
 		si_background = None
 		si_recipe_list.clear()
 		si_btn_list.clear()
+		si_marker.clear()
 
 	if gl.show_debug:		# append debug info
 		gl.debug_text.append("[UI SI] chosen_btn: " + str(si_chosen_btn) + " first_recipe: " + str(si_first_recipe) +  " chosen_recipe: " + str(drinks.recipes[si_first_recipe+si_chosen_btn]))
