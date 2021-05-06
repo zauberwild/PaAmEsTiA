@@ -60,10 +60,12 @@ clock = pygame.time.Clock()
 immutable_recipes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Pangalaktischer Donnergurgler']
 
 """ dictionary for recipes with their own video (path from /src/)"""
-recipe_video_dict = {"2":"/src/media/intro/intro2.mp4",
-					 "3":"/src/media/intro/intro3.mp4",
-					 "4":"/src/media/intro/intro4.mp4",
+recipe_background_dict = {"2":"/src/media/recipe/backgrounds/bg2.png",
+					 "3":"/src/media/recipe/backgrounds/bg3.png",
+					 "4":"/src/media/recipe/backgrounds/bg4.png",
 					 }
+
+
 """ notification """
 notifications = []
 
