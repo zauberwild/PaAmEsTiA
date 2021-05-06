@@ -28,6 +28,7 @@ class Image:
 		- show=True:	don't display image directly, when set to False
 		"""
 
+		self.file = path
 		self.img = pygame.transform.scale(pygame.image.load(path), (width, height))
 
 		# save all parameters
