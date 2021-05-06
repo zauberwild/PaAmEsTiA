@@ -320,7 +320,7 @@ rc_recipes = []				# list of all recipes, sorted after availability, than alphab
 
 rc_marker = []				# list holding markers
 
-rc_std_file = "/src/props/intro.mp4"	# standard video file
+rc_standard_file = "/src/media/recipe/backgrounds/bg.png"	# standard background
 rc_background = None		# video in the background
 
 rc_stage = 0				# 0: show all recipes; 1: show info of selected recipe (-1: go back; 2: mix recipe)
@@ -328,7 +328,7 @@ rc_info_textfield = None	# holds a textfield as soon stage is set to showing inf
 rc_info_btns = []			# holds all objects for info screen
 
 def recipe_choose():
-	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_recipes, rc_stage, rc_marker, rc_std_file, rc_background, rc_info_textfield, rc_info_btns
+	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_recipes, rc_stage, rc_marker, rc_standard_file, rc_background, rc_info_textfield, rc_info_btns
 
 	# entering the menu
 	if rc_active == False:
@@ -342,8 +342,7 @@ def recipe_choose():
 		rc_recipes = list_available + list_unavailable
 
 		# creating background
-		rc_background = media_lib.Video(gl.gen_path + rc_std_file)
-		rc_background.start(repeat=True)
+		rc_background = media_lib.Image(gl.gen_path + rc_standard_file, 0, 0, gl.W, gl.H)
 
 		# creating buttons
 		btn_size = (420, 40)
@@ -382,17 +381,6 @@ def recipe_choose():
 	for btn in rc_btns:
 		if btn.selected:
 			chosen_recipe = btn.text
-
-	if (io.read_input(io.UP) or io.read_input(io.DOWN)) and rc_stage == 0:
-		# setting correct background
-		prev_file = rc_background.file
-		try:
-			new_file = gl.gen_path + gl.recipe_video_dict[chosen_recipe]
-		except KeyError:
-			new_file = gl.gen_path + rc_std_file
-		if prev_file != new_file:
-			rc_background.file = new_file
-			rc_background.start(repeat=True, frame_counter=rc_background.frame_counter)
 	
 	# menu boundaries
 	# visible part
@@ -430,6 +418,17 @@ def recipe_choose():
 			btn.selected = True
 		else:
 			btn.selected = False
+	# changing background for special drinks
+	#if (io.read_input(io.UP) or io.read_input(io.DOWN)) and rc_stage == 0:
+	if rc_stage == 0:
+		current_file = rc_background.file
+		try:
+			new_file = gl.gen_path + gl.recipe_background_dict[chosen_recipe]
+		except KeyError:
+			new_file = gl.gen_path + rc_standard_file
+
+		if current_file != new_file:
+			rc_background = media_lib.Image(new_file, 0, 0, gl.W, gl.H)
 
 	# showing info
 	if rc_stage == 1 and not rc_info_textfield:
@@ -468,7 +467,7 @@ def recipe_choose():
 		else:
 			rc_stage = 1
 
-	# draw
+	""" draw """
 	rc_background.draw()
 	if rc_stage == 0:					# list mode
 		for i in rc_btns:
@@ -498,7 +497,8 @@ def recipe_choose():
 	if gl.show_debug:
 		gl.debug_text.append("rc_pos: " + str(rc_pos) + 
 							"; rc_visible_pos: " + str(rc_visible_pos) + 
-							"; rc_stage: " + str(rc_stage))
+							"; rc_stage: " + str(rc_stage) + 
+							"; chosen_recipe: " + str(chosen_recipe))
 
 ro_active = False
 ro_background = None			# background
