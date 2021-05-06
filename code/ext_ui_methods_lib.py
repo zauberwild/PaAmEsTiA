@@ -586,13 +586,16 @@ sd_first_drink = 0
 
 sd_btn_list = []
 sd_chosen_btn = 0
-sd_n_visible_btn = 10
+sd_n_visible_btn = 8
+sd_btn_list_cords = (gl.W - int((3.5+0.1+0.25)*100), int(0.35*100), int(3.5*100), int(5.3*100/sd_n_visible_btn))		# x, y, w, h
 
-sd_plug_btn = None
+sd_plug_img = None
+sd_plug_img_name = ["cleaning_water can't be set", "prop_1.png", "prop_2.png", "prop_3.png", "prop_4.png", "prop_5.png"]
 sd_plug_num = 1
+sd_plug_img_cords = (gl.W-int(0.35*100)-sd_btn_list_cords[3], int(0.35*100), sd_btn_list_cords[3], sd_btn_list_cords[3])				# x, y, w, h
 
 def settings_drink():
-	global sd_active, sd_background, sd_drinks_list, sd_first_drink, sd_btn_list, sd_chosen_btn, sd_n_visible_btn, sd_plug_btn, sd_plug_num
+	global sd_active, sd_background, sd_drinks_list, sd_first_drink, sd_btn_list, sd_chosen_btn, sd_n_visible_btn, sd_plug_img, sd_plug_img_name, sd_plug_num, sd_plug_img_cords, sd_btn_list_cords
 
 	if sd_active == False:			# when entering drink settings
 		sd_active = True
@@ -606,16 +609,15 @@ def settings_drink():
 		sd_drinks_list.insert(0, "None")
 
 		# create button list
-		x, y = gl.W - int((3.5+0.1+0.25)*100), int(0.35*100)
-		w, h = int(3.5*100), int(5.3*100/sd_n_visible_btn)
+		x, y = sd_btn_list_cords[0], sd_btn_list_cords[1]
+		w, h = sd_btn_list_cords[2], sd_btn_list_cords[3]
 		for i in range(sd_n_visible_btn):
 			sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
 			y += h
 		sd_btn_list[sd_chosen_btn].selected = True
 
-		#create plug button
-		sd_plug_btn = media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", gl.W-int(0.35*100)-h, int(0.35*100), h, h)
-		sd_plug_btn.add_text(str(sd_plug_num), gl.standard_font, (0,0,255))
+		#create plug image
+		sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], h, h)
 	
 	# input
 	if io.read_input(io.BACK):
@@ -652,13 +654,13 @@ def settings_drink():
 		if sd_plug_num < 1:
 			sd_plug_num = 1
 		# add text plug field
-		sd_plug_btn.add_text(str(sd_plug_num), gl.standard_font, (0,0,255))
+		sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], sd_plug_img_cords[3], sd_plug_img_cords[3])
 	elif io.read_input(io.RIGHT):
 		sd_plug_num += 1
 		if sd_plug_num > len(drinks.plugs)-1:
 			sd_plug_num = len(drinks.plugs)-1
 		# add text plug field
-		sd_plug_btn.add_text(str(sd_plug_num), gl.standard_font, (0,0,255))
+		sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], sd_plug_img_cords[3], sd_plug_img_cords[3])
 
 	# setting new drink to plug
 	elif io.read_input(io.NEXT):
@@ -679,14 +681,14 @@ def settings_drink():
 	sd_background.draw()
 	for i in sd_btn_list:
 		i.draw()
-	sd_plug_btn.draw()
+	sd_plug_img.draw()
 
 	if sd_active == False:		# when leaving drink settings
 		print("[UI SD] leavin' import settings")
 		sd_background = None
 		sd_drinks_list.clear()
 		sd_btn_list.clear()
-		sd_plug_btn = None
+		sd_plug_img = None
 	
 	if gl.show_debug:		# append debug info
 		gl.debug_text.append("[UI SD] chosen_btn: " + str(sd_chosen_btn) + " first_drink: " + str(sd_first_drink) +  " chosen_drink: " + str(drinks.drinks[sd_first_drink+sd_chosen_btn]))
