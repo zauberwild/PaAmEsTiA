@@ -90,10 +90,10 @@ def main_menu():
 	if menu_active == False:			# setup
 		menu_active = True
 		# creating the buttons for the main menu
-		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", 	"prop_grey.png", 50, 90, 200, 370))
-		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_blue.png", 	"prop_grey.png", 275, 35, 250, 445))
-		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_yellow.png", "prop_grey.png", 550, 90, 200, 370))
-		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_red.png", 	"prop_grey.png", 275, 505, 250, 50))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", 	"prop_grey.png", 48, 48, 197, 439))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_blue.png", 	"prop_grey.png", 261, 13, 279, 484))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_yellow.png", "prop_grey.png", 557, 48, 197, 439))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_red.png", 	"prop_grey.png", 274, 511, 250, 77))
 		menu_btns[0].add_text("EINSTELLUNGEN", gl.debug_font_big, (0,0,0), 0)			# DEL as soon as  the real sources are ready
 		menu_btns[1].add_text("REZEPT", gl.debug_font_big, (0,0,0), 0)
 		menu_btns[2].add_text("FREI MISCHEN", gl.debug_font_big, (0,0,0), 0)
@@ -311,7 +311,7 @@ def free_output():
 """ ### ### RECIPE ### ### """
 
 rc_active = False
-rc_visible_n = 6			# number of visible items
+rc_visible_n = 9			# number of visible items
 rc_btns = []				# list holding the recipes buttons
 rc_pos = 0					# position of selection in complete recipe list
 rc_visible_pos = 0			# position in visible part
@@ -345,9 +345,9 @@ def recipe_choose():
 		rc_background = media_lib.Image(gl.gen_path + rc_standard_file, 0, 0, gl.W, gl.H)
 
 		# creating buttons
-		btn_size = (420, 40)
-		spacing = 20
-		height = (600 - (btn_size[1]*rc_visible_n) - (spacing*rc_visible_n-1))/2
+		btn_size = (404, 56)
+		spacing = 5
+		height = 44
 		rc_btns.clear()
 		for i in range(rc_visible_n):
 			rc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 20, height, btn_size[0], btn_size[1]))
@@ -355,8 +355,8 @@ def recipe_choose():
 
 		# creating marker
 		rc_marker.clear()
-		rc_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 50, 220, 50, rotation=180))
-		rc_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 500, 220, 50))
+		rc_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 283, 7, 35, 30, rotation=180))
+		rc_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 281, 563, 35, 30))
 
 
 	""" input """
@@ -540,9 +540,9 @@ def settings_choose():
 		sc_background.start(repeat=True)
 
 		# create buttons
-		sc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 35, 35, 300, 530))
+		sc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 14, 10, 326, 582))
 		sc_btns[-1].add_text("Getränke", gl.debug_font, (0,0,255))		# DEL src rdy
-		sc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", gl.W-35-300, 35, 300, 530))
+		sc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 461, 10, 326, 582))
 		sc_btns[-1].add_text("Importieren", gl.debug_font, (0,0,255))	# DEL src rdy
 		sc_btns[sc_pos].selected = True
 
@@ -586,15 +586,15 @@ sd_first_drink = 0
 
 sd_btn_list = []				# contains all buttons
 sd_chosen_btn = 0
-sd_n_visible_btn = 8
-sd_btn_list_cords = (gl.W - int((3.5+0.1+0.25)*100), int(0.35*100), int(3.5*100), int(5.3*100/sd_n_visible_btn))		# x, y, w, h
+sd_n_visible_btn = 9
+sd_btn_list_cords = (188, 43, 388, 56)		# x, y, w, h
 
 sd_marker = []				# list holding markers
 
 sd_plug_img = None			# small image indicating selected plug
-sd_plug_img_name = ["cleaning_water can't be set", "prop_1.png", "prop_2.png", "prop_3.png", "prop_4.png", "prop_5.png"]
+sd_plug_img_name = ["cleaning_water can't be changed", "prop_1.png", "prop_2.png", "prop_3.png", "prop_4.png", "prop_5.png"]
 sd_plug_num = 1
-sd_plug_img_cords = (gl.W-int(0.35*100)-sd_btn_list_cords[3], int(0.35*100), sd_btn_list_cords[3], sd_btn_list_cords[3])				# x, y, w, h
+sd_plug_img_cords = (537, 43, 92, 56)				# x, y, w, h
 
 def settings_drink():
 	global sd_active, sd_background, sd_drinks_list, sd_first_drink, sd_btn_list, sd_chosen_btn, sd_n_visible_btn, sd_marker, sd_plug_img, sd_plug_img_name, sd_plug_num, sd_plug_img_cords, sd_btn_list_cords
@@ -613,17 +613,18 @@ def settings_drink():
 		# create button list
 		x, y = sd_btn_list_cords[0], sd_btn_list_cords[1]
 		w, h = sd_btn_list_cords[2], sd_btn_list_cords[3]
+		spacing = 5
 		for i in range(sd_n_visible_btn):
 			sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
-			y += h
+			y += h + spacing
 		sd_btn_list[sd_chosen_btn].selected = True
 
 		# create marker
-		sd_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 50, 220, 50, rotation=180))
-		sd_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 500, 220, 50))
+		sd_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 383, 6, 35, 30, rotation=180))
+		sd_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 383, 563, 35, 30))
 
 		#create plug image
-		sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], h, h)
+		sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], sd_plug_img_cords[2], sd_plug_img_cords[3])
 	
 	# input
 	if io.read_input(io.BACK):
@@ -728,7 +729,7 @@ si_first_recipe = 0			# stores the number of the first shown recipe
 
 si_btn_list = []			# stores the Button objects
 si_chosen_btn = 0			# stores the chosen Button
-si_n_visible_btn = 10		# number of visible Buttons
+si_n_visible_btn = 9		# number of visible Buttons
 
 si_marker = []				# list holding markers
 
@@ -746,19 +747,19 @@ def settings_import():
 		si_recipe_list = drinks.get_recipes()
 
 		# create button list
-		x, y = int(0.25*100), int(0.35*100)
-		w, h = int(3.5*100), int(5.3*100/si_n_visible_btn)
+		x, y = 87, 43
+		w, h = 409, 56
 		for i in range(si_n_visible_btn):
 			si_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
 			y += h
 		si_btn_list[si_chosen_btn].selected = True
 
 		# create marker
-		si_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 50, 220, 50, rotation=180))
-		si_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 100, 500, 220, 50))
+		si_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 283, 6, 35,30, rotation=180))
+		si_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 283, 563, 35, 30))
 
 		# create import button
-		si_import_btn = media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", int(gl.W-(0.25+1)*100), 480, 100, 50)
+		si_import_btn = media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 635, 510, 131, 45)
 		si_import_btn.add_text("Import", gl.standard_font, (0,0,255))
 
 	# input
