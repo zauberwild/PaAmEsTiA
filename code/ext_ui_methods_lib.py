@@ -4,6 +4,7 @@ this file include all methods for the user interface
 
 #from tkinter.constants import TRUE
 #from numpy import true_divide
+from tkinter.constants import E
 import globals as gl
 import io_lib as io
 import media_lib
@@ -99,6 +100,8 @@ def main_menu():
 		menu_btns[2].add_text("FREI MISCHEN", gl.debug_font_big, (0,0,0), 0)
 		menu_btns[3].add_text("VERLASSEN", gl.debug_font_big, (0,0,0), 0)
 		menu_btns[1].selected = True
+		menu_pos_x = 1				# postion of the buttons
+		menu_pos_y = 0
 	
 	# input
 	if io.read_input(io.UP):
@@ -313,6 +316,10 @@ def free_output():
 rc_active = False
 rc_visible_n = 9			# number of visible items
 rc_btns = []				# list holding the recipes buttons
+rc_btn_size = (388, 47)			# size of buttons
+rc_btn_size_sel = (404, 56)
+rc_spacing = (12, 7)			# spacing between little button , spacing between big and little buttons
+rc_x_offset = 16
 rc_pos = 0					# position of selection in complete recipe list
 rc_visible_pos = 0			# position in visible part
 
@@ -328,7 +335,7 @@ rc_info_textfield = None	# holds a textfield as soon stage is set to showing inf
 rc_info_btns = []			# holds all objects for info screen
 
 def recipe_choose():
-	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_recipes, rc_stage, rc_marker, rc_standard_file, rc_background, rc_info_textfield, rc_info_btns
+	global rc_active, rc_btns, rc_pos, rc_visible_pos, rc_spacing, rc_x_offset, rc_recipes, rc_stage, rc_marker, rc_standard_file, rc_background, rc_info_textfield, rc_info_btns, rc_btn_size, rc_btn_size_sel
 
 	# entering the menu
 	if rc_active == False:
@@ -345,13 +352,17 @@ def recipe_choose():
 		rc_background = media_lib.Image(gl.gen_path + rc_standard_file, 0, 0, gl.W, gl.H)
 
 		# creating buttons
-		btn_size = (404, 56)
-		spacing = 5
 		height = 44
 		rc_btns.clear()
 		for i in range(rc_visible_n):
-			rc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 20, height, btn_size[0], btn_size[1]))
-			height += btn_size[1] + spacing
+			if i == rc_visible_pos:
+				rc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 90, height, rc_btn_size_sel[0], rc_btn_size_sel[1]))
+				height += rc_btn_size_sel[1] + rc_spacing[1]
+			else:
+				rc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 90 + rc_x_offset, height, rc_btn_size[0], rc_btn_size[1]))
+				height += rc_btn_size[1] + rc_spacing[0]
+				if i+1 == rc_visible_pos:
+					height -= rc_spacing[0]-rc_spacing[1]
 
 		# creating marker
 		rc_marker.clear()
@@ -365,9 +376,25 @@ def recipe_choose():
 		if io.read_input(io.UP):
 			rc_visible_pos -= 1
 			rc_pos -= 1
+			if rc_visible_pos < 0:
+				rc_visible_pos = 0
 		if io.read_input(io.DOWN):
 			rc_visible_pos += 1
 			rc_pos += 1
+			if rc_visible_pos > rc_visible_n-1:
+				rc_visible_pos = rc_visible_n-1
+		if io.read_input(io.UP) or io.read_input(io.DOWN):
+			height = 44
+			rc_btns.clear()
+			for i in range(rc_visible_n):
+				if i == rc_visible_pos:
+					rc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 90, height, rc_btn_size_sel[0], rc_btn_size_sel[1]))
+					height += rc_btn_size_sel[1] + rc_spacing[1]
+				else:
+					rc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 90 + rc_x_offset, height, rc_btn_size[0], rc_btn_size[1]))
+					height += rc_btn_size[1] + rc_spacing[0]
+					if i+1 == rc_visible_pos:
+						height -= rc_spacing[0]-rc_spacing[1]
 
 	# select menu item / start mixing
 	if io.read_input(io.NEXT) or io.read_input(io.RIGHT):
@@ -383,11 +410,6 @@ def recipe_choose():
 			chosen_recipe = btn.text
 	
 	# menu boundaries
-	# visible part
-	if rc_visible_pos < 0:
-		rc_visible_pos = 0
-	elif rc_visible_pos > rc_visible_n-1:
-		rc_visible_pos = rc_visible_n-1
 	# complete list
 	if rc_pos < 0:
 		rc_pos = 0
@@ -587,17 +609,20 @@ sd_first_drink = 0
 sd_btn_list = []				# contains all buttons
 sd_chosen_btn = 0
 sd_n_visible_btn = 9
-sd_btn_list_cords = (188, 43, 388, 56)		# x, y, w, h
+sd_btn_list_cords = (206, 43, 388, 47)		# x, y, w, h
+sd_btn_list_cords_sel = (188, 43, 366, 56)		# x, y, w, h
+sd_spacing = rc_spacing
 
 sd_marker = []				# list holding markers
 
 sd_plug_img = None			# small image indicating selected plug
 sd_plug_img_name = ["cleaning_water can't be changed", "prop_1.png", "prop_2.png", "prop_3.png", "prop_4.png", "prop_5.png"]
 sd_plug_num = 1
-sd_plug_img_cords = (537, 43, 92, 56)				# x, y, w, h
+sd_plug_img_cords = [537, 43, 92, 56]				# x, y, w, h
+sd_plug_img_y_pos = []								# height for every button / possible place
 
 def settings_drink():
-	global sd_active, sd_background, sd_drinks_list, sd_first_drink, sd_btn_list, sd_chosen_btn, sd_n_visible_btn, sd_marker, sd_plug_img, sd_plug_img_name, sd_plug_num, sd_plug_img_cords, sd_btn_list_cords
+	global sd_active, sd_background, sd_drinks_list, sd_spacing, sd_btn_list_cords_sel, sd_plug_img_y_pos, sd_first_drink, sd_btn_list, sd_chosen_btn, sd_n_visible_btn, sd_marker, sd_plug_img, sd_plug_img_name, sd_plug_num, sd_plug_img_cords, sd_btn_list_cords
 
 	if sd_active == False:			# when entering drink settings
 		sd_active = True
@@ -613,10 +638,18 @@ def settings_drink():
 		# create button list
 		x, y = sd_btn_list_cords[0], sd_btn_list_cords[1]
 		w, h = sd_btn_list_cords[2], sd_btn_list_cords[3]
-		spacing = 5
 		for i in range(sd_n_visible_btn):
-			sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
-			y += h + spacing
+			sd_plug_img_y_pos.append(y)
+			if i == sd_chosen_btn:
+				l_x = sd_btn_list_cords_sel[0]
+				l_w, l_h = sd_btn_list_cords_sel[2], sd_btn_list_cords_sel[3]
+				sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", l_x, y, l_w, l_h))
+				y += l_h + sd_spacing[1]
+			else:
+				sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
+				y += h + sd_spacing[0]
+				if i+1 == sd_chosen_btn:
+						y -= sd_spacing[0]-sd_spacing[1]
 		sd_btn_list[sd_chosen_btn].selected = True
 
 		# create marker
@@ -638,7 +671,7 @@ def settings_drink():
 			if sd_first_drink < 0:
 				sd_first_drink = 0
 
-		sd_btn_list[sd_chosen_btn].selected = False				# menu boundaries
+		# menu boundaries
 		sd_chosen_btn -= 1
 		if sd_chosen_btn < 0:
 			sd_chosen_btn = 0
@@ -649,11 +682,31 @@ def settings_drink():
 			if sd_first_drink > len(sd_drinks_list) - sd_n_visible_btn:
 				sd_first_drink = len(sd_drinks_list) - sd_n_visible_btn
 
-		sd_btn_list[sd_chosen_btn].selected = False				# menu boundaries
+		# menu boundaries
 		sd_chosen_btn += 1
 		if sd_chosen_btn > sd_n_visible_btn-1:
 			sd_chosen_btn = sd_chosen_btn-1
+	
+	if io.read_input(io.UP) or io.read_input(io.DOWN):
+		sd_btn_list.clear()
+		x, y = sd_btn_list_cords[0], sd_btn_list_cords[1]
+		w, h = sd_btn_list_cords[2], sd_btn_list_cords[3]
+		for i in range(sd_n_visible_btn):
+			if i == sd_chosen_btn:
+				l_x = sd_btn_list_cords_sel[0]
+				l_w, l_h = sd_btn_list_cords_sel[2], sd_btn_list_cords_sel[3]
+				sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", l_x, y, l_w, l_h))
+				y += l_h + sd_spacing[1]
+			else:
+				sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
+				y += h + sd_spacing[0]
+				if i+1 == sd_chosen_btn:
+					y -= sd_spacing[0]-sd_spacing[1]
+
 		sd_btn_list[sd_chosen_btn].selected = True
+		l_y = sd_btn_list[sd_chosen_btn].y
+		sd_plug_img_cords[1] = l_y
+		sd_plug_img = sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], l_y, sd_plug_img_cords[2], sd_plug_img_cords[3])
 
 	# selecting plug
 	elif io.read_input(io.LEFT):
@@ -661,13 +714,13 @@ def settings_drink():
 		if sd_plug_num < 1:
 			sd_plug_num = 1
 		# add text plug field
-		sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], sd_plug_img_cords[3], sd_plug_img_cords[3])
+		sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], sd_plug_img_cords[2], sd_plug_img_cords[3])
 	elif io.read_input(io.RIGHT):
 		sd_plug_num += 1
 		if sd_plug_num > len(drinks.plugs)-1:
 			sd_plug_num = len(drinks.plugs)-1
 		# add text plug field
-		sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], sd_plug_img_cords[3], sd_plug_img_cords[3])
+		sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], sd_plug_img_cords[2], sd_plug_img_cords[3])
 
 	# setting new drink to plug
 	elif io.read_input(io.NEXT):
@@ -711,6 +764,7 @@ def settings_drink():
 		sd_btn_list.clear()
 		sd_plug_img = None
 		sd_marker.clear()
+		sd_plug_img_y_pos.clear()
 	
 	if gl.show_debug:		# append debug info
 		gl.debug_text.append("[UI SD] chosen_btn: " + str(sd_chosen_btn) + " first_drink: " + str(sd_first_drink) +  " chosen_drink: " + str(drinks.drinks[sd_first_drink+sd_chosen_btn]))
@@ -730,13 +784,16 @@ si_first_recipe = 0			# stores the number of the first shown recipe
 si_btn_list = []			# stores the Button objects
 si_chosen_btn = 0			# stores the chosen Button
 si_n_visible_btn = 9		# number of visible Buttons
+si_btns_cords = (104, 43, 393, 47)		# x, y, w, h
+si_btns_cords_sel = (87, 43, 409, 56)		# x, y, w, h
+si_spacing = rc_spacing		# spacing between buttons
 
 si_marker = []				# list holding markers
 
 si_import_btn = None		# the import button in the bottom-right corner
 
 def settings_import():
-	global si_active, si_background, si_recipe_list, si_first_recipe, si_btn_list, si_chosen_btn, si_n_visible_btn, si_import_btn, si_marker
+	global si_active, si_background, si_recipe_list, si_first_recipe, si_btn_list, si_chosen_btn, si_n_visible_btn, si_import_btn, si_marker, si_btns_cords, si_spacing, si_btns_cords_sel
 
 	if si_active == False:			# when entering import settings
 		si_active = True
@@ -747,11 +804,20 @@ def settings_import():
 		si_recipe_list = drinks.get_recipes()
 
 		# create button list
-		x, y = 87, 43
-		w, h = 409, 56
+		x, y = si_btns_cords[0], si_btns_cords[1]
+		w, h = si_btns_cords[2], si_btns_cords[3]
 		for i in range(si_n_visible_btn):
-			si_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
-			y += h
+			if i == si_chosen_btn:
+				l_x = si_btns_cords_sel[0]
+				l_w, l_h = si_btns_cords_sel[2], si_btns_cords_sel[3]
+				si_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", l_x, y, l_w, l_h))
+				y += l_h + si_spacing[1]
+			else:
+				si_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
+				y += h + si_spacing[0]
+				if i+1 == si_chosen_btn:
+					y -= si_spacing[0]-si_spacing[1]
+
 		si_btn_list[si_chosen_btn].selected = True
 
 		# create marker
@@ -790,6 +856,24 @@ def settings_import():
 			si_chosen_btn = si_chosen_btn-1
 		si_btn_list[si_chosen_btn].selected = True
 
+	if (io.read_input(io.DOWN) or io.read_input(io.UP)) and si_import_btn.selected == False:
+		si_btn_list.clear()
+		x, y = si_btns_cords[0], si_btns_cords[1]
+		w, h = si_btns_cords[2], si_btns_cords[3]
+		for i in range(si_n_visible_btn):
+			if i == si_chosen_btn:
+				l_x = si_btns_cords_sel[0]
+				l_w, l_h = si_btns_cords_sel[2], si_btns_cords_sel[3]
+				si_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", l_x, y, l_w, l_h))
+				y += l_h + si_spacing[1]
+			else:
+				si_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
+				y += h + si_spacing[0]
+				if i+1 == si_chosen_btn:
+					y -= si_spacing[0]-si_spacing[1]
+
+		si_btn_list[si_chosen_btn].selected = True
+
 	elif io.read_input(io.RIGHT):							# switch to import button
 		si_import_btn.selected = True
 		si_btn_list[si_chosen_btn].selected = False
@@ -820,6 +904,10 @@ def settings_import():
 		
 		gl.notifications.append(media_lib.Notification(notification_text))
 
+	# add the recipe names to the buttons
+	for idx, btn in enumerate(si_btn_list):
+		btn.add_text(si_recipe_list[si_first_recipe+idx], gl.standard_font, (0,0,255))
+
 	# control marker
 	# upper marker
 	if si_btn_list[0].text == si_recipe_list[0]:	# if first item in recipe-list is visible -> we are on the top of the list
@@ -831,11 +919,6 @@ def settings_import():
 		si_marker[1].disabled = True
 	else:
 		si_marker[1].disabled = False
-
-	
-	# add the recipe names to the buttons
-	for idx, btn in enumerate(si_btn_list):
-		btn.add_text(si_recipe_list[si_first_recipe+idx], gl.standard_font, (0,0,255))
 
 	# draw
 	si_background.draw()
