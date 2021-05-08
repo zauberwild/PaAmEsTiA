@@ -17,7 +17,7 @@ drink_file_path = gen_path + "/src/drinks"				# path of drinks file
 _UNIT_SIZE = 200 									# size of one unit in ml
 _TIME_PER_UNIT = 110000								# time needed to fill one unit in milliseconds
 TIME_PER_ML = _TIME_PER_UNIT / _UNIT_SIZE			# time pro milliliter in millisecond
-GLASS_SIZE = 300									# size of the glass
+GLASS_SIZE = 300									# size of the glass in milliliters
 CLEANING_TIME = 2000								# time for cleaning water to clean pipes (in milliseconds)
 
 """ debug variables """
@@ -36,6 +36,11 @@ standard_font = pygame.freetype.Font(gen_path + "/src/fonts/da_mad_rave/Da Mad R
 
 standard_font_size_small = 12
 standard_font_small = pygame.freetype.Font(gen_path + "/src/fonts/da_mad_rave/Da Mad Rave.otf", standard_font_size_small)
+
+notification_font_size = 16
+notification_font = pygame.freetype.Font(gen_path + "/src/fonts/da_mad_rave/Da Mad Rave.otf", notification_font_size)
+
+text_color_1 = (38,34,43)
 
 """ setting window up """
 prog_active = True		# set to False to end program
