@@ -159,51 +159,46 @@ fc_active = False			# controls if free_choose is active or not
 fc_background = None		# saves the background video
 fc_buttons = []				# saves the buttons at the buttom
 fc_bars = []				# saves the (progress) bars
+fc_sum_image = None
 fc_sum_text = None			# saves the textfield showing the sum of all drinks
 
 fc_pos = 1					# position on the menu (0: go back, 1-5: drinks, 6: next)
 fc_values = [0,0,0,0,0]		# saves values for the drinks
 
 def free_choose():
-	global fc_active, fc_background, fc_buttons, fc_bars, fc_pos, fc_values, fc_sum_text
+	global fc_active, fc_background, fc_buttons, fc_bars, fc_pos, fc_values, fc_sum_text, fc_sum_image
 	
 	# entering free_choose
 	if fc_active == False:
 		fc_active = True
 		# set video background
-		fc_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")
-		fc_background.start(repeat=True)
+		fc_background = media_lib.Image(gl.gen_path + "/src/media/background.jpeg", 0, 0, gl.W, gl.H)
 
 		# set buttons
-			# button: go back
-		fc_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_grey.png", "prop_tri_green.png", "prop_white.png", 20, 500, 60, 60, rotation=270))
+		# button: go back
+		fc_buttons.append(media_lib.Button(gl.gen_path + "/src/media/free/", "back.png", "back_sel.png", "back.png", 47, 515, 64, 50))
 		
 
-			# buttons with the drinks and bars
-		spacing = 50
-		btn_width, btn_height = 100, 60
-		btn_x, btn_y = spacing, 400
-		bar_y, bar_height = 100, 250
-		print("[UI FC]", drinks.plugs)
-		for e, i in enumerate(drinks.plugs[1:]):
-			# buttons
-			fc_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_white.png", btn_x, btn_y, btn_width, btn_height))
-			fc_buttons[-1].add_text(i, gl.debug_font_small, (255,0,0))				# DEL src rdy
+		# buttons with the drinks and bars
+		x = [57, 57, 290, 523, 523]
+		y = [115] * 5
+		w = [221] * 5
+		h = [377] * 5
+		img = ["tower_1.png", "tower_2.png", "tower_3.png", "tower_4.png", "tower_5.png"]
+		img_sel = ["tower_1_sel.png", "tower_2_sel.png", "tower_3_sel.png", "tower_4_sel.png", "tower_5_sel.png"]
+		bar = ["tower_1/", "tower_2/", "tower_3/", "tower_4/", "tower_5/"]
+		for i in range(5):
+			fc_buttons.append(media_lib.Button(gl.gen_path + "/src/media/free/", img[i], img_sel[i], img[i], x[i], y[i], w[i], h[i]))
+			fc_bars.append(media_lib.Bar(gl.gen_path + "/src/media/free/" + bar[i], x[i], y[i], w[i], h[i]))
 
-			# bars
-			fc_bars.append(media_lib.Bar(gl.gen_path + "/src/props/bar/", btn_x, bar_y, btn_width, bar_height, state=fc_values[e]))
-			
-			# increase x-position
-			btn_x += btn_width + spacing
-
-			# button: next
-		fc_buttons.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_grey.png", "prop_tri_green.png", "prop_white.png", 800-60-20, 500, 60, 60, rotation=90))
+		# button: next
+		fc_buttons.append(media_lib.Button(gl.gen_path + "/src/media/free/", "next.png", "next_sel.png", "next.png", 704, 515, 64, 50))
 
 		fc_buttons[fc_pos].selected = True
 
 		# textfield for sum
-		fc_sum_text = media_lib.TextField(400-50, 20, 100, 45, "ph", gl.standard_font, (255,0,0), alignment=0)
-		fc_sum_text.add_background(gl.gen_path + "/src/props/prop_white.png")
+		fc_sum_image = media_lib.Image(gl.gen_path + "/src/media/free/sum_bg.png", 153, 17, 495, 69)
+		fc_sum_text = media_lib.Bar(gl.gen_path + "/src/media/free/sum/", 345, 35, 112, 39)
 
 	""" logic / input """
 	# go left or right
@@ -236,7 +231,7 @@ def free_choose():
 
 		fc_bars[fc_pos-1].set_state(fc_values[fc_pos-1])	# set the new state for selected bar
 
-		fc_sum_text.change_text(str(sum_values) + "%")			# change the text for the summ of all drinks
+		fc_sum_text.set_state(sum_values)			# update sum value
 
 
 	# exiting the menu or start mixing
@@ -263,6 +258,7 @@ def free_choose():
 	""" draw """
 	fc_background.draw()
 
+	fc_sum_image.draw()
 	fc_sum_text.draw()
 
 	for bar in fc_bars:
@@ -276,6 +272,7 @@ def free_choose():
 		fc_background = None
 		fc_buttons.clear()
 		fc_bars.clear()
+		fc_sum_image = None
 		fc_sum_text = None
 
 	""" add debug info """
