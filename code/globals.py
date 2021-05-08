@@ -40,7 +40,8 @@ standard_font_small = pygame.freetype.Font(gen_path + "/src/fonts/da_mad_rave/Da
 notification_font_size = 16
 notification_font = pygame.freetype.Font(gen_path + "/src/fonts/da_mad_rave/Da Mad Rave.otf", notification_font_size)
 
-text_color_1 = (38,34,43)
+text_color_1 = (38,34,43)			# used for most of the text
+text_color_2 = (255, 255, 255)		# used for credits
 
 """ setting window up """
 prog_active = True		# set to False to end program
