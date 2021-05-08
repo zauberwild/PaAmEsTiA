@@ -603,10 +603,10 @@ sd_spacing = rc_spacing
 sd_marker = []				# list holding markers
 
 sd_plug_img = None			# small image indicating selected plug
-sd_plug_img_name = ["cleaning_water can't be changed", "prop_1.png", "prop_2.png", "prop_3.png", "prop_4.png", "prop_5.png"]
+sd_plug_img_name = ["cleaning_water can't be changed", "plug_1.png", "plug_2.png", "plug_3.png", "plug_4.png", "plug_5.png"]
 sd_plug_num = 1
-sd_plug_img_cords = [537, 43, 92, 56]				# x, y, w, h
-sd_plug_img_y_pos = []								# height for every button / possible place
+sd_plug_img_cords = [539, 43, 56, 56]				# x, y, w, h
+sd_plug_img_y_pos = []								# height for every button / possible place for the plug image to be
 
 def settings_drink():
 	global sd_active, sd_background, sd_drinks_list, sd_spacing, sd_btn_list_cords_sel, sd_plug_img_y_pos, sd_first_drink, sd_btn_list, sd_chosen_btn, sd_n_visible_btn, sd_marker, sd_plug_img, sd_plug_img_name, sd_plug_num, sd_plug_img_cords, sd_btn_list_cords
@@ -628,23 +628,26 @@ def settings_drink():
 		for i in range(sd_n_visible_btn):
 			sd_plug_img_y_pos.append(y)
 			if i == sd_chosen_btn:
+				# chosen button
 				l_x = sd_btn_list_cords_sel[0]
 				l_w, l_h = sd_btn_list_cords_sel[2], sd_btn_list_cords_sel[3]
-				sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", l_x, y, l_w, l_h))
+				sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/media/settings/drinks/", "btn_sel.png", "btn_sel.png", "btn_sel.png", l_x, y, l_w, l_h))
 				y += l_h + sd_spacing[1]
 			else:
-				sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
+				# other buttons
+				sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/media/settings/drinks/", "btn.png", "btn.png", "btn.png", x, y, w, h))
 				y += h + sd_spacing[0]
 				if i+1 == sd_chosen_btn:
 						y -= sd_spacing[0]-sd_spacing[1]
 		sd_btn_list[sd_chosen_btn].selected = True
 
 		# create marker
-		sd_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 383, 6, 35, 30, rotation=180))
-		sd_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 383, 563, 35, 30))
+		sd_marker.append(media_lib.Button(gl.gen_path + "/src/media/settings/drinks/", "marker_up_sel.png", "marker_up_sel.png", "marker_up.png", 383, 6, 35, 30))
+		sd_marker.append(media_lib.Button(gl.gen_path + "/src/media/settings/drinks/", "marker_down_sel.png", "marker_down_sel.png", "marker_down.png", 383, 563, 35, 30))
+		sd_marker[1].set_size(y=sd_btn_list[-1].y + sd_btn_list[-1].height + 7)
 
 		#create plug image
-		sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], sd_plug_img_cords[2], sd_plug_img_cords[3])
+		sd_plug_img = media_lib.Image(gl.gen_path + "/src/media/settings/drinks/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], sd_plug_img_cords[2], sd_plug_img_cords[3])
 	
 	# input
 	if io.read_input(io.BACK):
@@ -663,6 +666,7 @@ def settings_drink():
 		if sd_chosen_btn < 0:
 			sd_chosen_btn = 0
 		sd_btn_list[sd_chosen_btn].selected = True
+
 	elif io.read_input(io.DOWN):
 		if sd_chosen_btn == sd_n_visible_btn-1:
 			sd_first_drink += 1
@@ -680,20 +684,24 @@ def settings_drink():
 		w, h = sd_btn_list_cords[2], sd_btn_list_cords[3]
 		for i in range(sd_n_visible_btn):
 			if i == sd_chosen_btn:
+				# chosen button
 				l_x = sd_btn_list_cords_sel[0]
 				l_w, l_h = sd_btn_list_cords_sel[2], sd_btn_list_cords_sel[3]
-				sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", l_x, y, l_w, l_h))
+				sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/media/settings/drinks/", "btn_sel.png", "btn_sel.png", "btn_sel.png", l_x, y, l_w, l_h))
 				y += l_h + sd_spacing[1]
 			else:
-				sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
+				# other buttons
+				sd_btn_list.append(media_lib.Button(gl.gen_path + "/src/media/settings/drinks/", "btn.png", "btn.png", "btn.png", x, y, w, h))
 				y += h + sd_spacing[0]
 				if i+1 == sd_chosen_btn:
 					y -= sd_spacing[0]-sd_spacing[1]
+				
+			sd_marker[1].set_size(y=sd_btn_list[-1].y + sd_btn_list[-1].height + 7)
 
 		sd_btn_list[sd_chosen_btn].selected = True
 		l_y = sd_btn_list[sd_chosen_btn].y
 		sd_plug_img_cords[1] = l_y
-		sd_plug_img = sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], l_y, sd_plug_img_cords[2], sd_plug_img_cords[3])
+		sd_plug_img = sd_plug_img = media_lib.Image(gl.gen_path + "/src/media/settings/drinks/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], l_y, sd_plug_img_cords[2], sd_plug_img_cords[3])
 
 	# selecting plug
 	elif io.read_input(io.LEFT):
@@ -701,13 +709,13 @@ def settings_drink():
 		if sd_plug_num < 1:
 			sd_plug_num = 1
 		# add text plug field
-		sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], sd_plug_img_cords[2], sd_plug_img_cords[3])
+		sd_plug_img = media_lib.Image(gl.gen_path + "/src/media/settings/drinks/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], sd_plug_img_cords[2], sd_plug_img_cords[3])
 	elif io.read_input(io.RIGHT):
 		sd_plug_num += 1
 		if sd_plug_num > len(drinks.plugs)-1:
 			sd_plug_num = len(drinks.plugs)-1
 		# add text plug field
-		sd_plug_img = media_lib.Image(gl.gen_path + "/src/props/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], sd_plug_img_cords[2], sd_plug_img_cords[3])
+		sd_plug_img = media_lib.Image(gl.gen_path + "/src/media/settings/drinks/" + sd_plug_img_name[sd_plug_num], sd_plug_img_cords[0], sd_plug_img_cords[1], sd_plug_img_cords[2], sd_plug_img_cords[3])
 
 	# setting new drink to plug
 	elif io.read_input(io.NEXT):
@@ -722,16 +730,16 @@ def settings_drink():
 	# add the drink names to the buttons
 	for idx, btn in enumerate(sd_btn_list):
 		text = sd_drinks_list[sd_first_drink+idx]
-		btn.add_text(text, gl.standard_font, (0,0,255))
+		btn.add_text(text, gl.standard_font, gl.text_color_1)
 
 	# control marker
 	# upper marker
-	if sd_btn_list[0].text == sd_drinks_list[0]:	# if first item in recipe-list is visible -> we are on the top of the list
+	if sd_btn_list[sd_chosen_btn].text == sd_drinks_list[0]:	# if first item in recipe-list is visible -> we are on the top of the list
 		sd_marker[0].disabled = True
 	else:
 		sd_marker[0].disabled = False
 	# lower marker
-	if sd_btn_list[-1].text == sd_drinks_list[-1]:	# if last item in recipe-list is visible -> we are on the bottom of the list
+	if sd_btn_list[sd_chosen_btn].text == sd_drinks_list[-1]:	# if last item in recipe-list is visible -> we are on the bottom of the list
 		sd_marker[1].disabled = True
 	else:
 		sd_marker[1].disabled = False
