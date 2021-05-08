@@ -323,7 +323,7 @@ rc_recipes = []				# list of all recipes, sorted after availability, than alphab
 
 rc_marker = []				# list holding markers
 
-rc_standard_file = "/src/media/recipe/backgrounds/bg.png"	# standard background
+rc_standard_file = "/src/media/background.jpeg"	# standard background
 rc_background = None		# video in the background
 
 rc_stage = 0				# 0: show all recipes; 1: show info of selected recipe (-1: go back; 2: mix recipe)
@@ -352,18 +352,21 @@ def recipe_choose():
 		rc_btns.clear()
 		for i in range(rc_visible_n):
 			if i == rc_visible_pos:
-				rc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 90, height, rc_btn_size_sel[0], rc_btn_size_sel[1]))
+				# selected button
+				rc_btns.append(media_lib.Button(gl.gen_path + "/src/media/recipe/", "btn_sel.png", "btn_sel.png", "btn_sel.png", 90, height, rc_btn_size_sel[0], rc_btn_size_sel[1]))
 				height += rc_btn_size_sel[1] + rc_spacing[1]
 			else:
-				rc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 90 + rc_x_offset, height, rc_btn_size[0], rc_btn_size[1]))
+				# other buttons
+				rc_btns.append(media_lib.Button(gl.gen_path + "/src/media/recipe/", "btn.png", "btn.png", "btn.png", 90 + rc_x_offset, height, rc_btn_size[0], rc_btn_size[1]))
 				height += rc_btn_size[1] + rc_spacing[0]
 				if i+1 == rc_visible_pos:
 					height -= rc_spacing[0]-rc_spacing[1]
 
 		# creating marker
 		rc_marker.clear()
-		rc_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 283, 7, 35, 30, rotation=180))
-		rc_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 281, 563, 35, 30))
+		rc_marker.append(media_lib.Button(gl.gen_path + "/src/media/recipe/", "marker_up_sel.png", "marker_up_sel.png", "marker_up.png", 283, 7, 35, 30))
+		rc_marker.append(media_lib.Button(gl.gen_path + "/src/media/recipe/", "marker_down_sel.png", "marker_down_sel.png", "marker_down.png", 281, 563, 35, 30))
+		rc_marker[1].set_size(y=rc_btns[-1].y + rc_btns[-1].height + 7)
 
 
 	""" input """
@@ -384,13 +387,16 @@ def recipe_choose():
 			rc_btns.clear()
 			for i in range(rc_visible_n):
 				if i == rc_visible_pos:
-					rc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 90, height, rc_btn_size_sel[0], rc_btn_size_sel[1]))
+					# selected button
+					rc_btns.append(media_lib.Button(gl.gen_path + "/src/media/recipe/", "btn_sel.png", "btn_sel.png", "btn_sel.png", 90, height, rc_btn_size_sel[0], rc_btn_size_sel[1]))
 					height += rc_btn_size_sel[1] + rc_spacing[1]
 				else:
-					rc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 90 + rc_x_offset, height, rc_btn_size[0], rc_btn_size[1]))
+					# other buttons
+					rc_btns.append(media_lib.Button(gl.gen_path + "/src/media/recipe/", "btn.png", "btn.png", "btn.png", 90 + rc_x_offset, height, rc_btn_size[0], rc_btn_size[1]))
 					height += rc_btn_size[1] + rc_spacing[0]
 					if i+1 == rc_visible_pos:
 						height -= rc_spacing[0]-rc_spacing[1]
+				rc_marker[1].set_size(y=rc_btns[-1].y + rc_btns[-1].height + 7)
 
 	# select menu item / start mixing
 	if io.read_input(io.NEXT) or io.read_input(io.RIGHT):
@@ -415,17 +421,17 @@ def recipe_choose():
 	# moving menu / setting correct text
 	a = rc_pos - rc_visible_pos 		# first visible item
 	for btn in rc_btns:
-		btn.add_text(rc_recipes[a], gl.standard_font, (0,0,0), 1)
+		btn.add_text(rc_recipes[a], gl.standard_font, gl.text_color_1, 1)
 		a += 1
 
 	# control marker
 	# upper marker
-	if rc_btns[0].text == rc_recipes[0]:	# if first item in recipe-list is visible -> we are on the top of the list
+	if rc_btns[rc_visible_pos].text == rc_recipes[0]:	# if first item in recipe-list is visible -> we are on the top of the list
 		rc_marker[0].disabled = True
 	else:
 		rc_marker[0].disabled = False
 	# lower marker
-	if rc_btns[-1].text == rc_recipes[-1]:	# if last item in recipe-list is visible -> we are on the bottom of the list
+	if rc_btns[rc_visible_pos].text == rc_recipes[-1]:	# if last item in recipe-list is visible -> we are on the bottom of the list
 		rc_marker[1].disabled = True
 	else:
 		rc_marker[1].disabled = False
@@ -436,17 +442,6 @@ def recipe_choose():
 			btn.selected = True
 		else:
 			btn.selected = False
-	# changing background for special drinks
-	#if (io.read_input(io.UP) or io.read_input(io.DOWN)) and rc_stage == 0:
-	if rc_stage == 0:
-		current_file = rc_background.file
-		try:
-			new_file = gl.gen_path + gl.recipe_background_dict[chosen_recipe]
-		except KeyError:
-			new_file = gl.gen_path + rc_standard_file
-
-		if current_file != new_file:
-			rc_background = media_lib.Image(new_file, 0, 0, gl.W, gl.H)
 
 	# showing info
 	if rc_stage == 1 and not rc_info_textfield:
@@ -455,19 +450,18 @@ def recipe_choose():
 		file.close()
 		
 		# create textfield
-		rc_info_textfield = media_lib.TextField(50, 50, 400, 400, text, gl.standard_font_small, (0,0,255), alignment=1)
-		rc_info_textfield.add_background(gl.gen_path + "/src/props/prop_yellow.png")
-		#creating info objects
-		rc_info_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_grey.png", "prop_white.png", "prop_white.png", 50, 500, 75, 75, rotation=270))
-		rc_info_btns[-1].add_text("BACK", gl.standard_font, (0,0,255))
-		rc_info_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_grey.png", "prop_white.png", "prop_white.png", 700, 500, 75, 75, rotation=90))
-		rc_info_btns[-1].add_text("MISCHEN", gl.standard_font, (0,0,255))
-		rc_info_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_grey.png", "prop_white.png", "prop_white.png", 300, 500, 475, 75))
-		rc_info_btns[-1].add_text("MISCHEN NICHT MÖGLICH", gl.standard_font, (0,0,255))
+		rc_info_textfield = media_lib.TextField(98, 107, 396, 203, text, gl.standard_font_small, gl.text_color_1, alignment=1)
+		rc_info_textfield.add_background(gl.gen_path + "/src/media/recipe/info_textfield.png")
+		# creating info objects
+		a = drinks._test_availability(chosen_recipe)
+		rc_info_btns.append(media_lib.Button(gl.gen_path + "/src/media/recipe/", "mix.png", "mix_sel.png", "mix.png", 635, 509, 131, 45, selected=a))		# mix button
+		rc_info_btns.append(media_lib.Button(gl.gen_path + "/src/media/recipe/", "info_recipe.png", "mix_sel.png", "mix.png", 90, 44, 404, 56))		# recipe name
+		rc_info_btns[-1].add_text(chosen_recipe, gl.standard_font, gl.text_color_1, hor_alignment=1)
 		
 	# disabling info
 	if rc_stage == 0 and rc_info_textfield:
 		rc_info_textfield = None
+		rc_info_btns.clear()
 			
 	# navigating back and forwards
 	if rc_stage == -1:					# going back
@@ -494,11 +488,8 @@ def recipe_choose():
 			i.draw()
 	elif rc_stage == 1:					# info mode
 		rc_info_textfield.draw()
-		rc_info_btns[0].draw()
-		if drinks._test_availability(chosen_recipe):
-			rc_info_btns[1].draw()
-		else:
-			rc_info_btns[2].draw()
+		for i in rc_info_btns:
+			i.draw()
 
 	# if leaving recipe choose, clean up variables
 	if gl.prog_pos != 'rc':
