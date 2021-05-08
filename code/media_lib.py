@@ -110,6 +110,21 @@ class Button:
 		self.img_disabled	= Image(self.path_disabled	, self.x, self.y, self.width, self.height, self.rotation)
 		self.img_selected	= Image(self.path_selected	, self.x, self.y, self.width, self.height, self.rotation)
 		self.show = True
+
+	def set_size(self, *, x=-1, y=-1, w=-1, h=-1):
+		""" set new position """
+		if x == -1:
+			x = self.x
+		if y == -1:
+			y = self.y
+		if w == -1:
+			w = self.width
+		if h == -1:
+			h = self.height
+
+		self.img_normal		= Image(self.path_normal	, x, y, w, h, self.rotation)
+		self.img_disabled	= Image(self.path_disabled	, x, y, w, h, self.rotation)
+		self.img_selected	= Image(self.path_selected	, x, y, w, h, self.rotation)
 	
 	def unload_image(self):
 		""" deletes pygame.Surface objects """
