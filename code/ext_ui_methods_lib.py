@@ -950,7 +950,7 @@ def credits():
 		# create objects
 		cr_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")
 		cr_background.start(repeat=True)
-		cr_text = media_lib.TextField(0,8,gl.W, gl.H-8, gl.credits_text, gl.standard_font, (255,255,255), alignment=0)
+		cr_text = media_lib.TextField(0,8,gl.W, gl.H-8, gl.credits_text, gl.standard_font, gl.text_color_2, alignment=0)
 
 	# input
 	if io.read_input(io.BACK):
