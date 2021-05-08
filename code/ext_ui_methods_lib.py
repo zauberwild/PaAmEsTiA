@@ -787,6 +787,31 @@ si_marker = []				# list holding markers
 
 si_import_btn = None		# the import button in the bottom-right corner
 
+def _si_rebuilt_list(chosen_button_existent=True):
+	global si_btn_list, si_btns_cords, si_n_visible_btn, si_chosen_btn, si_btns_cords_sel, si_spacing
+
+	si_btn_list.clear()
+	x, y = si_btns_cords[0], si_btns_cords[1]
+	w, h = si_btns_cords[2], si_btns_cords[3]
+	for i in range(si_n_visible_btn):
+		if i == si_chosen_btn and chosen_button_existent:
+			# chosen button
+			l_x = si_btns_cords_sel[0]
+			l_w, l_h = si_btns_cords_sel[2], si_btns_cords_sel[3]
+			si_btn_list.append(media_lib.Button(gl.gen_path + "/src/media/settings/import/", "btn_sel.png", "btn_sel.png", "btn_del.png", l_x, y, l_w, l_h))
+			y += l_h + si_spacing[1]
+		else:
+			# other buttons
+			si_btn_list.append(media_lib.Button(gl.gen_path + "/src/media/settings/import/", "btn.png", "btn.png", "btn.png", x, y, w, h))
+			y += h + si_spacing[0]
+			if i+1 == si_chosen_btn:
+				y -= si_spacing[0]-si_spacing[1]
+		
+	si_marker[1].set_size(y=si_btn_list[-1].y + si_btn_list[-1].height + 7)
+
+	if chosen_button_existent:
+		si_btn_list[si_chosen_btn].selected = True
+
 def settings_import():
 	global si_active, si_background, si_recipe_list, si_first_recipe, si_btn_list, si_chosen_btn, si_n_visible_btn, si_import_btn, si_marker, si_btns_cords, si_spacing, si_btns_cords_sel
 
@@ -796,37 +821,26 @@ def settings_import():
 		si_background.start(repeat=True)
 
 		# get recipes
-		si_recipe_list = drinks.get_recipes()
-
-		# create button list
-		x, y = si_btns_cords[0], si_btns_cords[1]
-		w, h = si_btns_cords[2], si_btns_cords[3]
-		for i in range(si_n_visible_btn):
-			if i == si_chosen_btn:
-				l_x = si_btns_cords_sel[0]
-				l_w, l_h = si_btns_cords_sel[2], si_btns_cords_sel[3]
-				si_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", l_x, y, l_w, l_h))
-				y += l_h + si_spacing[1]
-			else:
-				si_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
-				y += h + si_spacing[0]
-				if i+1 == si_chosen_btn:
-					y -= si_spacing[0]-si_spacing[1]
-
-		si_btn_list[si_chosen_btn].selected = True
+		si_recipe_list = drinks.get_recipes()	
 
 		# create marker
-		si_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 283, 6, 35,30, rotation=180))
-		si_marker.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_tri_green.png", "prop_white.png", "prop_tri_grey.png", 283, 563, 35, 30))
+		si_marker.append(media_lib.Button(gl.gen_path + "/src/media/settings/import/", "marker_up_sel.png", "marker_up.png", "marker_up.png", 283, 6, 35,30))
+		si_marker.append(media_lib.Button(gl.gen_path + "/src/media/settings/import/", "marker_down_sel.png", "marker_down.png", "marker_down.png", 283, 563, 35, 30))
+
+		# create button list
+		_si_rebuilt_list()
 
 		# create import button
-		si_import_btn = media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 635, 510, 131, 45)
-		si_import_btn.add_text("Import", gl.standard_font, (0,0,255))
+		si_import_btn = media_lib.Button(gl.gen_path + "/src/media/settings/import/", "import.png", "import_sel.png", "import.png", 635, 510, 131, 45)
+		#si_import_btn.add_text("Import", gl.standard_font, (0,0,255))		# DEL src rdy
 
 	# input
 	if io.read_input(io.BACK):
-		si_active = False
-		gl.prog_pos = 'sc'
+		if si_btn_list[si_chosen_btn].disabled:
+			si_btn_list[si_chosen_btn].disabled = False
+		else:
+			si_active = False
+			gl.prog_pos = 'sc'
 
 	elif io.read_input(io.UP) and si_import_btn.selected == False:		# moving up and down in the list
 		if si_chosen_btn == 0:
@@ -852,32 +866,20 @@ def settings_import():
 		si_btn_list[si_chosen_btn].selected = True
 
 	if (io.read_input(io.DOWN) or io.read_input(io.UP)) and si_import_btn.selected == False:
-		si_btn_list.clear()
-		x, y = si_btns_cords[0], si_btns_cords[1]
-		w, h = si_btns_cords[2], si_btns_cords[3]
-		for i in range(si_n_visible_btn):
-			if i == si_chosen_btn:
-				l_x = si_btns_cords_sel[0]
-				l_w, l_h = si_btns_cords_sel[2], si_btns_cords_sel[3]
-				si_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", l_x, y, l_w, l_h))
-				y += l_h + si_spacing[1]
-			else:
-				si_btn_list.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", x, y, w, h))
-				y += h + si_spacing[0]
-				if i+1 == si_chosen_btn:
-					y -= si_spacing[0]-si_spacing[1]
+		_si_rebuilt_list()
 
 		si_btn_list[si_chosen_btn].selected = True
 
 	elif io.read_input(io.RIGHT):							# switch to import button
 		si_import_btn.selected = True
-		si_btn_list[si_chosen_btn].selected = False
+		_si_rebuilt_list(chosen_button_existent=False)
 
 	elif io.read_input(io.LEFT):							# switch to recipe list
 		si_import_btn.selected = False
-		si_btn_list[si_chosen_btn].selected = True
+		_si_rebuilt_list()
 
-	elif io.read_input(io.NEXT):								# pressing next
+	notification_text = None
+	if io.read_input(io.NEXT):								# pressing next
 		if si_import_btn.selected:								# if currently focusing the import-button
 			print("[UI SI] import recipe procedure started")		# start recipe import
 			success = drinks.import_recipe()
@@ -890,27 +892,30 @@ def settings_import():
 				notification_text = "An error occurred during import"
 
 		else:													# if currently focusing somewhere on the list
-			success = drinks.delete_recipe(si_first_recipe+si_chosen_btn)		# delete the chosen recipe (if possible)
-			si_active = False
-			if success:
-				notification_text = "successfully deleted recipe"
+			if si_btn_list[si_chosen_btn].disabled == False:				# first select delete
+				si_btn_list[si_chosen_btn].disabled = True
 			else:
-				notification_text = "couldn't delete recipe, recipe is immutable"
-		
-		gl.notifications.append(media_lib.Notification(notification_text))
+				success = drinks.delete_recipe(si_first_recipe+si_chosen_btn)		# delete the chosen recipe (if possible)
+				si_active = False
+				if success:
+					notification_text = "successfully deleted recipe"
+				else:
+					notification_text = "couldn't delete recipe, recipe is immutable"
+		if notification_text:
+			gl.notifications.append(media_lib.Notification(notification_text, ver_alignment=1))
 
 	# add the recipe names to the buttons
 	for idx, btn in enumerate(si_btn_list):
-		btn.add_text(si_recipe_list[si_first_recipe+idx], gl.standard_font, (0,0,255))
+		btn.add_text(si_recipe_list[si_first_recipe+idx], gl.standard_font, gl.text_color_1)
 
 	# control marker
 	# upper marker
-	if si_btn_list[0].text == si_recipe_list[0]:	# if first item in recipe-list is visible -> we are on the top of the list
+	if si_btn_list[si_chosen_btn].text == si_recipe_list[0]:	# if first item in recipe-list is visible -> we are on the top of the list
 		si_marker[0].disabled = True
 	else:
 		si_marker[0].disabled = False
 	# lower marker
-	if si_btn_list[-1].text == si_recipe_list[-1]:	# if last item in recipe-list is visible -> we are on the bottom of the list
+	if si_btn_list[si_chosen_btn].text == si_recipe_list[-1]:	# if last item in recipe-list is visible -> we are on the bottom of the list
 		si_marker[1].disabled = True
 	else:
 		si_marker[1].disabled = False
