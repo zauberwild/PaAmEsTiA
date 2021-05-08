@@ -4,7 +4,6 @@ this file include all methods for the user interface
 
 #from tkinter.constants import TRUE
 #from numpy import true_divide
-from tkinter.constants import E
 import globals as gl
 import io_lib as io
 import media_lib
