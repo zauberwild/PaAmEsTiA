@@ -421,7 +421,7 @@ class TextField:
 		self.font = font
 		self.font_color = font_col
 		
-		self.spacing = 15
+		self.spacing = 10
 
 		# save font size. this part is slightly hacky, but who cares?
 		if font == gl.standard_font:
@@ -430,6 +430,9 @@ class TextField:
 		elif font == gl.standard_font_small:
 			self.font_size = gl.standard_font_size_small
 			print("[MED TF init] small size")
+		elif font == gl.notification_font:
+			self.font_size = gl.notification_font_size
+			print("[MED TF init] notification font")
 		else:
 			self.font_size = 12
 			print("[MED TF init] not found; switched to default size")
@@ -524,7 +527,7 @@ class Bar:
 
 class Notification:
 
-	def __init__(self, text):
+	def __init__(self, text, ver_alignment=0):
 		""" notification class. it will show up, go away and delete istelf automatically
 		- text: text to show
 		"""
@@ -538,13 +541,13 @@ class Notification:
 		self.finish_time = 0
 
 		# coordinates and size
-		w, h = 350, 100
+		w, h = 237, 122
 		x, y = 10, 0-h
 		self.x ,self.y, self.w, self.h = x, y, w, h
 
 		# image and text
-		self.image = Image(gl.gen_path + "/src/props/prop_notify.png", x, y, w, h)
-		self.textfield = TextField(x, y, w, h, text, gl.standard_font, (0,255,0), 0, ver_alignment=0)
+		self.image = Image(gl.gen_path + "/src/media/notification.png", x, y, w, h)
+		self.textfield = TextField(x, y, w, h, text, gl.notification_font, gl.text_color_1, 0, ver_alignment=ver_alignment)
 
 	def update(self):
 		""" update notification """
