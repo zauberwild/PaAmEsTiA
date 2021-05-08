@@ -549,10 +549,10 @@ def settings_choose():
 		sc_background.start(repeat=True)
 
 		# create buttons
-		sc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 14, 10, 326, 582))
-		sc_btns[-1].add_text("Getränke", gl.debug_font, (0,0,255))		# DEL src rdy
-		sc_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", "prop_grey.png", 461, 10, 326, 582))
-		sc_btns[-1].add_text("Importieren", gl.debug_font, (0,0,255))	# DEL src rdy
+		sc_btns.append(media_lib.Button(gl.gen_path + "/src/media/settings/choose/", "drinks.png", "drinks.png", "drinks.png", 14, 10, 326, 582))
+		#sc_btns[-1].add_text("Getränke", gl.debug_font, (0,0,255))		# DEL src rdy
+		sc_btns.append(media_lib.Button(gl.gen_path + "/src/media/settings/choose/", "import.png", "import.png", "import.png", 461, 10, 326, 582))
+		#sc_btns[-1].add_text("Importieren", gl.debug_font, (0,0,255))	# DEL src rdy
 		sc_btns[sc_pos].selected = True
 
 	# input
