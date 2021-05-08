@@ -89,15 +89,15 @@ def main_menu():
 	
 	if menu_active == False:			# setup
 		menu_active = True
+
+		# background
+		menu_background = media_lib.Image(gl.gen_path + "/src/media/background.jpeg", 0, 0, gl.W, gl.H)
+
 		# creating the buttons for the main menu
-		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_green.png", 	"prop_grey.png", 48, 48, 197, 439))
-		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_blue.png", 	"prop_grey.png", 261, 13, 279, 484))
-		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_yellow.png", "prop_grey.png", 557, 48, 197, 439))
-		menu_btns.append(media_lib.Button(gl.gen_path + "/src/props/", "prop_white.png", "prop_red.png", 	"prop_grey.png", 274, 511, 250, 77))
-		menu_btns[0].add_text("EINSTELLUNGEN", gl.debug_font_big, (0,0,0), 0)			# DEL as soon as  the real sources are ready
-		menu_btns[1].add_text("REZEPT", gl.debug_font_big, (0,0,0), 0)
-		menu_btns[2].add_text("FREI MISCHEN", gl.debug_font_big, (0,0,0), 0)
-		menu_btns[3].add_text("VERLASSEN", gl.debug_font_big, (0,0,0), 0)
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/media/main_menu/", "settings.png", "settings_sel.png", "settings.png", 48, 48, 197, 439))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/media/main_menu/", "recipes.png", "recipes_sel.png", "recipes.png", 261, 13, 279, 484))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/media/main_menu/", "free.png", "free_sel.png", "free.png", 557, 48, 197, 439))
+		menu_btns.append(media_lib.Button(gl.gen_path + "/src/media/main_menu/", "quit.png", "quit_sel.png", "quit.png", 274, 511, 250, 77))
 		menu_btns[1].selected = True
 		menu_pos_x = 1				# postion of the buttons
 		menu_pos_y = 0
@@ -111,13 +111,13 @@ def main_menu():
 		menu_pos_y = 1
 		menu_btns[menu_pos_x].selected = False
 		menu_btns[3].selected = True
-	elif io.read_input(io.LEFT):
+	elif io.read_input(io.LEFT) and menu_pos_y == 0:
 		menu_btns[menu_pos_x].selected = False
 		menu_pos_x -= 1
 		if menu_pos_x < 0:
 			menu_pos_x = 0
 		menu_btns[menu_pos_x].selected = True
-	elif io.read_input(io.RIGHT):
+	elif io.read_input(io.RIGHT) and menu_pos_y == 0:
 		menu_btns[menu_pos_x].selected = False
 		menu_pos_x += 1
 		if menu_pos_x > 2:
@@ -137,7 +137,7 @@ def main_menu():
 			gl.prog_pos = 'q'
 
 	# draw
-	gl.screen.fill((127,127,127))
+	menu_background.draw()
 
 	# for each button in list
 	for btn in menu_btns:
