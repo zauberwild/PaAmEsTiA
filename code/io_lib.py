@@ -104,7 +104,7 @@ def read_input(input):
 
 """ ### ### OUTPUT ### ### """
 
-VALVES = [8, 7, 1, 24, 15, 18]			# NOTE Valves: set corresponding pins here ([0] is the valve for water, then going from left to right)
+VALVES = [8, 18, 15, 24, 1, 7]			# NOTE Valves: set corresponding pins here ([0] is the valve for water, then going from left to right)
 PUMP = 23								#		Pump:  set pin for pump here
 if gl.os_is_linux:
 	from gpiozero import LED
