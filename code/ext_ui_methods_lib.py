@@ -545,13 +545,12 @@ def settings_choose():
 
 	if sc_active == False:		# when entering settings_choose
 		sc_active = True
-		sc_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")		# create background
-		sc_background.start(repeat=True)
+		sc_background = media_lib.Image(gl.gen_path + "/src/media/background.jpeg", 0, 0, gl.W, gl.H)		# create background
 
 		# create buttons
-		sc_btns.append(media_lib.Button(gl.gen_path + "/src/media/settings/choose/", "drinks.png", "drinks.png", "drinks.png", 14, 10, 326, 582))
+		sc_btns.append(media_lib.Button(gl.gen_path + "/src/media/settings/choose/", "drinks.png", "drinks_sel.png", "drinks.png", 14, 10, 326, 582))
 		#sc_btns[-1].add_text("Getränke", gl.debug_font, (0,0,255))		# DEL src rdy
-		sc_btns.append(media_lib.Button(gl.gen_path + "/src/media/settings/choose/", "import.png", "import.png", "import.png", 461, 10, 326, 582))
+		sc_btns.append(media_lib.Button(gl.gen_path + "/src/media/settings/choose/", "import.png", "import_sel.png", "import.png", 461, 10, 326, 582))
 		#sc_btns[-1].add_text("Importieren", gl.debug_font, (0,0,255))	# DEL src rdy
 		sc_btns[sc_pos].selected = True
 
@@ -613,8 +612,7 @@ def settings_drink():
 
 	if sd_active == False:			# when entering drink settings
 		sd_active = True
-		sd_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")		# create background
-		sd_background.start(repeat=True)
+		sd_background = media_lib.Image(gl.gen_path + "/src/media/background.jpeg", 0, 0, gl.W, gl.H)		# create background
 
 		# get recipes
 		sd_drinks_list = drinks.get_drinks()
@@ -817,8 +815,7 @@ def settings_import():
 
 	if si_active == False:			# when entering import settings
 		si_active = True
-		si_background = media_lib.Video(gl.gen_path + "/src/props/intro.mp4")		# create background
-		si_background.start(repeat=True)
+		si_background = media_lib.Image(gl.gen_path + "/src/media/background.jpeg", 0, 0, gl.W, gl.H)		# create background
 
 		# get recipes
 		si_recipe_list = drinks.get_recipes()	
