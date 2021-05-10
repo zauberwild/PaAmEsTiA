@@ -58,5 +58,6 @@ Dieses Projekt steht unter der MIT-Lizenz (komplette Lizenz [hier](https://githu
 - [`pygame`](https://www.pygame.org/news) (und `pygame.freetype`)
 - [`opencv`](https://opencv.org/) (und [`numpy`](https://numpy.org/))
 - [`tkinter`](https://docs.python.org/3/library/tkinter.html)
-- `os` und `pathlib`
+- `os`, `time` und `pathlib`
 - [`gpiozero`](https://github.com/gpiozero/gpiozero)
+
