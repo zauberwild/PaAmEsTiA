@@ -14,17 +14,6 @@ import drinks_lib as drinks
 	This includes object creation, reading files in, etc.
 """
 
-file = open(gl.gen_path + "/src/drinks")			# DEL i guess
-lines = file.readlines()
-for idx, i in enumerate(lines):						# remove trailing newline characters
-	if lines[idx].endswith('\n'):
-		lines[idx] = lines[idx][:-1]
-print("[UI setup] drink file content:")
-print(lines)
-for idx, val in enumerate(lines):
-	drinks.set_drink(idx, val)
-
-
 """ EOF SETUP """
 
 def loop():
@@ -62,8 +51,6 @@ introduction_vid = None		# saves the video ofr the intro
 
 def intro():
 	global intro_active, introduction_vid
-
-	gl.prog_pos = 'm'		# DEL as soon as intro is needed again
 
 	if intro_active == False:		# setup
 		intro_active = True
@@ -549,9 +536,7 @@ def settings_choose():
 
 		# create buttons
 		sc_btns.append(media_lib.Button(gl.gen_path + "/src/media/settings/choose/", "drinks.png", "drinks_sel.png", "drinks.png", 14, 10, 326, 582))
-		#sc_btns[-1].add_text("Getränke", gl.debug_font, (0,0,255))		# DEL src rdy
 		sc_btns.append(media_lib.Button(gl.gen_path + "/src/media/settings/choose/", "import.png", "import_sel.png", "import.png", 461, 10, 326, 582))
-		#sc_btns[-1].add_text("Importieren", gl.debug_font, (0,0,255))	# DEL src rdy
 		sc_btns[sc_pos].selected = True
 
 	# input
@@ -829,7 +814,6 @@ def settings_import():
 
 		# create import button
 		si_import_btn = media_lib.Button(gl.gen_path + "/src/media/settings/import/", "import.png", "import_sel.png", "import.png", 635, 510, 131, 45)
-		#si_import_btn.add_text("Import", gl.standard_font, (0,0,255))		# DEL src rdy
 
 	# input
 	if io.read_input(io.BACK):
