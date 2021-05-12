@@ -13,10 +13,6 @@ pygame.freetype.init()
 # imports
 import globals as gl
 import ext_ui_methods_lib as ui
-import subprocess
-
-gl.screen.fill((0,0,127))
-pygame.display.flip()
 
 """ ### ### main loop ### ### """
 while gl.prog_active:
