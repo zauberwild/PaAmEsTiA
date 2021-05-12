@@ -83,5 +83,3 @@ while gl.prog_active:
 	gl.clock.tick(gl.FPS)		# limit fps
 
 pygame.quit()
-
-	
