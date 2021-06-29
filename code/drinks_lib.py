@@ -60,7 +60,7 @@ def update_recipes_and_drinks():
 	# look for recipes
 	for filename in os.listdir(dir_recipes):
 		recipes.append(filename)
-	recipes.remove('free_mixed_recipe')				# sort the free mixed recipe, as it should not appear in the recipe list
+	recipes.remove('free_mixed_recipe')				# sort out the free mixed recipe, as it should not appear in the recipe list
 
 	print("[DR URD] recipe list  content:")
 	print(recipes)
