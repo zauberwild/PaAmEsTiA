@@ -1,6 +1,6 @@
 Paamestia
 =========
-_Teammitglieder: Max, Dominik, André, Arvid (@zauberwild)
+_Teammitglieder: Max, Dominik, André, Arvid
 
 <img src="ReadMe.assets/logo_paamestia.jpeg" alt="logo_paamestia" width="400"/>
 
