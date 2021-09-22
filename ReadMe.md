@@ -8,6 +8,7 @@ Info
 ----
 
 In diesem Repository sind alle Dateien, Quellcodes, etc. für das Praxisprojekt für Fach Praxis im BGT an der BBS.  
+
 Bei dem Projekt handelt es sich um eine Cocktail-Mischmaschine, bei der man ein Rezept auswählt und dies automatisch gemischt wird.
 Außerdem soll es möglich sein, selber frei zu mischen und Rezepte zu importieren. 
 
@@ -22,7 +23,7 @@ Der Quellcode besteht aus mehreren Dateien, denen verschiedenen Aufgaben zukomme
 
 Hardware
 --------
-Das Hirn des gesamten Projekts ist ein Raspberry Pi, einem Einplatinencomputer, der neben Standard-Anschlüssen, wie USB und HDMI auch über GPIO-Pins (_**G**eneral-**P**urpose-**I**nput-**O**uput-Pins_)verfügt. Diese werden dazu verwendet um die Taster auszulesen, und die Ventile anzusteuern. Die Ansteuerung erfolgt dabei über zwei Relais-Boards, um die hohe Stromaufnahme nicht direkt über den Raspberry Pi zu leiten.  
+Das Hirn des gesamten Projekts ist ein Raspberry Pi, einem Einplatinencomputer, der neben Standard-Anschlüssen, wie USB und HDMI auch über GPIO-Pins (_**G**eneral-**P**urpose-**I**nput-**O**uput-Pins_) verfügt. Diese werden dazu verwendet um die Taster auszulesen, und die Ventile anzusteuern. Die Ansteuerung erfolgt dabei über zwei Relais-Boards, um die hohe Stromaufnahme nicht direkt über den Raspberry Pi zu leiten.  
 Für das Bild wird ein alter 3/4-Monitor verwendet, auf dem die grafische Benutzeröberfläche angezeigt wird.  
 Die Stromversorgung gestaltete sich etwas schwieriger, weil die Pumpe und Ventile mit 12V betrieben werden müssen, Der RasPi aber nur mit 5V. Dafür wurde erst ein 12V-Netzteil verwendet, und zusätzlich ein Step-Down-Converter, der die Spannung für den RasPi auf 5V runterregelt.  
 Zur Konstruktion wurden Alu-Profile als Rahmen verwendet, für die Abdeckung Blech. Zur Montage einiger Bauteile wurden außerdem Halterungen 3D-gedruckt, verwendet wurde dafür der Anycubic Mega S mit dunkelgrauem PETG und blauem PLA.  
